@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 2.3 - Escolhendo a Stack Certa | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Base overrides */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+        /* Blue accent */
+        html:not(.dark) .text-blue-400 { color: #2563eb; }
+        html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+        html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+        html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .bg-blue-900\/30 { background-color: rgba(29, 78, 216, 0.08); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center gap-3">
+                    <a href="../../index.html" class="text-yellow-400 font-bold text-lg hover:text-yellow-300 transition-colors">&#127959;&#65039; Arquitetura DEV 2030</a>
+                    <span class="text-neutral-500">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center gap-1">
+                    <a href="../trilha1/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+                    <a href="index.html" class="px-2 py-1 text-xs font-medium text-blue-400 bg-blue-500/10 rounded transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span></a>
+                    <a href="../trilha3/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 rounded transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span></a>
+                    <a href="../trilha4/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span></a>
+                    <a href="../trilha5/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span></a>
+                    <a href="../trilha6/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Escalando</span></a>
+                    <button id="theme-toggle" class="ml-3 p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors">
+                        <svg id="theme-toggle-dark-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-blue-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-blue-400 transition-colors">Trilha 2</a>
+            <span>/</span>
+            <span class="text-blue-400 font-medium">M&oacute;dulo 2.3</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-blue-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                    M&Oacute;DULO 2.3
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128736;&#65039; Escolhendo a Stack Certa
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Tecnologia &eacute; meio, n&atilde;o fim. Aprenda a escolher stack com base em dados, contexto e sustentabilidade &mdash; sem cair no hype cycle nem na paralisia de an&aacute;lise.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">Interm.</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">Estrat.</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TOPICO 1: Hype vs Sustentabilidade ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#127914; Hype vs. Sustentabilidade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Toda tecnologia passa pelo <strong class="text-blue-400">Gartner Hype Cycle</strong>: trigger de inova&ccedil;&atilde;o, pico de expectativas infladas, vale da desilus&atilde;o, rampa de esclarecimento e plat&ocirc; de produtividade. Adotar no pico &eacute; arriscado (tecnologia imatura, bugs, falta de documenta&ccedil;&atilde;o). Adotar no plat&ocirc; &eacute; seguro mas tardio. O sweet spot &eacute; a rampa de esclarecimento.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Boring Technology Theory</h3>
+                <p class="text-neutral-300 mb-4">Dan McKinley (Etsy) prop&ocirc;s que cada time tem um <strong class="text-white">&ldquo;budget de inova&ccedil;&atilde;o&rdquo;</strong> limitado:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Boring technology:</strong> PostgreSQL, Redis, Linux, HTTP. Conhecida, documentada, previs&iacute;vel. Bugs j&aacute; foram encontrados e corrigidos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Innovation tokens:</strong> Cada time tem ~3 tokens para tecnologias novas. Use-os onde geram vantagem competitiva real</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Lindy Effect:</strong> Tecnologias que existem h&aacute; 20 anos provavelmente existir&atilde;o por mais 20. PostgreSQL (1996) &eacute; aposta mais segura que qualquer NewDB (2024)</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: GraphQL</h3>
+                <p class="text-neutral-300 mb-4">GraphQL &eacute; um caso perfeito do Hype Cycle em a&ccedil;&atilde;o:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">2015 (trigger):</strong> Facebook libera como open source. Promessa de resolver todos os problemas de REST</li>
+                    <li><strong class="text-white">2017-2018 (pico):</strong> &ldquo;REST est&aacute; morto!&rdquo; Confer&ecirc;ncias lotadas, adoção em massa sem crit&eacute;rio</li>
+                    <li><strong class="text-white">2019-2020 (vale):</strong> Problemas reais emergem: N+1 queries, caching complexo, seguran&ccedil;a (query depth attacks)</li>
+                    <li><strong class="text-white">2023+ (plat&ocirc;):</strong> Usado onde faz sentido (mobile-first, apps com muitas entidades relacionadas) e ignorado onde n&atilde;o faz (APIs internas simples, CRUD b&aacute;sico)</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Consulte o <strong class="text-white">ThoughtWorks Technology Radar</strong> antes de adotar qualquer tecnologia nova. Ele classifica em: Adopt (seguro), Trial (experimente), Assess (avalie) e Hold (evite). Se a tecnologia est&aacute; em &ldquo;Hold&rdquo;, pense duas vezes. Se est&aacute; em &ldquo;Adopt&rdquo;, provavelmente j&aacute; passou pelo vale da desilus&atilde;o.</p>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Alerta: Resume-Driven Development</h3>
+                <p class="text-neutral-300">Cuidado com decis&otilde;es de stack motivadas por <strong class="text-white">&ldquo;quero aprender X&rdquo;</strong> em vez de &ldquo;X resolve nosso problema&rdquo;. Um dev que escolhe Rust para uma API CRUD interna n&atilde;o est&aacute; otimizando para o projeto &mdash; est&aacute; otimizando para o pr&oacute;prio curr&iacute;culo. O projeto paga o custo.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 2: Fit com o Time ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#128101; Fit com o Time</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-blue-400">A melhor tecnologia &eacute; a que seu time domina.</strong> Stack que ningu&eacute;m conhece &eacute; stack que ningu&eacute;m mant&eacute;m. O conhecimento existente do time &eacute; a restri&ccedil;&atilde;o mais importante e mais ignorada na escolha de tecnologia. Contratar para uma stack ex&oacute;tica &eacute; caro, demorado e arriscado.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Framework de Avalia&ccedil;&atilde;o de Fit</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Hiring Funnel:</strong> Quantos devs no mercado conhecem essa tecnologia? Se a resposta &eacute; &ldquo;poucos&rdquo;, o custo de contrata&ccedil;&atilde;o dispara</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Ramp-up Time:</strong> Quanto tempo um dev novo leva para ser produtivo? Go = 2 semanas. Haskell = 3 meses</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Bus Factor:</strong> Se a &uacute;nica pessoa que conhece Elixir sair, o projeto sobrevive?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Training vs. Hiring:</strong> &Eacute; mais barato treinar o time atual ou contratar especialistas?</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Etsy e PHP</h3>
+                <p class="text-neutral-300 mb-4">A Etsy deliberadamente escolheu PHP quando muitos o consideravam &ldquo;inferior&rdquo;:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Raz&atilde;o:</strong> Maior pool de desenvolvedores dispon&iacute;vel no mercado. Contrata&ccedil;&atilde;o r&aacute;pida</li>
+                    <li><strong class="text-white">Resultado:</strong> Time de 200+ devs contratados rapidamente, todos produtivos em semanas</li>
+                    <li><strong class="text-white">Compara&ccedil;&atilde;o:</strong> Empresas que escolheram Scala ou Clojure gastaram meses encontrando candidatos e pagaram 30-50% a mais em sal&aacute;rios</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> PHP &ldquo;inferior&rdquo; com 200 devs produtivos > Scala &ldquo;superior&rdquo; com 20 devs dif&iacute;ceis de encontrar</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Fazer <strong class="text-white">skills matrix</strong> do time antes de escolher stack</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Pesquisar vagas abertas para a tecnologia na sua <strong class="text-white">regi&atilde;o/faixa salarial</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Considerar <strong class="text-white">polyglot pragmatism</strong>: use linguagens diferentes onde faz sentido</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Escolher stack que <strong class="text-white">s&oacute; o CTO conhece</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Assumir que devs <strong class="text-white">&ldquo;aprendem r&aacute;pido&rdquo;</strong> sem investir em treinamento</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ter <strong class="text-white">5 linguagens</strong> diferentes para 3 devs</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 3: Ecossistema e Comunidade ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128279; Ecossistema e Comunidade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Uma linguagem ou framework &eacute; t&atilde;o boa quanto seu ecossistema. <strong class="text-blue-400">Bibliotecas maduras, documenta&ccedil;&atilde;o abundante, comunidade ativa</strong> &mdash; isso determina se voc&ecirc; resolve problemas em minutos (npm install) ou em dias (reinventando a roda). O ecossistema &eacute; o moat competitivo de uma tecnologia.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Como Avaliar um Ecossistema</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Package Manager:</strong> Quantos pacotes? Qual a qualidade m&eacute;dia? npm (2M+), PyPI (500K+), Go modules (crescendo r&aacute;pido)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Community Health:</strong> GitHub stars s&atilde;o vaidade. Olhe para: issues respondidas, PRs mergeados, release frequency</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Documenta&ccedil;&atilde;o:</strong> Docs oficiais s&atilde;o completos? Existem tutoriais, cursos, livros? Stack Overflow tem respostas?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Vendor Backing:</strong> Tem empresa grande por tr&aacute;s? Google (Go, Angular), Meta (React), Vercel (Next.js) &mdash; menos risco de abandono</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Python domina IA</h3>
+                <p class="text-neutral-300 mb-4">Python n&atilde;o &eacute; a linguagem mais r&aacute;pida, mais elegante nem mais segura. Mas domina IA e Data Science por uma raz&atilde;o:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Ecossistema:</strong> NumPy, Pandas, TensorFlow, PyTorch, scikit-learn, Hugging Face &mdash; anos de investimento comunit&aacute;rio</li>
+                    <li><strong class="text-white">Comunidade:</strong> Milh&otilde;es de data scientists que compartilham notebooks, modelos e tutoriais</li>
+                    <li><strong class="text-white">Alternativas:</strong> Julia &eacute; tecnicamente superior para computa&ccedil;&atilde;o cient&iacute;fica, mas tem 1/100 do ecossistema. Mojo promete performance, mas &eacute; rec&eacute;m-nascido</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> O ecossistema vence a linguagem. Sempre</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Antes de adotar uma biblioteca, verifique: <strong class="text-white">(1) &Uacute;ltimo commit &lt; 3 meses?</strong> (2) Issues respondidas em &lt; 1 semana? (3) Mais de 1 maintainer? (4) Usada em produ&ccedil;&atilde;o por empresas conhecidas? Se a resposta para qualquer uma &eacute; &ldquo;n&atilde;o&rdquo;, busque alternativa.</p>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Alerta: left-pad Syndrome</h3>
+                <p class="text-neutral-300">Em 2016, um dev removeu o pacote <strong class="text-white">left-pad</strong> (11 linhas de c&oacute;digo) do npm e quebrou milhares de projetos incluindo React e Babel. Depend&ecirc;ncia excessiva de pacotes triviais &eacute; risco real. Regra: se a fun&ccedil;&atilde;o tem menos de 20 linhas, escreva voc&ecirc; mesmo.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 4: Total Cost of Ownership ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128184; Total Cost of Ownership</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                O custo real de uma tecnologia vai muito al&eacute;m da licen&ccedil;a. <strong class="text-blue-400">TCO inclui infraestrutura, treinamento, contrata&ccedil;&atilde;o, manuten&ccedil;&atilde;o e custo de oportunidade.</strong> Um banco &ldquo;gratuito&rdquo; pode custar mais que um pago se exigir DBA dedicado. &ldquo;Open source &eacute; gr&aacute;tis como um cachorro &eacute; gr&aacute;tis&rdquo; &mdash; sempre h&aacute; custos ocultos.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Os 6 Custos de uma Tecnologia</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Licen&ccedil;a:</strong> Gratuito, freemium, enterprise. Cuidado com mudan&ccedil;as de licen&ccedil;a (Redis, Elastic, HashiCorp)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Infraestrutura:</strong> Servidores, storage, rede. Managed services custam mais mas economizam tempo de ops</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Pessoas:</strong> Treinamento do time atual + custo de contrata&ccedil;&atilde;o de especialistas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Migra&ccedil;&atilde;o:</strong> Custo de sair da tecnologia se n&atilde;o funcionar. Vendor lock-in premium</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Manuten&ccedil;&atilde;o:</strong> Updates, patches de seguran&ccedil;a, monitora&ccedil;&atilde;o, troubleshooting</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Oportunidade:</strong> O que voc&ecirc; deixa de fazer enquanto implementa/mant&eacute;m essa tecnologia</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Oracle &rarr; PostgreSQL</h3>
+                <p class="text-neutral-300 mb-4">A migra&ccedil;&atilde;o de Oracle para PostgreSQL parece &oacute;bvia, mas o TCO conta outra hist&oacute;ria:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Licen&ccedil;a Oracle:</strong> US$50.000/ano. Caro, mas inclui suporte 24/7 e patches autom&aacute;ticos</li>
+                    <li><strong class="text-white">PostgreSQL &ldquo;gr&aacute;tis&rdquo;:</strong> Licen&ccedil;a = $0. Mas: 3 meses de migra&ccedil;&atilde;o (US$150K em sal&aacute;rios), treinamento do time (US$30K), DBA com experi&ecirc;ncia em PG (US$180K/ano), tuning e troubleshooting sem suporte enterprise</li>
+                    <li><strong class="text-white">TCO no ano 1:</strong> PostgreSQL pode custar MAIS que manter Oracle. A partir do ano 2, a economia come&ccedil;a</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> &ldquo;Gr&aacute;tis&rdquo; n&atilde;o significa &ldquo;sem custo&rdquo;. Calcule o TCO em 3 anos antes de decidir</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Crie uma <strong class="text-white">planilha de TCO de 3 anos</strong> para cada tecnologia considerada. Inclua: licen&ccedil;a, infra, pessoas (sal&aacute;rios * tempo), migra&ccedil;&atilde;o, treinamento. Compare o total, n&atilde;o apenas o item mais vis&iacute;vel. Managed services (RDS, Cloud SQL) frequentemente vencem self-hosted quando voc&ecirc; inclui o custo de ops.</p>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Calcular <strong class="text-white">TCO de 3 anos</strong> incluindo custos ocultos</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Incluir <strong class="text-white">custo de sa&iacute;da</strong> (vendor lock-in) na an&aacute;lise</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Avaliar <strong class="text-white">managed vs. self-hosted</strong> honestamente</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Decidir baseado <strong class="text-white">s&oacute; no custo de licen&ccedil;a</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">mudan&ccedil;as de licen&ccedil;a</strong> (Redis BSL, Elastic SSPL)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Subestimar o custo de <strong class="text-white">operar</strong> software open source</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 5: Stack INEMA ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#127959;&#65039; Stack INEMA</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                A stack da INEMA &eacute; um caso pr&aacute;tico de <strong class="text-blue-400">escolhas calibradas para contexto real</strong>: time pequeno, produtos educacionais, automa&ccedil;&otilde;es com IA, custo m&iacute;nimo. Nada de React, nada de Kubernetes, nada de microsservi&ccedil;os &mdash; porque o contexto n&atilde;o exige.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> A Stack na Pr&aacute;tica</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">n8n (orquestra&ccedil;&atilde;o):</strong> Workflows visuais para automa&ccedil;&otilde;es. Conecta APIs, webhooks, schedule. Substitui backend custom para 80% dos casos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Claude Code (gera&ccedil;&atilde;o):</strong> Gera p&aacute;ginas, conte&uacute;do, c&oacute;digo. Humano revisa e aprova. 10x mais r&aacute;pido que escrever do zero</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Supabase (dados):</strong> PostgreSQL + Auth + Storage + Realtime. Um servi&ccedil;o para tudo que seria 4 servi&ccedil;os separados</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">HTML est&aacute;tico (front):</strong> Tailwind CSS, zero JavaScript obrigat&oacute;rio. Servido via CDN. Performance m&aacute;xima, custo zero de hosting</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Por que essa Stack Funciona</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Custo mensal:</strong> ~US$50 (Supabase Pro + n8n self-hosted). Comparado a US$500+ para stack enterprise equivalente</li>
+                    <li><strong class="text-white">Time-to-deploy:</strong> Novas p&aacute;ginas em minutos, n&atilde;o dias. Claude gera, humano revisa, push para CDN</li>
+                    <li><strong class="text-white">Depend&ecirc;ncias:</strong> Zero build tools, zero bundlers, zero node_modules. Edite HTML, fa&ccedil;a push, est&aacute; no ar</li>
+                    <li><strong class="text-white">Escala:</strong> HTML est&aacute;tico via CDN suporta milh&otilde;es de page views sem configura&ccedil;&atilde;o adicional</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Pergunte-se: <strong class="text-white">&ldquo;Preciso REALMENTE de um SPA (React/Vue/Angular)?&rdquo;</strong> Para conte&uacute;do est&aacute;tico, blogs, documenta&ccedil;&atilde;o, landing pages e cursos, HTML est&aacute;tico com Tailwind &eacute; mais r&aacute;pido de desenvolver, mais r&aacute;pido de carregar e infinitamente mais simples de manter. Reserve SPAs para apps com intera&ccedil;&atilde;o complexa em tempo real.</p>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Quando essa Stack N&Atilde;O Funciona</h3>
+                <p class="text-neutral-300">A stack INEMA &eacute; otimizada para <strong class="text-white">conte&uacute;do e automa&ccedil;&atilde;o</strong>. N&atilde;o serve para: apps com estado complexo (Figma, Google Docs), real-time collaboration, jogos, sistemas financeiros com transações ACID complexas. Reconhecer onde sua stack n&atilde;o funciona &eacute; t&atilde;o importante quanto saber onde funciona.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 6: Estrategias de Migracao ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128260; Estrat&eacute;gias de Migra&ccedil;&atilde;o</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Trocar o motor com o avi&atilde;o voando. <strong class="text-blue-400">Reescritas big-bang falham 70% das vezes</strong> (Standish Group). Migra&ccedil;&atilde;o gradual &eacute; a &uacute;nica abordagem confi&aacute;vel para mudar de stack sem parar o sistema.
+            </p>
+
+            <!-- Timeline: Padroes de Migracao -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Padr&otilde;es de Migra&ccedil;&atilde;o</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Strangler Fig Pattern</h4>
+                        <p class="text-neutral-300 text-sm">Novas features v&atilde;o para o novo sistema. Sistema antigo encolhe gradualmente. Nome inspirado em figueiras que estrangulam a &aacute;rvore hospedeira. O LinkedIn usou este padr&atilde;o por 3 anos para migrar do monolito Java para microsservi&ccedil;os.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Parallel Run</h4>
+                        <p class="text-neutral-300 text-sm">Sistema novo roda em paralelo com o antigo. Compara resultados. Quando a confian&ccedil;a &eacute; alta, redireciona tr&aacute;fego. Ideal para migra&ccedil;&otilde;es de banco de dados onde consist&ecirc;ncia &eacute; cr&iacute;tica.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Canary Migration</h4>
+                        <p class="text-neutral-300 text-sm">1% do tr&aacute;fego vai para o novo sistema. Monitore m&eacute;tricas. Se OK, aumente para 5%, 10%, 25%, 50%, 100%. Feature flags como kill switch para rollback instant&acirc;neo.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">4</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Blue-Green Deployment</h4>
+                        <p class="text-neutral-300 text-sm">Dois ambientes id&ecirc;nticos. Blue (atual) serve tr&aacute;fego enquanto Green (novo) &eacute; preparado. Switch instant&acirc;neo via load balancer. Rollback = voltar para Blue.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: LinkedIn</h3>
+                <p class="text-neutral-300 mb-4">O LinkedIn migrou de monolito Java para microsservi&ccedil;os usando Strangler Fig:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">2011-2014:</strong> Cada nova feature era um novo servi&ccedil;o. O monolito n&atilde;o recebia c&oacute;digo novo</li>
+                    <li><strong class="text-white">Proxy Layer:</strong> Um API gateway roteava requests entre monolito e novos servi&ccedil;os de forma transparente</li>
+                    <li><strong class="text-white">Resultado:</strong> Migra&ccedil;&atilde;o completa em 3 anos, zero downtime, zero big-bang</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> &ldquo;A melhor migra&ccedil;&atilde;o &eacute; aquela que o usu&aacute;rio n&atilde;o percebe&rdquo;</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Sempre tenha um <strong class="text-white">kill switch</strong> para migra&ccedil;&otilde;es: feature flags que redirecionam tr&aacute;fego de volta para o sistema antigo em segundos. Se algo der errado &agrave;s 3h da manh&atilde;, voc&ecirc; quer um bot&atilde;o, n&atilde;o um rollback de 4 horas.</p>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Alerta: Big-Bang Rewrite</h3>
+                <p class="text-neutral-300">A reescrita big-bang &eacute; a <strong class="text-white">forma mais sedutora e mais perigosa</strong> de migra&ccedil;&atilde;o. Parece simples (&ldquo;vamos refazer tudo do zero&rdquo;), mas na pr&aacute;tica: o novo sistema nunca atinge paridade com o antigo, o business n&atilde;o espera, e voc&ecirc; acaba mantendo dois sistemas por anos. O Netscape &eacute; o caso cl&aacute;ssico &mdash; reescreveram o browser do zero e perderam o mercado para o Internet Explorer.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 7: Checklist de Decisao ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#128203; Checklist de Decis&atilde;o de Stack</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Decis&atilde;o de stack sem framework vira debate emocional. <strong class="text-blue-400">&ldquo;Vamos usar Rust!&rdquo;</strong> &mdash; &Eacute; r&aacute;pido, sim. Mas algu&eacute;m do time sabe Rust? Vamos contratar devs Rust? Em quanto tempo? A que custo? Estas 10 perguntas cortam a emo&ccedil;&atilde;o e focam no que importa.
+            </p>
+
+            <!-- Conceito: Checklist -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> As 10 Perguntas Antes de Escolher</h3>
+                <ul class="space-y-3 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span><strong class="text-white">1. O time conhece?</strong> &mdash; Quantas pessoas dominam essa tecnologia hoje?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span><strong class="text-white">2. Contratamos f&aacute;cil?</strong> &mdash; Existe pool de candidatos na faixa salarial dispon&iacute;vel?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span><strong class="text-white">3. Comunidade ativa?</strong> &mdash; Issues respondidas, releases frequentes, docs completos?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span><strong class="text-white">4. Resolve o problema principal?</strong> &mdash; Qual o problema espec&iacute;fico que esta tecnologia resolve melhor?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span><strong class="text-white">5. TCO aceit&aacute;vel?</strong> &mdash; Custo total em 3 anos incluindo pessoas, infra e migra&ccedil;&atilde;o?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span><strong class="text-white">6. Lock-in gerenci&aacute;vel?</strong> &mdash; Se precisar sair, qual o custo e o prazo?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span><strong class="text-white">7. Escala para nosso horizonte?</strong> &mdash; Suporta 10x o tr&aacute;fego atual? E 100x?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span><strong class="text-white">8. Segura o suficiente?</strong> &mdash; Atende os requisitos de compliance do setor?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span><strong class="text-white">9. Podemos migrar depois?</strong> &mdash; Se n&atilde;o funcionar, qual o plano B e quanto custa?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span><strong class="text-white">10. Testamos com PoC?</strong> &mdash; Fizemos um spike time-boxed de 2 semanas m&aacute;x?</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Aplicando o Checklist</h3>
+                <p class="text-neutral-300 mb-4">Um time de 8 devs precisa escolher entre Next.js e Astro para um portal de conte&uacute;do:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Next.js:</strong> 7/8 devs conhecem React (&#10003;), contrata&ccedil;&atilde;o f&aacute;cil (&#10003;), ecossistema imenso (&#10003;), mas SSR complexity para conte&uacute;do est&aacute;tico (&#10007;), hosting caro com Vercel em escala (&#10007;)</li>
+                    <li><strong class="text-white">Astro:</strong> 2/8 devs conhecem (&#10007;), contrata&ccedil;&atilde;o limitada (&#10007;), mas perfeito para conte&uacute;do est&aacute;tico (&#10003;), hosting barato (&#10003;), suporta React components (&#10003;)</li>
+                    <li><strong class="text-white">Decis&atilde;o:</strong> Next.js venceu no checklist (7 vs 5 checkmarks). O fit com o time pesou mais que a adequa&ccedil;&atilde;o t&eacute;cnica pura</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> O checklist torna a decis&atilde;o objetiva e document&aacute;vel. Sem debates emocionais</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Transforme o checklist em um <strong class="text-white">stack scorecard</strong>: atribua pesos (1-5) para cada pergunta baseado no seu contexto, pontue cada tecnologia (1-5), multiplique peso x pontua&ccedil;&atilde;o e some. A tecnologia com maior score ganha. Documente o scorecard no ADR. Quando algu&eacute;m perguntar &ldquo;por que escolhemos X?&rdquo;, aponte para o scorecard.</p>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Sempre fazer <strong class="text-white">PoC time-boxed</strong> (2 semanas m&aacute;x) antes de decidir</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Definir <strong class="text-white">kill criteria</strong> antes do PoC: o que invalida essa op&ccedil;&atilde;o?</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Envolver <strong class="text-white">todo o time</strong> na avalia&ccedil;&atilde;o, n&atilde;o s&oacute; o tech lead</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Escolher baseado em <strong class="text-white">&ldquo;eu li um blog post&rdquo;</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Fazer PoC de <strong class="text-white">3 meses</strong> (n&atilde;o &eacute; mais PoC, &eacute; projeto)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar a pergunta <strong class="text-white">&ldquo;e se n&atilde;o funcionar?&rdquo;</strong></span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MODULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Hype Cycle: adote na rampa, n&atilde;o no pico</strong><span class="text-neutral-400"> &mdash; Boring technology vence tecnologia da moda 9 em 10 vezes</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Fit com o time &eacute; restri&ccedil;&atilde;o n&ordm;1</strong><span class="text-neutral-400"> &mdash; Stack que ningu&eacute;m conhece &eacute; stack que ningu&eacute;m mant&eacute;m</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Ecossistema vence linguagem</strong><span class="text-neutral-400"> &mdash; Bibliotecas, docs e comunidade pesam mais que syntax ou performance</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">TCO &ne; custo de licen&ccedil;a</strong><span class="text-neutral-400"> &mdash; Inclua pessoas, infra, migra&ccedil;&atilde;o e oportunidade no c&aacute;lculo</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Stack INEMA: simplicidade &eacute; feature</strong><span class="text-neutral-400"> &mdash; n8n + Claude + Supabase + HTML est&aacute;tico para custo m&iacute;nimo e velocidade m&aacute;xima</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Migre gradualmente, nunca big-bang</strong><span class="text-neutral-400"> &mdash; Strangler Fig, Canary, Blue-Green. Sempre com kill switch</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">10 perguntas antes de escolher</strong><span class="text-neutral-400"> &mdash; Stack scorecard torna decis&otilde;es objetivas e document&aacute;veis</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-blue-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">2.4 - &#128221; ADRs e Documenta&ccedil;&atilde;o de Decis&atilde;o &mdash; Architecture Decision Records: a mem&oacute;ria do projeto</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha</a>
+                    <a href="modulo-2-4.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; 2026</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

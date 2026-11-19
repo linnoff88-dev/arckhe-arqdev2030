@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 4.2 - APIs e Integra&ccedil;&atilde;o | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-amber-400 { color: #92400e; }
+        html:not(.dark) .bg-amber-500\/20 { background-color: rgba(217, 119, 6, 0.12); }
+        html:not(.dark) .bg-amber-500\/10 { background-color: rgba(217, 119, 6, 0.08); }
+        html:not(.dark) .border-amber-500\/30 { border-color: rgba(217, 119, 6, 0.25); }
+        html:not(.dark) .hover\:bg-amber-500\/30:hover { background-color: rgba(217, 119, 6, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-amber-900\/20 { background-color: rgba(217, 119, 6, 0.06); }
+        html:not(.dark) .bg-amber-900\/30 { background-color: rgba(217, 119, 6, 0.08); }
+        html:not(.dark) .bg-amber-900\/40 { background-color: rgba(217, 119, 6, 0.1); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 106, 0.06); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 106, 0.2); }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-amber-400 bg-amber-500/10">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-amber-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-amber-400 transition-colors">Trilha 4</a>
+            <span>/</span>
+            <span class="text-amber-400 font-medium">M&oacute;dulo 4.2</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-amber-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                    M&Oacute;DULO 4.2
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128268; APIs e Integra&ccedil;&atilde;o
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    APIs s&atilde;o o sistema nervoso do software moderno. Neste m&oacute;dulo, voc&ecirc; vai aprender a projetar APIs REST robustas, implementar autentica&ccedil;&atilde;o segura, documentar com OpenAPI, versionar sem quebrar clientes e construir integra&ccedil;&otilde;es resilientes.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-amber-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-amber-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-amber-400">Pr&aacute;tico</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-amber-400">Execu&ccedil;&atilde;o</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== T&Oacute;PICO 1: Design de APIs REST ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#128736;&#65039; Design de APIs REST</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Uma API bem projetada &eacute; <strong class="text-amber-400">previs&iacute;vel, consistente e auto-descritiva</strong>. Desenvolvedores que consomem sua API devem entender o que cada endpoint faz sem ler documenta&ccedil;&atilde;o. REST n&atilde;o &eacute; um protocolo &mdash; &eacute; um estilo arquitetural com conven&ccedil;&otilde;es que, quando seguidas, tornam a API intuitiva.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Princ&iacute;pios de Design REST</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Recursos como substantivos</strong> &mdash; <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">/users</code>, <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">/orders</code>, nunca <code class="bg-dark-700 px-2 py-0.5 rounded text-red-400">/getUsers</code></span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Verbos HTTP corretos</strong> &mdash; GET (ler), POST (criar), PUT/PATCH (atualizar), DELETE (remover)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Status codes semn&acirc;nticos</strong> &mdash; 200 OK, 201 Created, 400 Bad Request, 404 Not Found, 422 Unprocessable</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Pagina&ccedil;&atilde;o e filtragem</strong> &mdash; <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">?page=2&amp;limit=20&amp;status=active</code></span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Respostas consistentes</strong> &mdash; Sempre o mesmo formato: <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">{ data, meta, errors }</code></span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; Bom Design</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><code class="bg-dark-700 px-1 rounded">GET /api/v1/users/123/orders</code></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><code class="bg-dark-700 px-1 rounded">POST /api/v1/orders</code></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><code class="bg-dark-700 px-1 rounded">PATCH /api/v1/orders/456</code></span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; Design Ruim</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><code class="bg-dark-700 px-1 rounded">GET /api/getUserOrders?id=123</code></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><code class="bg-dark-700 px-1 rounded">POST /api/createNewOrder</code></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><code class="bg-dark-700 px-1 rounded">POST /api/updateOrder/456</code></span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Antes de implementar, <strong class="text-white">escreva a documenta&ccedil;&atilde;o da API primeiro</strong> (API-first design). Isso for&ccedil;a voc&ecirc; a pensar na interface antes da implementa&ccedil;&atilde;o. Ferramentas como Swagger Editor permitem projetar a API visualmente.</p>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 2: Autentica&ccedil;&atilde;o e Autoriza&ccedil;&atilde;o ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#128274; Autentica&ccedil;&atilde;o e Autoriza&ccedil;&atilde;o</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-amber-400">Autentica&ccedil;&atilde;o</strong> responde &ldquo;quem &eacute; voc&ecirc;?&rdquo;. <strong class="text-amber-400">Autoriza&ccedil;&atilde;o</strong> responde &ldquo;o que voc&ecirc; pode fazer?&rdquo;. Confundir os dois &eacute; um dos erros de seguran&ccedil;a mais comuns. Em 2026, nunca implemente auth do zero &mdash; use servi&ccedil;os especializados.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Padr&otilde;es de Autentica&ccedil;&atilde;o</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">JWT (JSON Web Tokens)</strong> &mdash; Stateless, escal&aacute;vel, mas n&atilde;o revog&aacute;vel. Ideal para APIs entre servi&ccedil;os</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">OAuth 2.0</strong> &mdash; Delega&ccedil;&atilde;o de acesso. &ldquo;Login com Google/GitHub&rdquo; usa OAuth</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">API Keys</strong> &mdash; Simples, bom para servi&ccedil;os M2M. N&atilde;o use para usu&aacute;rios finais</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Session Cookies</strong> &mdash; Stateful, mais seguro contra XSS. Ideal para aplica&ccedil;&otilde;es web tradicionais</span></li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Nunca Fa&ccedil;a Isso</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Armazenar <strong class="text-white">senhas em texto puro</strong> &mdash; Use bcrypt ou Argon2</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Guardar <strong class="text-white">JWT no localStorage</strong> &mdash; Vulner&aacute;vel a XSS. Use httpOnly cookies</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Implementar <strong class="text-white">crypto pr&oacute;pria</strong> &mdash; Use bibliotecas auditadas e battle-tested</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Confiar no <strong class="text-white">client-side</strong> para autoriza&ccedil;&atilde;o &mdash; Sempre valide no servidor</span></li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use <strong class="text-white">Supabase Auth, Clerk ou Auth.js</strong> para autentica&ccedil;&atilde;o. Para autoriza&ccedil;&atilde;o complexa (RBAC, ABAC), considere <strong class="text-white">CASL ou Cerbos</strong>. A regra de ouro: nunca gaste tempo implementando auth quando existem solu&ccedil;&otilde;es prontas e auditadas.</p>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 3: Documenta&ccedil;&atilde;o com OpenAPI ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128221; Documenta&ccedil;&atilde;o com OpenAPI</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-amber-400">API sem documenta&ccedil;&atilde;o &eacute; API que ningu&eacute;m usa.</strong> OpenAPI (antigo Swagger) &eacute; o padr&atilde;o da ind&uacute;stria para descrever APIs REST de forma estruturada. A partir de um arquivo YAML/JSON, voc&ecirc; gera documenta&ccedil;&atilde;o interativa, SDKs e testes automaticamente.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Benef&iacute;cios do OpenAPI</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Documenta&ccedil;&atilde;o interativa</strong> &mdash; Swagger UI permite testar endpoints direto no browser</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Gera&ccedil;&atilde;o de c&oacute;digo</strong> &mdash; SDKs para TypeScript, Python, Go gerados automaticamente</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Valida&ccedil;&atilde;o autom&aacute;tica</strong> &mdash; Middleware valida request/response contra o schema</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Contrato entre times</strong> &mdash; Frontend e backend concordam na interface antes de implementar</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Ferramentas de Documenta&ccedil;&atilde;o</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Swagger UI</strong> &mdash; Interface cl&aacute;ssica, test&aacute;vel, integrada com a maioria dos frameworks</li>
+                    <li><strong class="text-white">Redoc</strong> &mdash; Documenta&ccedil;&atilde;o bonita e responsiva, ideal para APIs p&uacute;blicas</li>
+                    <li><strong class="text-white">Scalar</strong> &mdash; Alternativa moderna ao Swagger UI, com UX superior</li>
+                    <li><strong class="text-white">Bruno / Insomnia</strong> &mdash; Clientes HTTP que importam OpenAPI para testes manuais</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 4: Versionamento ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128260; Versionamento</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                APIs evoluem. Clientes n&atilde;o devem quebrar quando voc&ecirc; muda a API. <strong class="text-amber-400">Versionamento</strong> &eacute; a estrat&eacute;gia para introduzir mudan&ccedil;as sem destruir integra&ccedil;&otilde;es existentes. A escolha da estrat&eacute;gia impacta diretamente a complexidade de manuten&ccedil;&atilde;o.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Estrat&eacute;gias de Versionamento</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">URL Path</strong> &mdash; <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">/api/v1/users</code> &rarr; Mais comum, f&aacute;cil de entender e rotear</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Header</strong> &mdash; <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">Accept: application/vnd.api+json;version=2</code> &rarr; Mais &ldquo;RESTful&rdquo;, menos vis&iacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Query Parameter</strong> &mdash; <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">?version=2</code> &rarr; Simples, mas polui a URL</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Sem versionamento</strong> &mdash; Evoluir aditivamente (nunca remover campos, s&oacute; adicionar). Stripe usa essa abordagem</span></li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Para a maioria dos projetos, <strong class="text-white">URL path versioning</strong> (<code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">/api/v1/</code>) &eacute; a melhor escolha. &Eacute; expl&iacute;cito, f&aacute;cil de rotear e qualquer desenvolvedor entende. Mantenha no m&aacute;ximo <strong class="text-white">2 vers&otilde;es ativas</strong> simultaneamente. Deprecie com aviso de 6 meses.</p>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 5: Resili&ecirc;ncia em Integra&ccedil;&otilde;es ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#128737;&#65039; Resili&ecirc;ncia em Integra&ccedil;&otilde;es</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Integra&ccedil;&otilde;es <strong class="text-amber-400">v&atilde;o falhar</strong>. APIs externas ficam fora do ar, redes caem, timeouts acontecem. A quest&atilde;o n&atilde;o &eacute; &ldquo;se&rdquo; vai falhar, mas &ldquo;quando&rdquo; e &ldquo;como seu sistema vai reagir&rdquo;. Resili&ecirc;ncia &eacute; a capacidade de continuar funcionando mesmo quando depend&ecirc;ncias falham.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Padr&otilde;es de Resili&ecirc;ncia</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Retry com backoff exponencial</strong> &mdash; Tente novamente com intervalos crescentes (1s, 2s, 4s, 8s)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Circuit Breaker</strong> &mdash; Pare de chamar um servi&ccedil;o que est&aacute; falhando. Retome gradualmente</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Timeout</strong> &mdash; Nunca espere infinitamente. Defina limites agressivos (3-5 segundos)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Fallback</strong> &mdash; Tenha um plano B: cache local, valor padr&atilde;o, degrada&ccedil;&atilde;o elegante</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Bulkhead</strong> &mdash; Isole falhas para que um servi&ccedil;o ruim n&atilde;o derrube tudo</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Netflix Hystrix</h3>
+                <p class="text-neutral-300 mb-4">A Netflix criou o Hystrix para resolver exatamente esse problema:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Problema:</strong> Uma API lenta cascateava falhas para todos os servi&ccedil;os dependentes</li>
+                    <li><strong class="text-white">Solu&ccedil;&atilde;o:</strong> Circuit breaker + bulkhead + fallback em todas as integra&ccedil;&otilde;es</li>
+                    <li><strong class="text-white">Resultado:</strong> Servi&ccedil;os continuam funcionando mesmo quando depend&ecirc;ncias caem</li>
+                    <li><strong class="text-white">Hoje:</strong> Hystrix foi deprecado, mas o padr&atilde;o vive em Resilience4j, Polly e libs modernas</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 6: Webhooks na Pr&aacute;tica ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128276; Webhooks na Pr&aacute;tica</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Webhooks s&atilde;o <strong class="text-amber-400">&ldquo;APIs ao contr&aacute;rio&rdquo;</strong>: em vez de voc&ecirc; chamar o servi&ccedil;o, o servi&ccedil;o chama voc&ecirc; quando algo acontece. Stripe notifica pagamentos, GitHub notifica pushes, Supabase notifica mudan&ccedil;as no banco. &Eacute; o padr&atilde;o dominante para integra&ccedil;&otilde;es event-driven.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Implementando Webhooks Seguros</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Verifique a assinatura</strong> &mdash; Sempre valide o HMAC signature do webhook para evitar spoofing</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Idempot&ecirc;ncia</strong> &mdash; O mesmo webhook pode chegar mais de uma vez. Garanta que processar 2x d&aacute; o mesmo resultado</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Responda r&aacute;pido</strong> &mdash; Retorne 200 imediatamente e processe em background (fila)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Logue tudo</strong> &mdash; Armazene o payload cru para debug e replay</span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Processar webhooks <strong class="text-white">assincronamente</strong> com filas</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Implementar <strong class="text-white">retry logic</strong> para falhas de processamento</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">svix ou hookdeck</strong> para gerenciar webhooks em escala</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Processar <strong class="text-white">s&iacute;ncronamente</strong> no handler do webhook</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">valida&ccedil;&atilde;o de assinatura</strong> (vulnerabilidade cr&iacute;tica)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Assumir que webhooks chegam <strong class="text-white">em ordem</strong> (n&atilde;o chegam)</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 7: API Gateway ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#127959;&#65039; API Gateway</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                O API Gateway &eacute; o <strong class="text-amber-400">ponto &uacute;nico de entrada</strong> para todas as suas APIs. Ele centraliza autentica&ccedil;&atilde;o, rate limiting, logging, transforma&ccedil;&atilde;o de requests e roteamento. Em vez de cada servi&ccedil;o implementar essas preocupa&ccedil;&otilde;es, o gateway resolve tudo em um lugar.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Quando Usar um API Gateway</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">M&uacute;ltiplos backends</strong> &mdash; Quando voc&ecirc; tem v&aacute;rios servi&ccedil;os e quer uma interface unificada</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Rate limiting</strong> &mdash; Proteger APIs contra abuso com limites por usu&aacute;rio/IP</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Transforma&ccedil;&atilde;o</strong> &mdash; Agregar respostas de v&aacute;rios servi&ccedil;os em uma &uacute;nica chamada (BFF pattern)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Observabilidade</strong> &mdash; Logging centralizado, m&eacute;tricas e tracing de todas as requisi&ccedil;&otilde;es</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Op&ccedil;&otilde;es de API Gateway</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Kong</strong> &mdash; Open-source, plugins extensivos, Lua-based. Padr&atilde;o da ind&uacute;stria</li>
+                    <li><strong class="text-white">Traefik</strong> &mdash; Cloud-native, auto-discovery, excelente com Docker/K8s</li>
+                    <li><strong class="text-white">AWS API Gateway</strong> &mdash; Serverless, gerenciado, integra&ccedil;&atilde;o nativa com Lambda</li>
+                    <li><strong class="text-white">Cloudflare Workers</strong> &mdash; Edge gateway com lat&ecirc;ncia m&iacute;nima. Free tier generoso</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Para MVPs e aplica&ccedil;&otilde;es pequenas, <strong class="text-white">voc&ecirc; n&atilde;o precisa de um API Gateway dedicado</strong>. O middleware do seu framework (Next.js, Express, FastAPI) resolve autentica&ccedil;&atilde;o e rate limiting. Adote um gateway quando tiver <strong class="text-white">3+ servi&ccedil;os</strong> ou precisar de funcionalidades avan&ccedil;adas como A/B testing de APIs.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO M&Oacute;DULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-amber-900/40 via-dark-800 to-dark-800 rounded-xl border border-amber-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">APIs REST bem projetadas</strong><span class="text-neutral-400"> &mdash; Recursos como substantivos, verbos HTTP corretos, status codes sem&acirc;nticos</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Auth nunca do zero</strong><span class="text-neutral-400"> &mdash; Use servi&ccedil;os especializados. JWT, OAuth 2.0 e cookies t&ecirc;m trade-offs distintos</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Documente com OpenAPI</strong><span class="text-neutral-400"> &mdash; API-first design gera documenta&ccedil;&atilde;o, SDKs e valida&ccedil;&atilde;o automaticamente</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Versione com URL path</strong><span class="text-neutral-400"> &mdash; Expl&iacute;cito, f&aacute;cil de rotear, m&aacute;ximo 2 vers&otilde;es ativas</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Integra&ccedil;&otilde;es resilientes</strong><span class="text-neutral-400"> &mdash; Retry, circuit breaker, timeout e fallback s&atilde;o obrigat&oacute;rios</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Webhooks seguros</strong><span class="text-neutral-400"> &mdash; Valide assinaturas, processe async, garanta idempot&ecirc;ncia</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">API Gateway quando fizer sentido</strong><span class="text-neutral-400"> &mdash; Centraliza cross-cutting concerns, mas n&atilde;o &eacute; necess&aacute;rio para MVPs</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-amber-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">4.3 - &#128452;&#65039; Banco de Dados e Modelagem &mdash; PostgreSQL, modelagem relacional, migrations e caching</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="modulo-4-1.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; M&oacute;dulo Anterior</a>
+                    <a href="modulo-4-3.html" class="flex-1 text-center px-6 py-3 bg-amber-600 text-white rounded-lg font-semibold hover:bg-amber-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; 2026</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

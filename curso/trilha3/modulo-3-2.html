@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 3.2 - Padr&otilde;es para LLMs em Produ&ccedil;&atilde;o | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+        /* Violet accent */
+        html:not(.dark) .text-violet-400 { color: #7c3aed; }
+        html:not(.dark) .bg-violet-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+        html:not(.dark) .bg-violet-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+        html:not(.dark) .border-violet-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+        html:not(.dark) .hover\:bg-violet-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.2); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+
+        /* Other trilha colors for nav */
+        html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+        html:not(.dark) .text-amber-400 { color: #92400e; }
+        html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(217, 119, 6, 0.08); }
+        html:not(.dark) .text-teal-400 { color: #0d9488; }
+        html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .text-rose-400 { color: #9f1239; }
+        html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(225, 29, 72, 0.08); }
+
+        /* Violet button */
+        html:not(.dark) .bg-violet-600 { background-color: #7c3aed; }
+        html:not(.dark) .hover\:bg-violet-500:hover { background-color: #6d28d9; }
+        html:not(.dark) .bg-violet-900\/20 { background-color: rgba(124, 58, 237, 0.06); }
+        html:not(.dark) .bg-violet-900\/30 { background-color: rgba(124, 58, 237, 0.08); }
+        html:not(.dark) .bg-violet-900\/40 { background-color: rgba(124, 58, 237, 0.1); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center gap-3">
+                    <a href="../../index.html" class="text-yellow-400 font-bold text-lg hover:text-yellow-300 transition-colors">&#127959;&#65039; Arquitetura DEV 2030</a>
+                    <span class="text-neutral-500">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center gap-1">
+                    <a href="../trilha1/index.html" class="px-2 py-1 text-xs font-medium text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+                    <a href="../trilha2/index.html" class="px-2 py-1 text-xs font-medium text-blue-400 hover:bg-blue-500/10 rounded transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span></a>
+                    <a href="index.html" class="px-2 py-1 text-xs font-medium text-violet-400 bg-violet-500/10 rounded transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span></a>
+                    <a href="../trilha4/index.html" class="px-2 py-1 text-xs font-medium text-amber-400 hover:bg-amber-500/10 rounded transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span></a>
+                    <a href="../trilha5/index.html" class="px-2 py-1 text-xs font-medium text-teal-400 hover:bg-teal-500/10 rounded transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span></a>
+                    <a href="../trilha6/index.html" class="px-2 py-1 text-xs font-medium text-rose-400 hover:bg-rose-500/10 rounded transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span></a>
+                    <button id="theme-toggle" class="ml-3 p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-4 h-4 text-neutral-400" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-4 h-4 text-neutral-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-violet-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-violet-400 transition-colors">Trilha 3</a>
+            <span>/</span>
+            <span class="text-violet-400 font-medium">M&oacute;dulo 3.2</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-violet-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-violet-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-violet-500/20 text-violet-400 border border-violet-500/30">
+                    M&Oacute;DULO 3.2
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128279; Padr&otilde;es para LLMs em Produ&ccedil;&atilde;o
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    De RAG a Agent Loops: os padr&otilde;es arquiteturais que definem como sistemas de IA funcionam em produ&ccedil;&atilde;o real. Neste m&oacute;dulo, voc&ecirc; vai dominar os padr&otilde;es que separam protótipos de sistemas prontos para escala.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">Interm.</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">Pr&aacute;tica</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TOPICO 1: RAG ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#128218; RAG &mdash; Retrieval-Augmented Generation</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                RAG &eacute; o padr&atilde;o mais importante para LLMs em produ&ccedil;&atilde;o. Em vez de treinar o modelo com seus dados, voc&ecirc; <strong class="text-violet-400">busca informa&ccedil;&otilde;es relevantes em tempo real e injeta no prompt</strong>. Isso elimina alucina&ccedil;&otilde;es, mant&eacute;m dados atualizados e reduz custos de fine-tuning.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Arquitetura RAG</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Indexa&ccedil;&atilde;o</strong> &mdash; Documentos s&atilde;o chunked, embedados e armazenados em vector database (Pinecone, Weaviate, pgvector)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Retrieval</strong> &mdash; Query do usu&aacute;rio &eacute; embedada e busca os chunks mais similares (semantic search)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Augmentation</strong> &mdash; Chunks relevantes s&atilde;o injetados no prompt como contexto</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Generation</strong> &mdash; LLM gera resposta baseada no contexto fornecido, n&atilde;o no conhecimento interno</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> RAG em N&uacute;meros</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">92%</strong> das empresas que usam LLMs em produ&ccedil;&atilde;o implementam alguma forma de RAG</li>
+                    <li><strong class="text-white">Redu&ccedil;&atilde;o de 60-80%</strong> em alucina&ccedil;&otilde;es comparado com LLM puro</li>
+                    <li><strong class="text-white">Custo:</strong> 10-100x mais barato que fine-tuning para a maioria dos casos de uso</li>
+                    <li><strong class="text-white">Atualiza&ccedil;&atilde;o:</strong> Novos documentos dispon&iacute;veis em minutos vs. semanas de retraining</li>
+                </ul>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Investir tempo em <strong class="text-white">chunking strategy</strong> &mdash; tamanho e overlap importam muito</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Implementar <strong class="text-white">hybrid search</strong> (sem&acirc;ntico + keyword) para melhor recall</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Adicionar <strong class="text-white">reranking</strong> ap&oacute;s retrieval para melhorar precis&atilde;o</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Chunks <strong class="text-white">muito grandes</strong> (diluem relev&acirc;ncia) ou <strong class="text-white">muito pequenos</strong> (perdem contexto)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">metadados</strong> na indexa&ccedil;&atilde;o (data, fonte, tipo)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Assumir que <strong class="text-white">top-k = resposta certa</strong> sem avaliar relev&acirc;ncia</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Comece com <strong class="text-white">pgvector no seu PostgreSQL existente</strong> antes de adotar um vector database dedicado. Para a maioria dos casos (&lt;1M documentos), pgvector &eacute; suficiente e elimina um componente de infra. Escale para Pinecone/Weaviate s&oacute; quando necess&aacute;rio.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 2: Function Calling / Tool Use ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#128295; Function Calling / Tool Use</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Function Calling permite que LLMs <strong class="text-violet-400">executem a&ccedil;&otilde;es no mundo real</strong> &mdash; consultar APIs, buscar dados, criar registros, enviar emails. O modelo n&atilde;o executa diretamente: ele <em>decide</em> qual fun&ccedil;&atilde;o chamar e com quais par&acirc;metros, e seu c&oacute;digo executa.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Como Function Calling Funciona</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Defini&ccedil;&atilde;o</strong> &mdash; Voc&ecirc; descreve fun&ccedil;&otilde;es dispon&iacute;veis via JSON Schema (nome, descri&ccedil;&atilde;o, par&acirc;metros)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Decis&atilde;o</strong> &mdash; O modelo analisa a pergunta e decide se precisa chamar alguma fun&ccedil;&atilde;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Execu&ccedil;&atilde;o</strong> &mdash; Seu c&oacute;digo executa a fun&ccedil;&atilde;o e retorna o resultado ao modelo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">S&iacute;ntese</strong> &mdash; O modelo usa o resultado para compor a resposta final ao usu&aacute;rio</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Assistentes de Atendimento</h3>
+                <p class="text-neutral-300 mb-4">Empresas como Klarna e Intercom usam function calling para:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Consultar pedidos:</strong> get_order_status(order_id) &mdash; modelo extrai o ID da conversa</li>
+                    <li><strong class="text-white">Processar devolu&ccedil;&otilde;es:</strong> create_return(order_id, reason) &mdash; com confirma&ccedil;&atilde;o humana</li>
+                    <li><strong class="text-white">Resultado Klarna:</strong> 2/3 do atendimento automatizado, resolu&ccedil;&atilde;o 25% mais r&aacute;pida</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Classifique suas tools em <strong class="text-white">read-only (seguras) e write (perigosas)</strong>. Tools read-only podem ser executadas automaticamente. Tools write devem ter confirma&ccedil;&atilde;o ou aprova&ccedil;&atilde;o. Nunca d&ecirc; ao modelo uma tool &ldquo;execute_sql&rdquo; com acesso total ao banco.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 3: Agent Loops ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128260; Agent Loops</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Agentes s&atilde;o LLMs que <strong class="text-violet-400">executam tarefas multi-step autonomamente</strong>. Em vez de uma &uacute;nica chamada prompt &rarr; resposta, o agente entra em um loop: pensa, age, observa, e repete at&eacute; completar a tarefa. &Eacute; o padr&atilde;o mais poderoso &mdash; e o mais perigoso.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Anatomia de um Agent Loop</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Observe</strong> &mdash; Receber o estado atual (mensagem do usu&aacute;rio, resultado da &uacute;ltima a&ccedil;&atilde;o)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Think</strong> &mdash; Analisar o estado e decidir pr&oacute;ximo passo (chain-of-thought)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Act</strong> &mdash; Executar uma tool ou responder ao usu&aacute;rio</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Loop</strong> &mdash; Repetir at&eacute; a tarefa estar completa ou atingir limite de itera&ccedil;&otilde;es</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Riscos de Agentes Aut&ocirc;nomos</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Loop infinito:</strong> Agente fica preso tentando resolver algo que n&atilde;o consegue &mdash; sem limite de itera&ccedil;&otilde;es, consome tokens indefinidamente</li>
+                    <li><strong class="text-white">A&ccedil;&otilde;es destrutivas:</strong> Sem guardrails, agente pode deletar dados, enviar emails, fazer transa&ccedil;&otilde;es</li>
+                    <li><strong class="text-white">Custo imprevis&iacute;vel:</strong> Cada itera&ccedil;&atilde;o do loop consome tokens &mdash; tarefas complexas podem custar US$10+</li>
+                    <li><strong class="text-white">Debugging dif&iacute;cil:</strong> Comportamento n&atilde;o-determin&iacute;stico torna reprodu&ccedil;&atilde;o de bugs quase imposs&iacute;vel</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Sempre defina <strong class="text-white">max_iterations, max_tokens_budget e timeout</strong> para qualquer agent loop. Um agente sem limites &eacute; um cart&atilde;o de cr&eacute;dito sem limite nas m&atilde;os de um rob&ocirc;. Comece com limites conservadores e aumente conforme ganhar confian&ccedil;a.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 4: Prompt Engineering como Infra ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128221; Prompt Engineering como Infra</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Em sistemas de produ&ccedil;&atilde;o, prompts s&atilde;o <strong class="text-violet-400">infraestrutura cr&iacute;tica</strong>, n&atilde;o strings soltas no c&oacute;digo. Precisam de versionamento, testes, rollback e monitoramento &mdash; exatamente como qualquer outro componente de infra.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Prompt como C&oacute;digo</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Versionamento</strong> &mdash; Cada prompt &eacute; versionado (v1, v2, v3) com changelog</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Templates</strong> &mdash; Usar template engines (Jinja2, Handlebars) com vari&aacute;veis</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Testes</strong> &mdash; Suite de evals autom&aacute;ticos rodando em CI/CD a cada mudan&ccedil;a de prompt</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">A/B testing</strong> &mdash; Comparar vers&otilde;es de prompt em produ&ccedil;&atilde;o com m&eacute;tricas reais</span></li>
+                </ul>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Armazenar prompts em <strong class="text-white">arquivos separados</strong>, n&atilde;o inline no c&oacute;digo</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Criar <strong class="text-white">dataset de avalia&ccedil;&atilde;o</strong> com inputs e outputs esperados</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Implementar <strong class="text-white">rollback instant&acirc;neo</strong> para vers&otilde;es anteriores</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Hardcodar prompts como <strong class="text-white">strings no c&oacute;digo</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Mudar prompts em produ&ccedil;&atilde;o <strong class="text-white">sem testes</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar que mudan&ccedil;a de modelo <strong class="text-white">quebra prompts</strong> existentes</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use <strong class="text-white">Promptfoo</strong> para criar suites de teste para seus prompts. Defina crit&eacute;rios de aceita&ccedil;&atilde;o (contém X, n&atilde;o cont&eacute;m Y, formato JSON v&aacute;lido) e rode no CI a cada PR que altera prompts. Prompt regression &eacute; t&atilde;o real quanto code regression.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 5: Fine-tuning vs Prompting vs RAG ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#9878;&#65039; Fine-tuning vs Prompting vs RAG</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                A pergunta mais comum: <strong class="text-violet-400">&ldquo;Devo fazer fine-tuning, RAG, ou s&oacute; melhorar o prompt?&rdquo;</strong> A resposta depende do tipo de conhecimento, do volume de dados e do budget. Na maioria dos casos, a ordem correta &eacute;: prompt engineering &rarr; RAG &rarr; fine-tuning.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Quando Usar Cada Abordagem</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Prompt Engineering</strong> &mdash; Conhecimento gen&eacute;rico, formato espec&iacute;fico, baixo volume. Custo: zero. Tempo: horas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">RAG</strong> &mdash; Dados propriet&aacute;rios, atualizados frequentemente, base de conhecimento grande. Custo: m&eacute;dio. Tempo: dias</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Fine-tuning</strong> &mdash; Estilo/tom espec&iacute;fico, tarefas muito especializadas, performance cr&iacute;tica. Custo: alto. Tempo: semanas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Combina&ccedil;&atilde;o</strong> &mdash; Fine-tuned model + RAG &eacute; o estado da arte, mas s&oacute; justifica em escala</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Compara&ccedil;&atilde;o Direta</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Prompt:</strong> 0 dados necess&aacute;rios, implementa&ccedil;&atilde;o em minutos, sem custo adicional</li>
+                    <li><strong class="text-white">RAG:</strong> Documentos existentes, implementa&ccedil;&atilde;o em dias, custo de vector DB + embeddings</li>
+                    <li><strong class="text-white">Fine-tuning:</strong> 1k-100k exemplos anotados, implementa&ccedil;&atilde;o em semanas, US$100-10k+ por training run</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Regra de ouro: <strong class="text-white">&ldquo;Se prompt engineering resolve 80% do problema, n&atilde;o fa&ccedil;a RAG. Se RAG resolve 80%, n&atilde;o fa&ccedil;a fine-tuning.&rdquo;</strong> Cada salto de complexidade multiplica custo e tempo de manuten&ccedil;&atilde;o. S&oacute; avan&ccedil;e quando o n&iacute;vel anterior comprovadamente n&atilde;o atende.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 6: Seguranca de IA ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128274; Seguran&ccedil;a de IA</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Seguran&ccedil;a em sistemas de IA vai al&eacute;m de guardrails. Envolve <strong class="text-violet-400">prote&ccedil;&atilde;o de dados de treinamento, preven&ccedil;&atilde;o de data leakage, compliance regulat&oacute;rio</strong> e defesa contra ataques espec&iacute;ficos de IA como prompt injection, data poisoning e model extraction.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Superf&iacute;cie de Ataque de IA</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Prompt Injection</strong> &mdash; Usu&aacute;rio manipula o prompt para extrair dados ou mudar comportamento</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Data Leakage</strong> &mdash; Modelo revela dados sens&iacute;veis do contexto (PII, segredos)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Indirect Injection</strong> &mdash; Dados maliciosos injetados via RAG (documentos envenenados)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Model Extraction</strong> &mdash; Ataques para replicar ou roubar o comportamento do modelo</span></li>
+                </ul>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; Defesas Essenciais</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><strong class="text-white">Sanitizar inputs</strong> &mdash; Remover/escapar instru&ccedil;&otilde;es maliciosas antes do prompt</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><strong class="text-white">PII detection</strong> &mdash; Filtrar dados pessoais do output antes de exibir</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><strong class="text-white">Rate limiting por usu&aacute;rio</strong> &mdash; Limitar requisi&ccedil;&otilde;es para prevenir abuso</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; Erros Comuns</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Colocar <strong class="text-white">secrets no system prompt</strong> (modelo pode revelar)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Confiar que o modelo <strong class="text-white">&ldquo;nunca vai&rdquo;</strong> fazer algo proibido</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Indexar documentos sens&iacute;veis no RAG <strong class="text-white">sem controle de acesso</strong></span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Implemente <strong class="text-white">OWASP Top 10 for LLM Applications</strong> como checklist de seguran&ccedil;a. Trate o modelo como um &ldquo;usu&aacute;rio n&atilde;o confi&aacute;vel&rdquo; &mdash; valide tudo que entra e tudo que sai, assim como faria com input de um formul&aacute;rio web.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 7: Escalando Sistemas com IA ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#128640; Escalando Sistemas com IA</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Escalar sistemas de IA &eacute; <strong class="text-violet-400">fundamentalmente diferente</strong> de escalar CRUD tradicionais. Voc&ecirc; n&atilde;o pode simplesmente adicionar inst&acirc;ncias &mdash; cada requisi&ccedil;&atilde;o de IA &eacute; computacionalmente cara, e o gargalo geralmente &eacute; o provedor, n&atilde;o sua infra.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Estrat&eacute;gias de Escala para IA</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Queue-based processing</strong> &mdash; Desacoplar requisi&ccedil;&otilde;es do processamento. Usu&aacute;rio envia, recebe quando pronto</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Multi-provider load balancing</strong> &mdash; Distribuir entre OpenAI, Anthropic, modelos locais</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Batch processing</strong> &mdash; Agrupar requisi&ccedil;&otilde;es similares para processar em lote (mais barato)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Edge inference</strong> &mdash; Modelos pequenos rodando no edge para requisi&ccedil;&otilde;es simples</span></li>
+                </ul>
+            </div>
+
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Escala Progressiva</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">MVP (0-1k usu&aacute;rios)</h4>
+                        <p class="text-neutral-300 text-sm">API direta para um provedor. Sem cache. Sem filas. Foco em validar o produto.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Growth (1k-50k usu&aacute;rios)</h4>
+                        <p class="text-neutral-300 text-sm">Semantic cache, proxy de modelos, rate limiting, multi-provider fallback. Budget alerts.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Scale (50k+ usu&aacute;rios)</h4>
+                        <p class="text-neutral-300 text-sm">Modelos self-hosted para workloads previs&iacute;veis. Batch processing. Edge inference. Fine-tuning para reduzir tokens.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">O maior erro de escala em IA &eacute; <strong class="text-white">tratar todas as requisi&ccedil;&otilde;es como iguais</strong>. Classifique por prioridade e complexidade: requisi&ccedil;&otilde;es simples v&atilde;o para modelos r&aacute;pidos/baratos, requisi&ccedil;&otilde;es complexas para modelos poderosos. Isso pode reduzir custos em 50-70%.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MODULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-violet-900/40 via-dark-800 to-dark-800 rounded-xl border border-violet-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">RAG &eacute; o padr&atilde;o #1</strong><span class="text-neutral-400"> &mdash; Retrieval + contexto no prompt elimina alucina&ccedil;&otilde;es e mant&eacute;m dados atualizados</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Function Calling d&aacute; a&ccedil;&otilde;es ao LLM</strong><span class="text-neutral-400"> &mdash; Mas com controle: read-only vs. write, confirma&ccedil;&atilde;o humana</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Agent Loops s&atilde;o poderosos mas perigosos</strong><span class="text-neutral-400"> &mdash; Sempre com max_iterations, budget e timeout</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Prompts s&atilde;o infra</strong><span class="text-neutral-400"> &mdash; Versione, teste e monitore como qualquer componente cr&iacute;tico</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Prompt &rarr; RAG &rarr; Fine-tuning</strong><span class="text-neutral-400"> &mdash; Essa &eacute; a ordem correta de complexidade crescente</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Seguran&ccedil;a de IA &eacute; superf&iacute;cie nova</strong><span class="text-neutral-400"> &mdash; Prompt injection, data leakage e indirect injection s&atilde;o amea&ccedil;as reais</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Escala em IA &eacute; diferente</strong><span class="text-neutral-400"> &mdash; Classifique requisi&ccedil;&otilde;es, use multi-provider e caching agressivo</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-violet-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">3.3 - &#9881;&#65039; Automa&ccedil;&atilde;o Inteligente com n8n &mdash; Orquestrando workflows, integrando IA e escalando automa&ccedil;&otilde;es</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="modulo-3-1.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; M&oacute;dulo Anterior</a>
+                    <a href="modulo-3-3.html" class="flex-1 text-center px-6 py-3 bg-violet-600 text-white rounded-lg font-semibold hover:bg-violet-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-700 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <p class="text-center text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; 2026</p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T6 - Escalando e Evoluindo | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+        .topic-explanation { display: none; }
+        .topic-explanation.active { display: block; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-rose-400 { color: #9f1239; }
+        html:not(.dark) .bg-rose-500\/20 { background-color: rgba(225, 29, 72, 0.12); }
+        html:not(.dark) .bg-rose-500\/10 { background-color: rgba(225, 29, 72, 0.08); }
+        html:not(.dark) .border-rose-500\/30 { border-color: rgba(225, 29, 72, 0.25); }
+        html:not(.dark) .hover\:bg-rose-500\/30:hover { background-color: rgba(225, 29, 72, 0.18); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-rose-400 bg-rose-500/10">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-rose-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-rose-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                    TRILHA 6
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold">&#128200; Escalando e Evoluindo</h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    De 100 usuarios para 100 milhoes &mdash; escalando sistemas, otimizando performance e construindo produtos que evoluem
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">5</div>
+                        <div class="text-sm text-neutral-400 mt-1">M&oacute;dulos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">35</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">~3h</div>
+                        <div class="text-sm text-neutral-400 mt-1">de conte&uacute;do</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">Avan&ccedil;ado</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Section 1: Navegacao Rapida -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <h2 class="text-lg font-semibold text-neutral-400 mb-4">Navega&ccedil;&atilde;o R&aacute;pida</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a href="#modulo-6-1" class="bg-dark-800 rounded-xl border border-dark-600 p-4 hover:border-rose-500/30 transition-colors">
+                <span class="text-rose-400 font-bold text-sm">6.1</span>
+                <h3 class="font-semibold mt-1">&#128202; Estrategias de Escala</h3>
+                <p class="text-neutral-400 text-sm mt-1">De 100 usuarios para 100 milhoes &mdash; sem reescrever</p>
+            </a>
+            <a href="#modulo-6-2" class="bg-dark-800 rounded-xl border border-dark-600 p-4 hover:border-rose-500/30 transition-colors">
+                <span class="text-rose-400 font-bold text-sm">6.2</span>
+                <h3 class="font-semibold mt-1">&#9889; Performance e Otimizacao</h3>
+                <p class="text-neutral-400 text-sm mt-1">Medir, identificar, otimizar &mdash; nessa ordem</p>
+            </a>
+            <a href="#modulo-6-3" class="bg-dark-800 rounded-xl border border-dark-600 p-4 hover:border-rose-500/30 transition-colors">
+                <span class="text-rose-400 font-bold text-sm">6.3</span>
+                <h3 class="font-semibold mt-1">&#127970; Multi-tenancy e SaaS</h3>
+                <p class="text-neutral-400 text-sm mt-1">Um sistema, muitos clientes &mdash; como isolar e escalar</p>
+            </a>
+            <a href="#modulo-6-4" class="bg-dark-800 rounded-xl border border-dark-600 p-4 hover:border-rose-500/30 transition-colors">
+                <span class="text-rose-400 font-bold text-sm">6.4</span>
+                <h3 class="font-semibold mt-1">&#127891; Produto Educacional e Comunidade</h3>
+                <p class="text-neutral-400 text-sm mt-1">Construindo negocios de conhecimento escalaveis</p>
+            </a>
+            <a href="#modulo-6-5" class="bg-dark-800 rounded-xl border border-dark-600 p-4 hover:border-rose-500/30 transition-colors">
+                <span class="text-rose-400 font-bold text-sm">6.5</span>
+                <h3 class="font-semibold mt-1">&#128302; Futuro da Arquitetura</h3>
+                <p class="text-neutral-400 text-sm mt-1">Tendencias e para onde estamos indo</p>
+            </a>
+        </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center space-x-4 py-4">
+            <div class="flex-1 border-t border-dark-600"></div>
+            <span class="text-neutral-500 text-sm font-medium">Conte&uacute;do Detalhado</span>
+            <div class="flex-1 border-t border-dark-600"></div>
+        </div>
+    </div>
+
+    <!-- Section 2: Conteudo Detalhado -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+
+        <!-- Module 6.1 -->
+        <div id="modulo-6-1" class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+            <div class="p-6 border-b border-dark-600">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-rose-400 font-bold">6.1</span>
+                    <span class="text-xs text-neutral-500">~35 min</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-2">&#128202; Estrategias de Escala</h3>
+                <p class="text-neutral-400 text-sm">De 100 usuarios para 100 milhoes &mdash; sem reescrever</p>
+            </div>
+            <div class="divide-y divide-dark-600">
+                <!-- Topic 1 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128200; Vertical vs. Horizontal Scaling &mdash; "Servidor maior ou mais servidores?"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Vertical: maquina mais potente (mais CPU, RAM). Horizontal: mais maquinas atras de load balancer. Vertical tem teto; horizontal escala infinitamente (em teoria).</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Vertical e simples ate o limite do hardware. Horizontal exige stateless design. Ex: O Stack Overflow roda em apenas 9 servidores web (vertical scaling + otimizacao extrema). O Twitter usa milhares de servidores (horizontal). Ambos servem milhoes &mdash; abordagens opostas.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Scale up vs. scale out</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Stateless services</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Load balancing</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Auto-scaling</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Cost curves</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Breaking point</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 2 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#9878;&#65039; Load Balancing &mdash; "Distribuir trafego inteligentemente"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Distribui requests entre multiplas instancias: round-robin, least connections, IP hash, weighted. L4 (TCP) vs. L7 (HTTP).</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Sem load balancer, uma instancia recebe todo trafego e cai enquanto outras ficam ociosas. Ex: O NGINX como load balancer: 3 instancias do app, round-robin, health check a cada 5s. Se uma cai, remove automaticamente. Usuario nunca percebe.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">L4 vs. L7 load balancing</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Algorithms (round-robin, least-conn, IP hash)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Health checks</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Sticky sessions (avoid!)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">HAProxy, NGINX, AWS ALB</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 3 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128451;&#65039; Database Scaling &mdash; "O banco e sempre o bottleneck"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Estrategias para escalar banco: read replicas, connection pooling, sharding, partitioning, caching layer.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">App escala facil (stateless, horizontal). Banco e stateful e escala com dor. Ex: O Instagram escalou PostgreSQL de 0 a 1B photos: read replicas para queries de leitura + PgBouncer para connection pooling + partitioning por user_id. Sem sharding &mdash; PostgreSQL aguentou.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Read replicas</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Connection pooling (PgBouncer)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Sharding strategies</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Table partitioning</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Query optimization</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Vertical partitioning</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 4 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128230; Caching em Escala &mdash; "Cache e o atalho, banco e a verdade"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Multiplas camadas de cache: browser &rarr; CDN &rarr; API gateway &rarr; application (Redis) &rarr; database (query cache). Cada camada reduz carga na seguinte.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Cache bem feito reduz carga no banco em 95%+. Ex: O Reddit cache: CDN para estaticos, Redis para hot posts, PostgreSQL para tudo. 90% das page views servidas do cache, banco respira.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Cache layers</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Cache-aside vs. write-through</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">TTL strategies</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Cache invalidation</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Thundering herd</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Cache stampede</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 5 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128232; Queue-Based Load Leveling &mdash; "Absorver picos com filas"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Em vez de processar tudo sincronamente, coloca em fila e processa no ritmo que o sistema aguenta. Absorve picos sem escalar infra.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Picos de trafego quebram sistemas sincronos. Filas absorvem e nivelam. Ex: O iFood no Super Bowl: 3x mais pedidos em 15 minutos. Sem fila: sistema cai. Com SQS: pedidos entram na fila, processados no ritmo normal, todos atendidos em 20 minutos.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Message queues (SQS, RabbitMQ, Redis Streams)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Consumer scaling</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Back pressure</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Dead letter queues</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">FIFO vs. standard</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 6 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#127757; CDN e Edge Computing &mdash; "Processar perto do usuario"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">CDN serve conteudo estatico de PoPs globais. Edge computing executa logica (Cloudflare Workers, Vercel Edge) proximo ao usuario.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Reduz latencia de 200ms para 20ms para usuarios globais. Ex: Cloudflare Workers processa auth e routing na edge &mdash; o request nem chega ao origin server para checks basicos. Latencia: 5ms em vez de 150ms.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">CDN (Cloudflare, CloudFront)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Edge functions</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Static assets at edge</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">API caching at edge</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Global load balancing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 7 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">7</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128302; Scaling Checklist &mdash; "10 passos para escalar qualquer sistema"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Checklist pratico: (1) Profile primeiro, (2) Cache hot paths, (3) Add read replicas, (4) Optimize queries, (5) Add CDN, (6) Go stateless, (7) Horizontal scale app, (8) Queue heavy work, (9) Shard if needed, (10) Edge computing.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">A maioria dos problemas de escala se resolve nos passos 1-5. Sharding (passo 9) e raramente necessario. Ex: O Shopify escala 175B/ano de GMV com: MySQL, Redis, CDN, background jobs. Sem sharding do banco principal ate 2023 (15 anos depois de fundado).</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Profile before optimize</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">80/20 rule</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Step-by-step scaling</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Avoiding premature optimization</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Scaling budget</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 6.2 -->
+        <div id="modulo-6-2" class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+            <div class="p-6 border-b border-dark-600">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-rose-400 font-bold">6.2</span>
+                    <span class="text-xs text-neutral-500">~35 min</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-2">&#9889; Performance e Otimizacao</h3>
+                <p class="text-neutral-400 text-sm">Medir, identificar, otimizar &mdash; nessa ordem</p>
+            </div>
+            <div class="divide-y divide-dark-600">
+                <!-- Topic 1 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128202; Profiling &mdash; "Meca antes de otimizar"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Identificar onde o tempo e gasto: CPU profiling, memory profiling, query profiling. Nao otimize sem dados.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Intuicao sobre performance esta errada 90% das vezes. Ex: Dev achava que "JSON parsing e o bottleneck". Profile mostrou: 95% do tempo era em queries N+1 no banco. Otimizar JSON parsing economizaria 2ms. Fix do N+1 economizou 800ms.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">CPU profiling</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Memory profiling</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Flame graphs</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">EXPLAIN ANALYZE</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">APM tools (New Relic, Datadog)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Performance budget</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 2 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128451;&#65039; Otimizacao de Queries &mdash; "A query lenta que destroi tudo"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">EXPLAIN ANALYZE para entender execution plan. Adicionar indices. Evitar N+1. Usar JOINs em vez de queries separadas. Paginacao com cursor.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Uma query lenta pode derrubar o banco inteiro. Ex: N+1 em lista de pedidos: 1 query para pedidos + 1 query por pedido para items. 100 pedidos = 101 queries. Com JOIN: 1 query. De 500ms para 5ms.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">EXPLAIN ANALYZE</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">N+1 queries</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Index strategies</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Query plan optimization</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Connection pooling</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Slow query log</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 3 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128444;&#65039; Otimizacao de Assets &mdash; "Images, fonts, CSS, JS &mdash; cada byte conta"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Comprimir imagens (WebP, AVIF), font subsetting, CSS/JS minification, tree shaking, lazy loading, code splitting.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Assets representam 60-80% do peso de uma pagina. Ex: Converter JPG para WebP reduz tamanho em 30-50%. Lazy loading de imagens below-the-fold reduz initial load em 40%. Font subsetting (so caracteres usados) reduz de 300KB para 30KB.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Image formats (WebP, AVIF)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Lazy loading</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Code splitting</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Tree shaking</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Font subsetting</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Compression (gzip, brotli)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 4 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#9889; Server-Side Performance &mdash; "Backend rapido = frontend rapido"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Otimizacoes server-side: connection pooling, response caching, async processing, query optimization, efficient serialization.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Frontend nao pode compensar backend lento. Ex: API que retorna em 2s = UX impossivel de salvar. Connection pooling sozinho pode reduzir latencia de 200ms para 20ms (elimina overhead de criar conexao TCP + TLS a cada request).</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Connection pooling</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">HTTP caching (ETag, Last-Modified)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Async/await</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Response compression</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Pagination</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Field selection</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 5 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#127760; Frontend Performance &mdash; "First Contentful Paint &lt; 1.5s"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Otimizar carregamento: Critical CSS inline, defer scripts, preload critical resources, service worker, skeleton screens.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">53% dos usuarios abandonam se carrega &gt; 3s. Core Web Vitals afetam SEO. Ex: Mercado Livre otimizou FCP de 3.2s para 1.1s: critical CSS inline + lazy loading de imagens + preconnect CDN. Resultado: +10% conversao.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Critical rendering path</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">CSS inline</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">JS defer/async</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Preload/prefetch</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Service workers</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Skeleton screens</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Core Web Vitals</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 6 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128201; Reducao de Payload &mdash; "Menos dados = mais rapido"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Enviar menos dados: paginacao, field selection (GraphQL/sparse fields), compression, Protocol Buffers em vez de JSON.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">API que retorna objeto completo quando so precisa de 2 campos desperdica banda. Ex: REST endpoint retorna user completo (50 campos, 5KB) quando o frontend precisa de name e avatar (2 campos, 200B). GraphQL resolve: peca so o que precisa.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Pagination (cursor-based)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Field selection</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Response compression</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Protocol Buffers</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">GraphQL for mobile</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Sparse fieldsets</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 7 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">7</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128300; Performance Testing &mdash; "Load test antes de ir pro ar"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Testar performance sob carga: load testing (carga normal), stress testing (acima do normal), spike testing (pico repentino), soak testing (longa duracao).</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">"Funcionou com 10 usuarios" nao garante que funciona com 10k. Ex: O k6 (Grafana) simula 1000 users simultaneos fazendo checkout. Resultado: banco esgota connections em 300 users. Fix: PgBouncer + read replicas. Agora suporta 5000.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">k6, JMeter, Locust</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Load vs. stress vs. spike vs. soak testing</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Performance baselines</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Bottleneck identification</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 6.3 -->
+        <div id="modulo-6-3" class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+            <div class="p-6 border-b border-dark-600">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-rose-400 font-bold">6.3</span>
+                    <span class="text-xs text-neutral-500">~35 min</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-2">&#127970; Multi-tenancy e SaaS</h3>
+                <p class="text-neutral-400 text-sm">Um sistema, muitos clientes &mdash; como isolar e escalar</p>
+            </div>
+            <div class="divide-y divide-dark-600">
+                <!-- Topic 1 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#127959;&#65039; Modelos de Multi-tenancy &mdash; "Banco compartilhado, schema separado ou banco separado"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Tres modelos: (1) tabela compartilhada (tenant_id column), (2) schema por tenant, (3) banco por tenant. Cada um com trade-offs de custo, isolamento e complexidade.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">A escolha define custo e escalabilidade do SaaS. Ex: O Shopify usa "pods" &mdash; grupos de tenants compartilham infraestrutura, mas grandes tenants (&gt;US$1M/mes) ganham pod dedicado. Hibrido pragmatico.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Shared database</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Schema per tenant</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Database per tenant</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Hybrid approach</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Tenant isolation</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Cost per tenant</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 2 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128274; Isolamento de Dados &mdash; "Tenant A nunca ve dados do Tenant B"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Garantir que queries sempre filtram por tenant_id. Row Level Security (RLS) no PostgreSQL. API middleware que injeta tenant context.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Vazamento entre tenants e o bug mais grave em SaaS. Ex: O Zendesk teve bug onde tickets de um cliente apareciam para outro &mdash; breach de dados, perda de confianca, processos. RLS no PostgreSQL previne isso no nivel do banco.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Row Level Security (RLS)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Tenant context middleware</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Query scoping</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Data encryption per tenant</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Audit logging</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Penetration testing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 3 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128202; Billing e Subscription &mdash; "Cobranca recorrente sem reinventar a roda"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Usar Stripe Billing para: planos, trials, upgrades/downgrades, invoices, metered billing. Nao construa billing in-house.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Billing e surpreendentemente complexo: proration, trials, dunning, tax, refunds, multi-currency. Ex: Construir billing in-house levou 6 meses de dev time no Notion. Quando migraram para Stripe Billing, ganharam features que levariam mais 12 meses para construir.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Stripe Billing</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Plans/prices</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Metered billing</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Proration</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Dunning</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Tax calculation</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Webhooks for billing events</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 4 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#127899;&#65039; Feature Flags por Tenant &mdash; "Plano free vs. pro vs. enterprise"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Controlar features por plano/tenant: free (features basicas), pro (advanced), enterprise (tudo + customizacao). Feature flags controlam acesso.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Monetizacao de SaaS depende de diferenciar planos. Ex: O Notion: free (blocks limitados), Plus (ilimitado), Business (admin features), Enterprise (SSO + audit). Cada upgrade desbloqueia features via flags, sem deploy.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Feature flags per plan</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Entitlements</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Usage limits</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Soft vs. hard limits</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Upgrade prompts</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Feature gating middleware</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 5 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128260; Onboarding Automatizado &mdash; "Novo cliente produtivo em 5 minutos"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Fluxo automatico: signup &rarr; create tenant &rarr; provision resources &rarr; seed data &rarr; welcome email &rarr; guided tour.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Onboarding ruim = churn no dia 1. Ex: O Slack onboarding: cria workspace &rarr; importa contatos &rarr; sugere channels &rarr; envia primeira mensagem &mdash; tudo em 3 minutos. Time-to-value baixissimo. Resultado: 93% de retencao D30.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Self-service onboarding</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Tenant provisioning</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Seed data</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Guided tours</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Time-to-first-value</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Activation metrics</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 6 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128200; Scaling Multi-tenant &mdash; "Quando um tenant consome 80% dos recursos"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Lidar com "noisy neighbors": rate limiting per tenant, resource quotas, dedicated infrastructure para grandes clientes.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Sem isolamento de recursos, um tenant pesado degrada todos os outros. Ex: Um tenant fazendo import de 1M de rows saturou o banco compartilhado &mdash; todos os outros tenants sofreram latencia de 10s. Fix: queue de imports com rate limit per tenant + read replicas.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Noisy neighbor problem</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Rate limiting per tenant</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Resource quotas</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Tenant-aware scaling</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Dedicated infrastructure tier</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Fair scheduling</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 7 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">7</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#127757; Internacionalizacao &mdash; "Um produto, muitos mercados"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">i18n (internacionalizacao): suporte a multiplos idiomas, moedas, fusos horarios, formatos de data, regulacoes locais.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Expansao global e multiplicador de receita. Ex: O Canva suporta 130+ idiomas &mdash; cada string e uma chave que aponta para traducoes. Adicionar novo idioma = arquivo JSON de traducoes, sem tocar em codigo.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">i18n/l10n</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">ICU MessageFormat</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Date/currency formatting (Intl API)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">RTL support</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Locale detection</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Translation management (Crowdin, Lokalise)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 6.4 -->
+        <div id="modulo-6-4" class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+            <div class="p-6 border-b border-dark-600">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-rose-400 font-bold">6.4</span>
+                    <span class="text-xs text-neutral-500">~35 min</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-2">&#127891; Produto Educacional e Comunidade</h3>
+                <p class="text-neutral-400 text-sm">Construindo negocios de conhecimento escalaveis</p>
+            </div>
+            <div class="divide-y divide-dark-600">
+                <!-- Topic 1 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128218; Arquitetura de Produto Educacional &mdash; "Curso como software: estruturado, testavel, escalavel"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Tratar conteudo educacional com mentalidade de engenharia: versionado, modular, com metricas de qualidade. HTML estatico + CDN para maxima performance e custo zero.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Plataformas de curso sao caras e limitam. HTML estatico e infinitamente customizavel e gratis de hospedar. Ex: A INEMA.CLUB serve cursos como HTML estatico via Cloudflare &mdash; load time &lt; 500ms, custo R$0/mes, design totalmente customizado. Zero dependencia de Hotmart, Teachable ou Thinkific.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Content-as-code</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">HTML estatico</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">CDN deployment</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Template system</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Version control for content</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Zero-cost hosting</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 2 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#129302; Geracao de Conteudo com IA &mdash; "Claude como co-autor, nao autor"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Usar LLMs para auxiliar na criacao: estruturar modulos, gerar exemplos, criar exercicios, revisar texto. Humano define estrategia, IA executa producao.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">IA 10x a velocidade de producao de conteudo mantendo qualidade. Ex: Workflow INEMA: humano define topico + objetivos &rarr; Claude gera draft com exemplos &rarr; humano revisa e ajusta &rarr; n8n formata em HTML &rarr; deploy automatico. 1 modulo/dia vs. 1 modulo/semana.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">AI-assisted writing</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Prompt templates for education</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Quality review pipeline</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Content consistency</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Style guides</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Plagiarism avoidance</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 3 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128202; Metricas de Aprendizado &mdash; "Completou nao significa aprendeu"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Metricas alem de "taxa de conclusao": tempo por modulo, quiz scores, revisitas (voltou para reler?), aplicacao pratica, NPS.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Curso com 80% de conclusao mas 10% de aplicacao nao esta ensinando. Ex: Duolingo mede: streak (consistencia), quiz accuracy (aprendizado), time to answer (fluencia). Nao mede "concluiu licao" &mdash; mede se APRENDEU.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Completion rate</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Assessment scores</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Time on task</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Return visits</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Application rate</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Learner NPS</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Cohort analysis</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 4 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128101; Comunidade como Produto &mdash; "O curso e a isca, a comunidade e o valor"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Comunidade paga onde membros trocam experiencias, fazem networking, recebem conteudo exclusivo e mentorias. Slack, Discord, Circle.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Comunidade tem retencao 3-5x maior que curso one-shot. Ex: A INEMA.VIP combina: cursos (conteudo) + comunidade (networking) + mentorias (aceleracao). Retencao de 85% vs. 15% de cursos tradicionais.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Community-Led Growth</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Engagement loops</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Gamification</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">User-generated content</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Moderation</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Onboarding community members</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 5 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128176; Monetizacao &mdash; "Modelos de receita para negocios de conhecimento"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Modelos: curso avulso, assinatura, freemium, cohort-based, corporate training, licensing.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">O modelo de monetizacao define a arquitetura necessaria. Assinatura precisa de billing recorrente. Cohort precisa de turmas. Ex: Comparativo: curso avulso (LTV baixo, sem retencao) vs. assinatura (LTV alto, precisa reter mes a mes) vs. cohort (LTV alto, commitment temporal). Cada um exige features diferentes.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">One-time vs. recurring</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Freemium conversion</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Cohort-based courses</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">B2B licensing</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Pricing psychology</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">LTV/CAC</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 6 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128260; Automacao de Conteudo &mdash; "Pipeline de producao: da ideia ao deploy"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Pipeline automatizado: pesquisa &rarr; outline &rarr; draft (IA) &rarr; revisao &rarr; formatacao &rarr; deploy. Tudo orquestrado por n8n.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Producao manual nao escala. Com pipeline, 1 pessoa produz conteudo de 5. Ex: Pipeline INEMA: Airtable (planejamento) &rarr; Claude (draft) &rarr; n8n (formatacao HTML) &rarr; GitHub (versionamento) &rarr; Cloudflare (deploy). Novo modulo publicado com 1 comando.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Content pipeline</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">n8n orchestration</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Template-based generation</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Quality gates</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Automated publishing</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Content calendar</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 7 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">7</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128200; Crescimento Organico &mdash; "SEO, conteudo gratuito e word-of-mouth"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Estrategias de crescimento sem paid ads: SEO (conteudo otimizado), conteudo gratuito (blog, YouTube, newsletter), referral programs, community-led growth.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Paid ads tem CAC crescente. Organico tem CAC decrescente ao longo do tempo. Ex: O Ahrefs cresce principalmente com blog SEO &mdash; 7M visitas/mes organicas. Cada artigo e um "vendedor" 24/7 que custa zero apos publicado.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">SEO fundamentals</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Content marketing</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Newsletter growth</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Referral programs</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Social proof</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Community-Led Growth</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 6.5 -->
+        <div id="modulo-6-5" class="bg-dark-800 rounded-xl border border-dark-600 mb-6">
+            <div class="p-6 border-b border-dark-600">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-rose-400 font-bold">6.5</span>
+                    <span class="text-xs text-neutral-500">~30 min</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-2">&#128302; Futuro da Arquitetura</h3>
+                <p class="text-neutral-400 text-sm">Tendencias e para onde estamos indo</p>
+            </div>
+            <div class="divide-y divide-dark-600">
+                <!-- Topic 1 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">1</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#129302; IA-Native Applications &mdash; "Software projetado com IA como primitivo"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Nova geracao de apps onde IA nao e feature add-on, mas o core. Cursor (IDE), Perplexity (search), Midjourney (design), Claude Code (dev). Arquitetura fundamentalmente diferente.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Apps IA-native vao substituir categorias inteiras de software. Ex: O Cursor nao e "VS Code com AI plugin" &mdash; e IDE redesenhada onde IA entende contexto completo do projeto, sugere, edita e executa. A arquitetura e profundamente diferente de "VS Code + Copilot".</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">AI-native vs. AI-augmented</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Context-aware systems</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Agentic interfaces</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">New UX patterns</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Human-AI collaboration</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 2 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">2</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#127754; Edge Computing &mdash; "Processamento na borda da rede"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Logica de aplicacao executada em servers distribuidos globalmente, perto do usuario. Cloudflare Workers, Deno Deploy, Vercel Edge.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Latencia global de &lt;50ms e possivel. Ex: Cloudflare Workers roda em 300+ cidades. Uma funcao de auth executa no PoP mais proximo &mdash; Sao Paulo para brasileiros, Frankfurt para europeus. Latencia: 5-15ms em vez de 100-200ms.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Edge functions</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Durable Objects</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Edge databases (Turso, Neon)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Global state</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Cold start elimination</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Edge-first architecture</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 3 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">3</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128279; WebAssembly &mdash; "Codigo nativo no browser e no server"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Formato binario que roda em browsers com performance near-native. Permite compilar C, Rust, Go para rodar no browser. No server: WASI permite sandboxed execution.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">WASM esta expandindo o que e possivel no browser e no edge. Ex: O Figma roda rendering engine em WASM &mdash; performance de app nativo no browser. O Photoshop Web usa WASM. Antes, impossivel sem instalar software.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">WASM</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">WASI</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Component Model</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Performance gains</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Browser capabilities</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Polyglot execution</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Edge deployment</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 4 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">4</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#127959;&#65039; Platform Engineering &mdash; "Infra como produto interno"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Time de plataforma que constroi ferramentas e abstracoes para que devs deployem sem precisar de ops. Internal Developer Platform (IDP).</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">E a evolucao de DevOps: em vez de "todo dev faz ops", um time especializado constroi a plataforma. Ex: A Spotify tem o Backstage (open-source) como portal de desenvolvedor &mdash; templates de servico, catalogo de APIs, docs centralizada. Dev cria novo servico com 1 click.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Internal Developer Platform</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Backstage</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Golden paths</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Self-service infrastructure</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Platform as a product</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Developer experience</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 5 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">5</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#127807; Sustainability &mdash; "Green software: arquitetura sustentavel"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Minimizar impacto ambiental de software: eficiencia energetica, carbon-aware computing, right-sizing, serverless.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Tech e responsavel por 4% das emissoes globais (mais que aviacao). Regulacao esta vindo. Ex: O Microsoft Azure oferece carbon-aware deployment &mdash; roda workloads nao-urgentes quando a grid eletrica esta mais limpa (mais eolica/solar). Green Software Foundation cria padroes.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Carbon-aware computing</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Energy-efficient code</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Right-sizing</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Green hosting</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">SCI (Software Carbon Intensity)</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Sustainability reports</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 6 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">6</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128274; Arquitetura Zero-Knowledge &mdash; "Privacidade como arquitetura, nao como feature"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Sistemas onde o provider nao pode ler dados do usuario. End-to-end encryption, zero-knowledge proofs, client-side encryption.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Privacidade e diferencial competitivo e requisito regulatorio crescente. Ex: O Signal nao consegue ler suas mensagens mesmo que quisesse &mdash; E2E encryption, keys no device. O ProtonMail nao le seus emails. Confianca por arquitetura, nao por promessa.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">E2E encryption</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Zero-knowledge proofs</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Client-side encryption</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Homomorphic encryption</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Privacy by design</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">GDPR Article 25</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 7 -->
+                <div class="topic-item">
+                    <button onclick="toggleTopic(this)" class="w-full px-6 py-4 flex items-center space-x-3 hover:bg-dark-700/50 transition-colors text-left">
+                        <span class="w-6 h-6 rounded-full bg-rose-500/20 text-rose-400 text-sm font-bold flex items-center justify-center flex-shrink-0">7</span>
+                        <span class="text-neutral-100 font-medium flex-1">&#128640; O Arquiteto do Futuro &mdash; "Habilidades que nao mudam com a tecnologia"</span>
+                        <svg class="w-5 h-5 text-neutral-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div class="topic-explanation px-6 pb-4 space-y-3">
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">O que e</h4>
+                            <p class="text-neutral-300 text-sm">Independente da stack do momento, o arquiteto do futuro precisa: pensamento sistemico, comunicacao, trade-off analysis, lideranca tecnica, curiosidade continua, pragmatismo.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Tecnologias mudam a cada 3-5 anos. Principios duram decadas. Ex: O CAP theorem tem 25 anos e continua relevante. SOLID tem 20 anos e guia design diario. O arquiteto que domina principios se adapta a qualquer stack; o que domina so a stack fica obsoleto.</p>
+                        </div>
+                        <div class="bg-dark-700/30 rounded-xl p-4">
+                            <h4 class="text-rose-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Systems thinking</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Communication skills</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Trade-off analysis</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Continuous learning</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">T-shaped expertise</span>
+                                <span class="bg-rose-500/20 text-rose-400 px-2 py-1 rounded-md text-xs font-medium">Leading through influence</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div class="flex flex-col sm:flex-row gap-4 justify-between">
+            <a href="../trilha5/index.html" class="flex items-center gap-2 bg-dark-800 border border-dark-600 rounded-xl px-6 py-4 hover:border-rose-500/30 transition-colors group">
+                <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                <span class="text-neutral-300 group-hover:text-rose-400 transition-colors">&larr; DevOps e Opera&ccedil;&otilde;es</span>
+            </a>
+            <a href="../../index.html" class="flex items-center gap-2 bg-dark-800 border border-dark-600 rounded-xl px-6 py-4 hover:border-rose-500/30 transition-colors group justify-end">
+                <span class="text-neutral-300 group-hover:text-rose-400 transition-colors font-medium">Voltar ao In&iacute;cio</span>
+                <svg class="w-5 h-5 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1h-2z"></path></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 mt-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <p class="text-center text-neutral-500 text-sm">Arquitetura DEV 2030 &mdash; 2026</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="relative w-full h-full max-w-5xl mx-auto p-4 sm:p-8 flex items-center justify-center">
+            <div class="bg-dark-800 rounded-2xl w-full h-[80vh] overflow-hidden border border-dark-600 relative">
+                <button onclick="closeModal()" class="absolute top-4 right-4 z-10 bg-dark-700 hover:bg-dark-600 rounded-lg p-2 transition-colors">
+                    <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <iframe id="modal-iframe" class="w-full h-full" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+            themeToggleDarkIcon.classList.remove('hidden');
+            html.classList.remove('dark');
+        } else {
+            themeToggleLightIcon.classList.remove('hidden');
+        }
+        themeToggle.addEventListener('click', () => {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Topic toggle
+        function toggleTopic(btn) {
+            const topicItem = btn.closest('.topic-item');
+            const explanation = topicItem.querySelector('.topic-explanation');
+            const arrow = btn.querySelector('svg');
+            explanation.classList.toggle('active');
+            arrow.classList.toggle('rotate-180');
+        }
+
+        // Modal
+        function openModal(url) {
+            const modal = document.getElementById('modal');
+            const iframe = document.getElementById('modal-iframe');
+            iframe.src = url;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            const iframe = document.getElementById('modal-iframe');
+            modal.classList.add('hidden');
+            iframe.src = '';
+            document.body.style.overflow = '';
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+
+</body>
+</html>

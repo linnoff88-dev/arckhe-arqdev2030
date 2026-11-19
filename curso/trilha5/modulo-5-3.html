@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 5.3 - Monitoramento e Observabilidade | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-teal-400 { color: #0d9488; }
+        html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+        html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+        html:not(.dark) .hover\:bg-teal-500\/30:hover { background-color: rgba(13, 148, 136, 0.18); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.06); }
+        html:not(.dark) .bg-teal-900\/30 { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .bg-teal-900\/40 { background-color: rgba(13, 148, 136, 0.1); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-teal-400 bg-teal-500/10">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-teal-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-teal-400 transition-colors">Trilha 5</a>
+            <span>/</span>
+            <span class="text-teal-400 font-medium">M&oacute;dulo 5.3</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-teal-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-teal-500/20 text-teal-400 border border-teal-500/30">
+                    M&Oacute;DULO 5.3
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128202; Monitoramento e Observabilidade
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Voc&ecirc; n&atilde;o pode consertar o que n&atilde;o pode ver. Neste m&oacute;dulo, voc&ecirc; vai dominar os tr&ecirc;s pilares da observabilidade &mdash; logs, m&eacute;tricas e traces &mdash; al&eacute;m de alerting inteligente, dashboards eficazes, health checks e a defini&ccedil;&atilde;o formal de confiabilidade com SLIs, SLOs e SLAs.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">Avan&ccedil;ado</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">Execu&ccedil;&atilde;o</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TÓPICO 1: Logs Estruturados ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#128221; Logs Estruturados</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Logs s&atilde;o o registro cronol&oacute;gico de eventos do sistema. <strong class="text-teal-400">Logs estruturados (JSON)</strong> transformam texto livre em dados pesquis&aacute;veis e analisa&aacute;veis. A diferen&ccedil;a entre &ldquo;algo deu errado&rdquo; e &ldquo;o endpoint /api/users retornou 500 para o usu&aacute;rio X &agrave;s 14:32:15 com trace_id abc123&rdquo; &eacute; a diferen&ccedil;a entre adivinhar e diagnosticar.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Anatomia de um Log Estruturado</h3>
+                <p class="text-neutral-300 mb-4">Campos essenciais que todo log deve conter:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">timestamp</strong> &mdash; Quando aconteceu (ISO 8601, com timezone UTC)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">level</strong> &mdash; Severidade: DEBUG, INFO, WARN, ERROR, FATAL</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">message</strong> &mdash; Descri&ccedil;&atilde;o human-readable do evento</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">trace_id / request_id</strong> &mdash; Correlaciona logs de uma mesma requisi&ccedil;&atilde;o entre servi&ccedil;os</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">context</strong> &mdash; user_id, endpoint, http_status, dura&ccedil;&atilde;o, servi&ccedil;o de origem</span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-teal-900/20 rounded-xl border border-teal-500/30 p-6">
+                    <h4 class="font-bold text-teal-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Usar <strong class="text-white">JSON estruturado</strong> em vez de texto livre</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Incluir <strong class="text-white">trace_id</strong> em todo log para correla&ccedil;&atilde;o entre servi&ccedil;os</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Definir <strong class="text-white">n&iacute;veis de log</strong> consistentes e configur&aacute;veis por ambiente</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Logar <strong class="text-white">dados sens&iacute;veis</strong> (senhas, tokens, PII) sem mascarar</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar <strong class="text-white">console.log</strong> em produ&ccedil;&atilde;o sem estrutura nem n&iacute;vel</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Logar <strong class="text-white">tudo em DEBUG</strong> permanentemente &mdash; gera ru&iacute;do e custo</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use <strong class="text-white">Pino (Node.js), Serilog (.NET), Logrus (Go) ou Logback (Java)</strong> para logs estruturados. Centralize com ELK Stack (Elasticsearch + Logstash + Kibana), Loki + Grafana ou Datadog. A regra de ouro: se voc&ecirc; n&atilde;o consegue encontrar o log que precisa em menos de 60 segundos durante um incidente, seu logging est&aacute; quebrado.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 2: Métricas ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#128200; M&eacute;tricas</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                M&eacute;tricas s&atilde;o <strong class="text-teal-400">dados num&eacute;ricos agregados ao longo do tempo</strong>. Enquanto logs contam hist&oacute;rias individuais, m&eacute;tricas revelam tend&ecirc;ncias e padr&otilde;es. Latência m&eacute;dia, taxa de erros, uso de CPU, requisi&ccedil;&otilde;es por segundo &mdash; m&eacute;tricas s&atilde;o a vis&atilde;o panor&acirc;mica da sa&uacute;de do sistema.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Os 4 Tipos de M&eacute;tricas (RED + USE)</h3>
+                <p class="text-neutral-300 mb-4">Dois frameworks complementares para monitorar sistemas:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">RED (para servi&ccedil;os)</strong> &mdash; Rate (req/s), Errors (taxa de erro), Duration (lat&ecirc;ncia p50/p95/p99)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">USE (para recursos)</strong> &mdash; Utilization (% de uso), Saturation (fila de espera), Errors (falhas de hardware/OS)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Counter</strong> &mdash; Valor que s&oacute; cresce: total de requisi&ccedil;&otilde;es, total de erros</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Gauge</strong> &mdash; Valor que sobe e desce: mem&oacute;ria em uso, conex&otilde;es ativas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Histogram</strong> &mdash; Distribui&ccedil;&atilde;o de valores: lat&ecirc;ncia em percentis (p50, p95, p99)</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Por que M&eacute;dia Engana</h3>
+                <p class="text-neutral-300 mb-4">Um e-commerce reportava &ldquo;lat&ecirc;ncia m&eacute;dia de 120ms&rdquo; e achava que estava tudo bem:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">p50 = 80ms</strong> &mdash; Metade dos usu&aacute;rios tinham experi&ecirc;ncia r&aacute;pida</li>
+                    <li><strong class="text-white">p95 = 450ms</strong> &mdash; 5% dos usu&aacute;rios esperavam quase meio segundo</li>
+                    <li><strong class="text-white">p99 = 3.200ms</strong> &mdash; 1% esperava mais de 3 segundos. Esses eram os usu&aacute;rios premium com carrinhos grandes</li>
+                    <li><strong class="text-white">Impacto:</strong> Os clientes que mais gastavam tinham a pior experi&ecirc;ncia. A m&eacute;dia escondia o problema</li>
+                </ul>
+                <p class="text-neutral-300 mt-3"><strong class="text-white">Li&ccedil;&atilde;o:</strong> Sempre monitore <strong class="text-white">percentis (p95, p99)</strong>, nunca apenas m&eacute;dia.</p>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use <strong class="text-white">Prometheus + Grafana</strong> como stack open-source para m&eacute;tricas. Prometheus coleta e armazena, Grafana visualiza. Para come&ccedil;ar, instrumente os <strong class="text-white">4 golden signals do Google SRE</strong>: lat&ecirc;ncia, tr&aacute;fego, erros e satura&ccedil;&atilde;o. Esses 4 cobrem 90% dos problemas.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 3: Distributed Tracing ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128269; Distributed Tracing</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Em sistemas distribu&iacute;dos, uma requisi&ccedil;&atilde;o pode passar por <strong class="text-teal-400">dezenas de servi&ccedil;os</strong> antes de retornar ao usu&aacute;rio. Distributed tracing permite seguir essa requisi&ccedil;&atilde;o do in&iacute;cio ao fim, visualizando cada hop, sua dura&ccedil;&atilde;o e onde ocorrem gargalos ou falhas. &Eacute; o &ldquo;raio-X&rdquo; de sistemas complexos.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Conceitos de Tracing</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Trace</strong> &mdash; O caminho completo de uma requisi&ccedil;&atilde;o pelo sistema. Identificado por um trace_id &uacute;nico</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Span</strong> &mdash; Uma opera&ccedil;&atilde;o individual dentro do trace (chamada HTTP, query SQL, processamento)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Context Propagation</strong> &mdash; Passar o trace_id entre servi&ccedil;os via headers HTTP (traceparent W3C)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Sampling</strong> &mdash; Coletar apenas uma fra&ccedil;&atilde;o dos traces para reduzir custo (1-10% em alto volume)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">OpenTelemetry</strong> &mdash; Padr&atilde;o aberto da CNCF para instrumenta&ccedil;&atilde;o. Vendor-neutral, suportado por todos os players</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Uber e Jaeger</h3>
+                <p class="text-neutral-300 mb-4">O Uber criou o Jaeger (agora parte da CNCF) para resolver tracing em escala massiva:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">3.000+ microsservi&ccedil;os</strong> &mdash; Uma requisi&ccedil;&atilde;o de corrida pode passar por 20+ servi&ccedil;os</li>
+                    <li><strong class="text-white">Sem tracing:</strong> &ldquo;algo est&aacute; lento&rdquo; levava horas para investigar. Qual servi&ccedil;o? Qual depend&ecirc;ncia?</li>
+                    <li><strong class="text-white">Com Jaeger:</strong> Visualiza&ccedil;&atilde;o instant&acirc;nea do caminho da requisi&ccedil;&atilde;o e onde o tempo &eacute; gasto</li>
+                    <li><strong class="text-white">MTTR reduzido em 60%</strong> para investiga&ccedil;&atilde;o de problemas de performance</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Adote <strong class="text-white">OpenTelemetry (OTel)</strong> desde o in&iacute;cio. &Eacute; o padr&atilde;o da ind&uacute;stria e funciona com Jaeger, Zipkin, Datadog, New Relic e Grafana Tempo. A instrumenta&ccedil;&atilde;o autom&aacute;tica do OTel cobre HTTP, gRPC e bancos de dados com poucas linhas de c&oacute;digo. Comece com auto-instrumentation e adicione spans customizados onde precisar.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 4: Alerting ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128276; Alerting</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">Alertas existem para acordar humanos apenas quando necess&aacute;rio.</strong> Um sistema de alertas eficaz notifica sobre problemas reais que requerem a&ccedil;&atilde;o imediata. Alertas demais causam alert fatigue &mdash; o time para de prestar aten&ccedil;&atilde;o e incidentes reais passam despercebidos. Alertas de menos significam descobrir problemas pelos clientes.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Princ&iacute;pios de Alerting Eficaz</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Alert on symptoms, not causes</strong> &mdash; Alerte sobre &ldquo;lat&ecirc;ncia alta para usu&aacute;rios&rdquo;, n&atilde;o &ldquo;CPU alta no servidor X&rdquo;</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Severidade clara</strong> &mdash; P1 (acorda algu&eacute;m &agrave;s 3h), P2 (pr&oacute;ximo dia &uacute;til), P3 (backlog)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Actionable</strong> &mdash; Todo alerta deve ter um runbook linkado com passos claros de investiga&ccedil;&atilde;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Burn rate alerts</strong> &mdash; Alerte baseado na velocidade de consumo do error budget, n&atilde;o em thresholds fixos</span></li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Alert Fatigue: O Assassino Silencioso</h3>
+                <p class="text-neutral-300 mb-4">Pesquisa do Google SRE e de hospitais (onde alert fatigue &eacute; letal) mostra:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">95% dos alertas</strong> em muitas organiza&ccedil;&otilde;es s&atilde;o falsos positivos ou n&atilde;o-acion&aacute;veis</li>
+                    <li><strong class="text-white">Ap&oacute;s 2 semanas</strong> de alertas excessivos, engenheiros come&ccedil;am a ignorar sistematicamente</li>
+                    <li><strong class="text-white">Incidentes reais</strong> s&atilde;o perdidos no ru&iacute;do de centenas de alertas irrelevantes</li>
+                    <li><strong class="text-white">Regra de ouro:</strong> Se um alerta n&atilde;o requer a&ccedil;&atilde;o humana, ele deveria ser um log ou m&eacute;trica, n&atilde;o um alerta</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Fa&ccedil;a uma <strong class="text-white">&ldquo;alert hygiene review&rdquo; mensal</strong>: para cada alerta que disparou no &uacute;ltimo m&ecirc;s, pergunte: &ldquo;Algu&eacute;m tomou alguma a&ccedil;&atilde;o?&rdquo; Se a resposta for consistentemente &ldquo;n&atilde;o&rdquo;, delete ou transforme em log. Use <strong class="text-white">PagerDuty, Opsgenie ou Grafana OnCall</strong> com escalonamento autom&aacute;tico.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 5: Dashboards ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#128202; Dashboards</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Dashboards s&atilde;o a <strong class="text-teal-400">interface visual entre humanos e sistemas</strong>. Um bom dashboard conta uma hist&oacute;ria em 5 segundos: o sistema est&aacute; saud&aacute;vel ou n&atilde;o? Um dashboard ruim &eacute; uma parede de gr&aacute;ficos que ningu&eacute;m olha. A diferen&ccedil;a est&aacute; no design intencional.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Hierarquia de Dashboards</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Executive / Overview</strong> &mdash; Sa&uacute;de geral do sistema. SLOs, uptime, m&eacute;tricas de neg&oacute;cio. Para stakeholders e on-call</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Service Dashboard</strong> &mdash; M&eacute;tricas RED por servi&ccedil;o. Lat&ecirc;ncia, throughput, erros. Para o time dono do servi&ccedil;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Infrastructure</strong> &mdash; CPU, mem&oacute;ria, disco, rede. M&eacute;tricas USE dos recursos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Debug / Investigation</strong> &mdash; Dashboards detalhados usados apenas durante incidentes. N&atilde;o precisam ser bonitos</span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-teal-900/20 rounded-xl border border-teal-500/30 p-6">
+                    <h4 class="font-bold text-teal-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Colocar as m&eacute;tricas mais cr&iacute;ticas <strong class="text-white">no topo, vis&iacute;veis sem scroll</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Usar <strong class="text-white">cores sem&acirc;nticas</strong>: verde = ok, amarelo = aten&ccedil;&atilde;o, vermelho = cr&iacute;tico</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Incluir <strong class="text-white">anota&ccedil;&otilde;es de deploy</strong> nos gr&aacute;ficos para correlacionar mudan&ccedil;as</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Criar dashboards com <strong class="text-white">50+ pain&eacute;is</strong> que ningu&eacute;m consegue absorver</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Mostrar <strong class="text-white">m&eacute;tricas sem contexto</strong> de &ldquo;normal&rdquo; (sem baseline ou threshold)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Criar dashboards e <strong class="text-white">nunca revisitar</strong> se ainda s&atilde;o &uacute;teis</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Siga a regra <strong class="text-white">&ldquo;5 seconds to answer&rdquo;</strong>: ao abrir o dashboard, em 5 segundos voc&ecirc; deve saber se o sistema est&aacute; saud&aacute;vel. Use <strong class="text-white">Grafana com templates de vari&aacute;veis</strong> para navegar entre servi&ccedil;os e ambientes sem duplicar dashboards.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 6: Health Checks ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128154; Health Checks</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Health checks s&atilde;o <strong class="text-teal-400">endpoints que reportam a sa&uacute;de do servi&ccedil;o</strong> para load balancers, orquestradores e sistemas de monitoramento. Um health check bem implementado &eacute; a diferen&ccedil;a entre o Kubernetes rotear tr&aacute;fego para uma inst&acirc;ncia saud&aacute;vel ou para uma que est&aacute; morrendo.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Tipos de Health Check</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Liveness</strong> &mdash; O processo est&aacute; vivo? Se n&atilde;o, restarte. Deve ser leve e r&aacute;pido (sem I/O externo)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Readiness</strong> &mdash; O servi&ccedil;o est&aacute; pronto para receber tr&aacute;fego? Verifica depend&ecirc;ncias (DB, cache)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Startup</strong> &mdash; A aplica&ccedil;&atilde;o terminou de inicializar? Evita que liveness mate pods que ainda est&atilde;o subindo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Deep health check</strong> &mdash; Verifica todas as depend&ecirc;ncias (DB, cache, APIs externas). Usado para diagn&oacute;stico, n&atilde;o para roteamento</span></li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Armadilha: Health Check em Cascata</h3>
+                <p class="text-neutral-300 mb-4">Um erro comum que causa outages generalizados:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Servi&ccedil;o A</strong> verifica o banco no readiness check</li>
+                    <li><strong class="text-white">Banco fica lento</strong> por 30 segundos (GC pause, backup)</li>
+                    <li><strong class="text-white">Todos os pods</strong> do Servi&ccedil;o A falham no readiness simultaneamente</li>
+                    <li><strong class="text-white">Resultado:</strong> 100% do tr&aacute;fego &eacute; rejeitado, mesmo que o servi&ccedil;o em si esteja funcional</li>
+                    <li><strong class="text-white">Solu&ccedil;&atilde;o:</strong> Liveness nunca verifica depend&ecirc;ncias externas. Readiness com timeouts generosos e circuit breaker</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Implemente <strong class="text-white">3 endpoints separados</strong>: <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">/healthz</code> (liveness, sem I/O), <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">/readyz</code> (readiness, verifica deps) e <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">/health/detailed</code> (deep check com status de cada depend&ecirc;ncia). N&atilde;o exponha o detailed externamente &mdash; ele pode vazar informa&ccedil;&otilde;es de infraestrutura.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 7: SLIs/SLOs/SLAs ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#127919; SLIs, SLOs e SLAs</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">A linguagem formal da confiabilidade.</strong> SLIs, SLOs e SLAs definem objetivamente o que significa &ldquo;o sistema est&aacute; funcionando bem&rdquo;. Sem eles, a conversa sobre qualidade &eacute; subjetiva: &ldquo;est&aacute; lento&rdquo; vs. &ldquo;a lat&ecirc;ncia p99 est&aacute; 2x acima do SLO definido&rdquo;. A diferen&ccedil;a &eacute; entre opini&atilde;o e engenharia.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> A Pir&acirc;mide SLI &rarr; SLO &rarr; SLA</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">SLI (Service Level Indicator)</strong> &mdash; A m&eacute;trica em si. Ex: &ldquo;propor&ccedil;&atilde;o de requisi&ccedil;&otilde;es com lat&ecirc;ncia &lt;300ms&rdquo;</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">SLO (Service Level Objective)</strong> &mdash; A meta interna. Ex: &ldquo;99.9% das requisi&ccedil;&otilde;es devem ter lat&ecirc;ncia &lt;300ms em janela de 30 dias&rdquo;</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">SLA (Service Level Agreement)</strong> &mdash; O contrato com o cliente. Ex: &ldquo;99.5% de uptime, sen&atilde;o cr&eacute;ditos&rdquo;. Sempre mais frouxo que o SLO</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Error Budget</strong> &mdash; Quanto pode falhar: 99.9% SLO = 43.8 min de downtime/m&ecirc;s permitidos. Gastou? Congela features</span></li>
+                </ul>
+            </div>
+
+            <!-- Timeline: Implementando SLOs -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Como Implementar SLOs em 4 Passos</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Escolha os SLIs certos</h4>
+                        <p class="text-neutral-300 text-sm">Foque em m&eacute;tricas que refletem a experi&ecirc;ncia do usu&aacute;rio: lat&ecirc;ncia, disponibilidade, taxa de erro, throughput. N&atilde;o use CPU ou mem&oacute;ria como SLI.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Defina SLOs realistas</h4>
+                        <p class="text-neutral-300 text-sm">Baseie-se em dados hist&oacute;ricos. Se o sistema j&aacute; opera em 99.5%, um SLO de 99.99% &eacute; irreal sem investimento significativo. Comece com o que &eacute; alcan&ccedil;&aacute;vel.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Monitore o error budget</h4>
+                        <p class="text-neutral-300 text-sm">Dashboard mostrando quanto do error budget foi consumido. Alerte quando atingir 50%, 80% e 100%. Burn rate alerts detectam consumo r&aacute;pido.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">4</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Tome a&ccedil;&otilde;es baseadas no budget</h4>
+                        <p class="text-neutral-300 text-sm">Budget sobrando? Mais features e experimentos. Budget esgotado? Foco em confiabilidade. Isso cria um equil&iacute;brio natural entre velocidade e estabilidade.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Refer&ecirc;ncia: N&iacute;veis de Disponibilidade</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">99% (dois noves)</strong> &mdash; 87.6 horas de downtime/ano. Aceit&aacute;vel para ferramentas internas</li>
+                    <li><strong class="text-white">99.9% (tr&ecirc;s noves)</strong> &mdash; 8.76 horas/ano. Padr&atilde;o para maioria das aplica&ccedil;&otilde;es SaaS</li>
+                    <li><strong class="text-white">99.99% (quatro noves)</strong> &mdash; 52.6 minutos/ano. Sistemas financeiros e de sa&uacute;de</li>
+                    <li><strong class="text-white">99.999% (cinco noves)</strong> &mdash; 5.26 minutos/ano. Telecomunica&ccedil;&otilde;es, sistemas cr&iacute;ticos. Cust&iacute;ssimo</li>
+                    <li><strong class="text-white">Cada 9 adicional</strong> custa aproximadamente 10x mais em infraestrutura e engenharia</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Leia o <strong class="text-white">Google SRE Book</strong> (dispon&iacute;vel gratuitamente online) &mdash; &eacute; a refer&ecirc;ncia definitiva sobre SLIs, SLOs e error budgets. Para come&ccedil;ar, defina <strong class="text-white">um &uacute;nico SLO por servi&ccedil;o</strong> (geralmente disponibilidade ou lat&ecirc;ncia) e evolua a partir da&iacute;. SLOs s&atilde;o um processo iterativo, n&atilde;o um projeto com data de fim.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MÓDULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-teal-900/40 via-dark-800 to-dark-800 rounded-xl border border-teal-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Logs estruturados s&atilde;o obrigat&oacute;rios</strong><span class="text-neutral-400"> &mdash; JSON com trace_id, n&iacute;vel e contexto. Texto livre n&atilde;o escala</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">M&eacute;tricas revelam tend&ecirc;ncias</strong><span class="text-neutral-400"> &mdash; RED para servi&ccedil;os, USE para recursos. Percentis, nunca m&eacute;dia</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Tracing conecta os pontos</strong><span class="text-neutral-400"> &mdash; OpenTelemetry como padr&atilde;o. Essencial para sistemas distribu&iacute;dos</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Alertas devem ser acion&aacute;veis</strong><span class="text-neutral-400"> &mdash; Alerte sobre sintomas, n&atilde;o causas. Alert fatigue mata a confiabilidade</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Dashboards contam hist&oacute;rias</strong><span class="text-neutral-400"> &mdash; 5 segundos para saber se est&aacute; tudo bem. Hierarquia de overview a debug</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Health checks evitam cascata</strong><span class="text-neutral-400"> &mdash; Liveness sem I/O externo, readiness com cuidado, startup para inicializa&ccedil;&atilde;o</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">SLOs formalizam confiabilidade</strong><span class="text-neutral-400"> &mdash; Error budgets equilibram velocidade e estabilidade com dados, n&atilde;o opini&otilde;es</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-teal-400 mb-2">Parab&eacute;ns!</h3>
+                    <p class="text-neutral-300">Voc&ecirc; completou a Trilha 5 &mdash; DevOps e Opera&ccedil;&otilde;es. Agora voc&ecirc; tem as ferramentas para entregar software com confian&ccedil;a, monitorar com precis&atilde;o e operar com excel&ecirc;ncia.</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="modulo-5-2.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; M&oacute;dulo Anterior</a>
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-500 transition-colors">Voltar para Trilha &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 mt-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+            <p class="text-neutral-500 text-sm">Arquitetura DEV 2030 &mdash; 2026</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

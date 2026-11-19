@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 2.4 - ADRs e Documentação de Decisão | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+        /* Blue accent */
+        html:not(.dark) .text-blue-400 { color: #2563eb; }
+        html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+        html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+        html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .bg-blue-900\/30 { background-color: rgba(29, 78, 216, 0.08); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.2); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center gap-3">
+                    <a href="../../index.html" class="text-yellow-400 font-bold text-lg hover:text-yellow-300 transition-colors">&#127959;&#65039; Arquitetura DEV 2030</a>
+                    <span class="text-neutral-500">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center gap-1">
+                    <a href="../trilha1/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+                    <a href="index.html" class="px-2 py-1 text-xs font-medium text-blue-400 bg-blue-500/10 rounded transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span></a>
+                    <a href="../trilha3/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span></a>
+                    <a href="../trilha4/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span></a>
+                    <a href="../trilha5/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span></a>
+                    <a href="../trilha6/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Escalando</span></a>
+                    <button id="theme-toggle" class="ml-3 p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors">
+                        <svg id="theme-toggle-dark-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-blue-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-blue-400 transition-colors">Trilha 2</a>
+            <span>/</span>
+            <span class="text-blue-400 font-medium">M&oacute;dulo 2.4</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-blue-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                    M&Oacute;DULO 2.4
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128221; ADRs e Documenta&ccedil;&atilde;o de Decis&atilde;o
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Architecture Decision Records s&atilde;o a mem&oacute;ria do projeto. Neste m&oacute;dulo, voc&ecirc; vai aprender a documentar decis&otilde;es arquiteturais de forma que qualquer pessoa &mdash; hoje ou daqui a 2 anos &mdash; entenda o porqu&ecirc; de cada escolha.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">30 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">Interm.</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">Pr&aacute;tica</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TÓPICO 1: O que são ADRs ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#128196; O que s&atilde;o ADRs</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Architecture Decision Records s&atilde;o documentos curtos e estruturados que registram <strong class="text-blue-400">decis&otilde;es arquiteturais significativas</strong>: o contexto, a decis&atilde;o tomada e suas consequ&ecirc;ncias. Vivem no reposit&oacute;rio junto ao c&oacute;digo, s&atilde;o versionados com git e revisados como qualquer outro artefato. S&atilde;o a &ldquo;mem&oacute;ria institucional&rdquo; que impede que cada novo desenvolvedor redescubra (e frequentemente reverta) decis&otilde;es anteriores.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Conceito Principal</h3>
+                <p class="text-neutral-300 mb-4">Um ADR tem quatro elementos fundamentais:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Contexto</strong> &mdash; Qual problema motivou a decis&atilde;o? Quais for&ccedil;as est&atilde;o em jogo?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Decis&atilde;o</strong> &mdash; O que foi escolhido e por qu&ecirc;. Sempre com &ldquo;because&rdquo;.</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Consequ&ecirc;ncias</strong> &mdash; O que melhora e o que piora com essa decis&atilde;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Status</strong> &mdash; Proposed, Accepted, Deprecated ou Superseded</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Spotify</h3>
+                <p class="text-neutral-300 mb-4">O Spotify tem mais de 1.000 ADRs p&uacute;blicos internamente e mediu o impacto da pr&aacute;tica:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">40% menos</strong> discuss&otilde;es repetidas sobre decis&otilde;es j&aacute; tomadas</li>
+                    <li><strong class="text-white">Onboarding 30% mais r&aacute;pido</strong> para novos desenvolvedores</li>
+                    <li><strong class="text-white">Consist&ecirc;ncia entre squads</strong> que trabalham em dom&iacute;nios similares</li>
+                    <li><strong class="text-white">Rastreabilidade completa</strong> &mdash; sempre se sabe por que algo foi decidido daquela forma</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Tratar ADRs como <strong class="text-white">c&oacute;digo</strong> &mdash; versionado, revisado, mergeado</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Escrever ADRs <strong class="text-white">no momento da decis&atilde;o</strong>, n&atilde;o depois</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Incluir <strong class="text-white">alternativas rejeitadas</strong> e os motivos</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Documentar na Confluence e esperar que <strong class="text-white">algu&eacute;m leia</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Escrever ADRs com <strong class="text-white">10 p&aacute;ginas</strong> &mdash; ideal &eacute; 1 p&aacute;gina</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Documentar <strong class="text-white">depois de implementar</strong> &mdash; o contexto j&aacute; se perdeu</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Comece <strong class="text-white">hoje</strong>: crie uma pasta <code class="bg-dark-700 px-2 py-0.5 rounded text-blue-400">docs/adr/</code> no seu reposit&oacute;rio e escreva o primeiro ADR sobre uma decis&atilde;o recente. N&atilde;o precisa ser perfeito &mdash; ADR ruim &eacute; melhor que nenhum ADR. O h&aacute;bito se constr&oacute;i com a pr&aacute;tica.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 2: Como Escrever um Bom ADR ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#9997;&#65039; Como Escrever um Bom ADR</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Um bom ADR segue o template de <strong class="text-blue-400">Michael Nygard</strong>: T&iacute;tulo, Data, Status, Contexto, Decis&atilde;o, Consequ&ecirc;ncias. A chave &eacute; o &ldquo;because&rdquo; &mdash; a decis&atilde;o sem justificativa n&atilde;o &eacute; um ADR, &eacute; um an&uacute;ncio. ADRs ruins d&atilde;o falsa sensa&ccedil;&atilde;o de documenta&ccedil;&atilde;o e s&atilde;o piores que nenhum ADR.
+            </p>
+
+            <!-- Template ADR -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128203;</span> Template de ADR (Michael Nygard)</h3>
+                <div class="space-y-4">
+                    <div class="bg-dark-800 rounded-lg p-4 border border-dark-600">
+                        <p class="text-sm font-mono text-neutral-300">
+                            <strong class="text-blue-400"># ADR-001: Usar PostgreSQL como banco prim&aacute;rio</strong><br><br>
+                            <strong class="text-white">Status:</strong> Accepted<br>
+                            <strong class="text-white">Date:</strong> 2024-01-15<br>
+                            <strong class="text-white">Deciders:</strong> Time de Plataforma<br><br>
+                            <strong class="text-white">## Contexto</strong><br>
+                            Precisamos de um banco relacional com suporte a JSON, full-text search e extens&otilde;es geoespaciais...<br><br>
+                            <strong class="text-white">## Decis&atilde;o</strong><br>
+                            Usaremos PostgreSQL <em>because</em> atende todos os requisitos e o time j&aacute; tem expertise...<br><br>
+                            <strong class="text-white">## Consequ&ecirc;ncias</strong><br>
+                            <span class="text-emerald-400">+</span> Ecossistema maduro, comunidade ativa<br>
+                            <span class="text-red-400">-</span> Precisamos de expertise em tuning de PostgreSQL
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; Bom ADR</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>&ldquo;Escolhemos PostgreSQL <strong class="text-white">porque</strong> precisamos de transa&ccedil;&otilde;es ACID e o time tem expertise&rdquo;</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Inclui alternativas rejeitadas: <strong class="text-white">MongoDB descartado</strong> por falta de transa&ccedil;&otilde;es multi-document</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Cabe em <strong class="text-white">uma p&aacute;gina</strong> &mdash; conciso e direto</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; Mau ADR</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>&ldquo;Decidimos usar PostgreSQL&rdquo; &mdash; <strong class="text-white">sem contexto nem justificativa</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>10 p&aacute;ginas de <strong class="text-white">an&aacute;lise comparativa</strong> que ningu&eacute;m l&ecirc;</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Escrito <strong class="text-white">6 meses depois</strong> da decis&atilde;o &mdash; contexto perdido</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Formatos Populares</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Nygard (original)</strong> &mdash; T&iacute;tulo, Status, Contexto, Decis&atilde;o, Consequ&ecirc;ncias</li>
+                    <li><strong class="text-white">MADR (Markdown ADR)</strong> &mdash; Adiciona Alternativas Consideradas e Pr&oacute;s/Contras estruturados</li>
+                    <li><strong class="text-white">Y-Statement</strong> &mdash; &ldquo;No contexto de X, enfrentando Y, decidimos Z para atingir W, aceitando Q&rdquo;</li>
+                    <li><strong class="text-white">Lightweight ADR</strong> &mdash; Apenas 3 se&ccedil;&otilde;es: Problema, Decis&atilde;o, Impacto</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use o formato <strong class="text-white">MADR</strong> se seu time gosta de estrutura, ou <strong class="text-white">Nygard</strong> se prefere simplicidade. O formato importa menos que a consist&ecirc;ncia. Escolha um e use para todos os ADRs &mdash; n&atilde;o misture formatos no mesmo projeto.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 3: Quando Criar um ADR ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128270; Quando Criar um ADR</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-blue-400">N&atilde;o documente tudo, documente o que importa.</strong> ADRs s&atilde;o para decis&otilde;es significativas &mdash; escolha de banco de dados, estilo arquitetural, protocolo de comunica&ccedil;&atilde;o, estrat&eacute;gia de deploy. Over-documentation mata a pr&aacute;tica t&atilde;o r&aacute;pido quanto a aus&ecirc;ncia de documenta&ccedil;&atilde;o.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Regra dos 4 Crit&eacute;rios</h3>
+                <p class="text-neutral-300 mb-4">Escreva um ADR se a decis&atilde;o atende <strong class="text-white">pelo menos um</strong> desses crit&eacute;rios:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">&Eacute; dif&iacute;cil de reverter</strong> &mdash; Mudar de banco de dados depois de 2 anos custa caro</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Afeta m&uacute;ltiplos times</strong> &mdash; Padr&atilde;o de comunica&ccedil;&atilde;o entre servi&ccedil;os, por exemplo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Tem trade-offs n&atilde;o-&oacute;bvios</strong> &mdash; Se a resposta &eacute; &oacute;bvia, n&atilde;o precisa de ADR</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Algu&eacute;m vai perguntar &ldquo;por qu&ecirc;?&rdquo;</strong> daqui a 6 meses</span></li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Armadilha: Over-Documentation</h3>
+                <p class="text-neutral-300 mb-4">Times que documentam <strong class="text-white">tudo</strong> em ADRs geram fadiga e a pr&aacute;tica morre em semanas:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>&ldquo;ADR-042: Usar tabs em vez de espa&ccedil;os&rdquo; &mdash; <strong class="text-white">N&atilde;o</strong>. Isso &eacute; linter config.</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>&ldquo;ADR-043: Usar Jest para testes&rdquo; &mdash; <strong class="text-white">Talvez</strong>. S&oacute; se houve debate real.</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>&ldquo;ADR-044: Usar Event Sourcing para pagamentos&rdquo; &mdash; <strong class="text-white">Sim!</strong> Decis&atilde;o com alto impacto e trade-offs.</span></li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Teste mental r&aacute;pido: <strong class="text-white">&ldquo;Se um dev novo entrar no time daqui a 1 ano, essa decis&atilde;o vai confundi-lo?&rdquo;</strong> Se sim, escreva um ADR. Se a decis&atilde;o &eacute; auto-evidente pelo c&oacute;digo, economize o tempo.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 4: Organizando ADRs no Repositório ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128194; Organizando no Reposit&oacute;rio</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                ADRs devem viver <strong class="text-blue-400">junto ao c&oacute;digo</strong> no reposit&oacute;rio. Documenta&ccedil;&atilde;o na Confluence, Google Docs ou wikis internas &eacute; onde decis&otilde;es v&atilde;o para morrer. No reposit&oacute;rio, o ADR aparece no PR review, no blame, no log &mdash; &eacute; parte do fluxo natural de desenvolvimento.
+            </p>
+
+            <!-- Estrutura de diretórios -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128193;</span> Estrutura Recomendada</h3>
+                <div class="bg-dark-800 rounded-lg p-4 border border-dark-600">
+                    <pre class="text-sm font-mono text-neutral-300">
+projeto/
+&#9500;&#9472;&#9472; docs/
+&#9474;   &#9500;&#9472;&#9472; adr/
+&#9474;   &#9474;   &#9500;&#9472;&#9472; 0001-use-postgresql.md
+&#9474;   &#9474;   &#9500;&#9472;&#9472; 0002-adopt-event-sourcing-for-payments.md
+&#9474;   &#9474;   &#9500;&#9472;&#9472; 0003-use-grpc-for-internal-communication.md
+&#9474;   &#9474;   &#9492;&#9472;&#9472; README.md  (index com links)
+&#9474;   &#9492;&#9472;&#9472; architecture/
+&#9474;       &#9492;&#9472;&#9472; c4-diagrams/
+&#9500;&#9472;&#9472; src/
+&#9492;&#9472;&#9472; ...
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Ferramentas de ADR</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">adr-tools (CLI)</strong> &mdash; <code class="bg-dark-700 px-2 py-0.5 rounded text-blue-400">adr new "Use PostgreSQL"</code> cria o arquivo com template e numera&ccedil;&atilde;o autom&aacute;tica</li>
+                    <li><strong class="text-white">Log4brains</strong> &mdash; Gera site est&aacute;tico navegável a partir dos ADRs Markdown do reposit&oacute;rio</li>
+                    <li><strong class="text-white">ADR Manager (VS Code)</strong> &mdash; Extens&atilde;o para criar, visualizar e gerenciar ADRs direto no editor</li>
+                    <li><strong class="text-white">GitHub/GitLab templates</strong> &mdash; Template de PR que exige link para ADR quando h&aacute; mudan&ccedil;a arquitetural</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Numerar sequencialmente: <strong class="text-white">0001, 0002, 0003</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Linkar ADRs nos <strong class="text-white">PRs que implementam</strong> a decis&atilde;o</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Manter um <strong class="text-white">README index</strong> com todos os ADRs e status</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Guardar ADRs na <strong class="text-white">Confluence</strong> &mdash; morrem em semanas</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar <strong class="text-white">nomes gen&eacute;ricos</strong> como &ldquo;decision-1.md&rdquo;</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Deletar ADRs antigos &mdash; <strong class="text-white">deprecie, n&atilde;o apague</strong></span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 5: Lifecycle de um ADR ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#128260; Lifecycle de um ADR</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                ADRs t&ecirc;m ciclo de vida: nascem como <strong class="text-blue-400">Proposed</strong>, s&atilde;o aceitos ou rejeitados, e eventualmente podem ser <strong class="text-blue-400">Superseded</strong> por uma nova decis&atilde;o. O ADR antigo n&atilde;o &eacute; &ldquo;errado&rdquo; &mdash; era certo para o contexto da &eacute;poca. A hist&oacute;ria completa fica preservada.
+            </p>
+
+            <!-- Timeline -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128260; Fluxo de Status</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">&#128308; Proposed</h4>
+                        <p class="text-neutral-300 text-sm">ADR criado como PR. Time revisa, comenta, sugere altera&ccedil;&otilde;es. Funciona como um RFC (Request for Comments) ass&iacute;ncrono.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">&#128994; Accepted</h4>
+                        <p class="text-neutral-300 text-sm">Time concorda com a decis&atilde;o. PR mergeado. A partir daqui, a decis&atilde;o &eacute; a refer&ecirc;ncia oficial.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">&#128993; Deprecated</h4>
+                        <p class="text-neutral-300 text-sm">A decis&atilde;o n&atilde;o &eacute; mais relevante (ex: tecnologia descontinuada). Mantido para hist&oacute;rico.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">4</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">&#128309; Superseded</h4>
+                        <p class="text-neutral-300 text-sm">Substitu&iacute;do por um novo ADR. Ex: &ldquo;ADR-0023 substitui ADR-0005&rdquo;. Link bidirecional entre os dois.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Exemplo de Superseding</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">ADR-0005 (2022)</strong> &mdash; &ldquo;Usar REST para todas as APIs&rdquo; &mdash; Status: <span class="text-red-400">Superseded by ADR-0023</span></li>
+                    <li><strong class="text-white">ADR-0023 (2024)</strong> &mdash; &ldquo;Usar gRPC para comunica&ccedil;&atilde;o servi&ccedil;o-a-servi&ccedil;o&rdquo; &mdash; Status: <span class="text-emerald-400">Accepted</span></li>
+                    <li><strong class="text-white">Contexto da mudan&ccedil;a</strong> &mdash; Lat&ecirc;ncia p99 entre servi&ccedil;os ultrapassou SLO de 50ms com REST/JSON. gRPC com protobuf reduziu para 12ms.</li>
+                </ul>
+                <p class="text-neutral-300 mt-3">A hist&oacute;ria mostra que REST era correto em 2022 (time pequeno, poucos servi&ccedil;os) e gRPC &eacute; correto agora (20 servi&ccedil;os, lat&ecirc;ncia cr&iacute;tica).</p>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300"><strong class="text-white">Nunca delete um ADR.</strong> ADRs superseded s&atilde;o hist&oacute;ria valiosa. Eles mostram como o pensamento do time evoluiu e por que decis&otilde;es anteriores faziam sentido no contexto original. Marque como superseded e adicione o link para o ADR substituto.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 6: Ferramenta de Comunicação ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128483;&#65039; Ferramenta de Comunica&ccedil;&atilde;o</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                ADRs n&atilde;o s&atilde;o s&oacute; documenta&ccedil;&atilde;o &mdash; s&atilde;o uma <strong class="text-blue-400">ferramenta de alinhamento ass&iacute;ncrono</strong>. Um ADR com status &ldquo;Proposed&rdquo; &eacute; um RFC que o time revisa antes da implementa&ccedil;&atilde;o. Isso elimina reuni&otilde;es desnecess&aacute;rias e d&aacute; a todos a chance de contribuir, independente do fuso hor&aacute;rio.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> ADR como RFC</h3>
+                <p class="text-neutral-300 mb-4">O fluxo de ADR como ferramenta de comunica&ccedil;&atilde;o:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Autor prop&otilde;e</strong> &mdash; Cria branch, escreve ADR, abre PR</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Time comenta</strong> &mdash; Perguntas, sugest&otilde;es, preocupa&ccedil;&otilde;es &mdash; tudo registrado no PR</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Ajustes s&atilde;o feitos</strong> &mdash; Itera&ccedil;&otilde;es at&eacute; consenso (ou consent)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Merge = aceito</strong> &mdash; A decis&atilde;o &eacute; oficial quando o PR &eacute; mergeado</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: ThoughtWorks</h3>
+                <p class="text-neutral-300 mb-4">O ThoughtWorks usa ADRs como RFCs e eliminou 80% das reuni&otilde;es de decis&atilde;o arquitetural:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Antes:</strong> Reuni&otilde;es de 1h com 8 pessoas para discutir cada decis&atilde;o = 8h de trabalho</li>
+                    <li><strong class="text-white">Depois:</strong> ADR escrito em 30min, revisado assincronamente = ~2h de trabalho total</li>
+                    <li><strong class="text-white">B&ocirc;nus:</strong> Introverted devs que n&atilde;o falam em reuni&otilde;es contribuem mais por escrito</li>
+                    <li><strong class="text-white">Resultado:</strong> Decis&otilde;es melhores, mais inclusivas, e 75% mais r&aacute;pidas</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Definir <strong class="text-white">per&iacute;odo de coment&aacute;rios</strong> (ex: 3 dias &uacute;teis)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">consent, n&atilde;o consensus</strong> &mdash; &ldquo;algu&eacute;m discorda?&rdquo; vs. &ldquo;todos concordam?&rdquo;</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Ter <strong class="text-white">path de escala&ccedil;&atilde;o</strong> para impasses</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar ADR para <strong class="text-white">justificar decis&atilde;o j&aacute; tomada</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar coment&aacute;rios e <strong class="text-white">mergear unilateralmente</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Deixar ADR &ldquo;Proposed&rdquo; <strong class="text-white">por semanas</strong> sem resolu&ccedil;&atilde;o</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 7: Métricas e Revisão ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#128202; M&eacute;tricas e Revis&atilde;o</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-blue-400">Decis&otilde;es envelhecem.</strong> O que era correto com 10 usu&aacute;rios pode ser errado com 10 milh&otilde;es. Revisar ADRs periodicamente &agrave; luz de novos dados garante que a arquitetura evolui com o sistema. Architecture Fitness Functions automatizam essa verifica&ccedil;&atilde;o.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Estrat&eacute;gias de Revis&atilde;o</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Review trimestral</strong> &mdash; Passar pelos ADRs ativos uma vez por quarter e validar se ainda fazem sentido</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Trigger-based</strong> &mdash; Revisar quando uma m&eacute;trica ultrapassa threshold (ex: lat&ecirc;ncia > SLO)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Incident-driven</strong> &mdash; Todo post-mortem verifica se algum ADR precisa ser revisitado</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Scale-triggered</strong> &mdash; Ao atingir milestones de escala (10x usu&aacute;rios, novo mercado)</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Fitness Functions na Pr&aacute;tica</h3>
+                <p class="text-neutral-300 mb-4">Testes automatizados que verificam se a arquitetura ainda atende seus atributos de qualidade:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">ArchUnit (Java)</strong> &mdash; &ldquo;Nenhum controller importa reposit&oacute;rio diretamente&rdquo; &mdash; se algu&eacute;m viola, o build quebra</li>
+                    <li><strong class="text-white">NetArchTest (.NET)</strong> &mdash; Mesma ideia para ecossistema .NET</li>
+                    <li><strong class="text-white">Performance budgets</strong> &mdash; CI falha se bundle size > 200KB ou se p99 > 200ms</li>
+                    <li><strong class="text-white">Dependency checks</strong> &mdash; Alertas se depend&ecirc;ncias circulares forem introduzidas</li>
+                </ul>
+            </div>
+
+            <!-- Checklist -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128203;</span> Checklist de Revis&atilde;o Trimestral</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span>A decis&atilde;o ainda resolve o problema original?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span>Os trade-offs documentados se confirmaram?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span>Surgiram alternativas melhores desde ent&atilde;o?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span>O contexto mudou significativamente (escala, time, requisitos)?</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-primary">&#9744;</span><span>Houve incidentes relacionados a essa decis&atilde;o?</span></li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Adicione ao template do ADR um campo <strong class="text-white">&ldquo;Review trigger&rdquo;</strong>: uma condi&ccedil;&atilde;o que, quando atingida, sinaliza que &eacute; hora de revisitar. Ex: <strong class="text-white">&ldquo;Revisitar se ultrapassarmos 10k req/s&rdquo;</strong> ou <strong class="text-white">&ldquo;Revisitar se o time crescer al&eacute;m de 15 pessoas&rdquo;</strong>.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MÓDULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">ADRs s&atilde;o a mem&oacute;ria do projeto</strong><span class="text-neutral-400"> &mdash; Documentos curtos que registram o porqu&ecirc; de cada decis&atilde;o arquitetural</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Contexto + Decis&atilde;o + Consequ&ecirc;ncias</strong><span class="text-neutral-400"> &mdash; O template b&aacute;sico que todo ADR deve seguir</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Documente o que importa, n&atilde;o tudo</strong><span class="text-neutral-400"> &mdash; Use a regra dos 4 crit&eacute;rios para decidir quando criar um ADR</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">ADRs vivem no reposit&oacute;rio</strong><span class="text-neutral-400"> &mdash; Junto ao c&oacute;digo, versionados, revisados como PRs</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Proposed &rarr; Accepted &rarr; Superseded</strong><span class="text-neutral-400"> &mdash; ADRs t&ecirc;m ciclo de vida; nunca delete, deprecie</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">ADRs s&atilde;o RFCs ass&iacute;ncronos</strong><span class="text-neutral-400"> &mdash; Ferramenta de comunica&ccedil;&atilde;o que elimina reuni&otilde;es desnecess&aacute;rias</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Revise periodicamente com dados</strong><span class="text-neutral-400"> &mdash; Fitness functions e triggers de revis&atilde;o mantêm ADRs relevantes</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-blue-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">2.5 - &#128260; Migra&ccedil;&atilde;o e Evolu&ccedil;&atilde;o &mdash; Strangler Fig, Feature Flags e estrat&eacute;gias para evoluir sistemas sem quebrar</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha</a>
+                    <a href="modulo-2-5.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; Trilha 2: Estrat&eacute;gias de Decis&atilde;o</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

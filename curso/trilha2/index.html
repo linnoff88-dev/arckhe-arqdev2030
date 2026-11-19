@@ -1,0 +1,1197 @@
+<!DOCTYPE html><html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T2 - Estratégias de Decisão | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+        .topic-explanation { display: none; }
+        .topic-explanation.active { display: block; }
+
+        /* Base overrides (same for all) */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+        /* Blue accent */
+        html:not(.dark) .text-blue-400 { color: #2563eb; }
+        html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+        html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+        html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center gap-3">
+                    <a href="../../index.html" class="text-yellow-400 font-bold text-lg hover:text-yellow-300 transition-colors">🏗️ Arquitetura DEV 2030</a>
+                    <span class="text-neutral-500">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center gap-1">
+                    <a href="../trilha1/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+                    <a href="index.html" class="px-2 py-1 text-xs font-medium text-blue-400 bg-blue-500/10 rounded transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Decisão</span></a>
+                    <a href="../trilha3/index.html" class="px-2 py-1 text-xs font-medium text-violet-400 hover:bg-violet-500/10 rounded transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span></a>
+                    <a href="../trilha4/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Prática</span></a>
+                    <a href="../trilha5/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span></a>
+                    <a href="../trilha6/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Escalando</span></a>
+                    <button id="theme-toggle" class="ml-3 p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors">
+                        <svg id="theme-toggle-dark-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-900/30 via-dark-900 to-dark-900"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+            <div class="text-center">
+                <div class="inline-block bg-blue-500/20 text-blue-400 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full border border-blue-500/30 mb-6">Trilha 2</div>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 mb-4">🧭 Estratégias de Decisão</h1>
+                <p class="text-lg text-neutral-300 max-w-2xl mx-auto mb-10">Frameworks, trade-offs e métodos para tomar decisões arquiteturais com confiança</p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto">
+                    <div class="bg-dark-800 border border-blue-500/30 rounded-xl p-4">
+                        <div class="text-2xl font-bold text-blue-400">5</div>
+                        <div class="text-sm text-neutral-400">Módulos</div>
+                    </div>
+                    <div class="bg-dark-800 border border-blue-500/30 rounded-xl p-4">
+                        <div class="text-2xl font-bold text-blue-400">35</div>
+                        <div class="text-sm text-neutral-400">Tópicos</div>
+                    </div>
+                    <div class="bg-dark-800 border border-blue-500/30 rounded-xl p-4">
+                        <div class="text-2xl font-bold text-blue-400">~3h</div>
+                        <div class="text-sm text-neutral-400">de conteúdo</div>
+                    </div>
+                    <div class="bg-dark-800 border border-blue-500/30 rounded-xl p-4">
+                        <div class="text-2xl font-bold text-blue-400">Inter.</div>
+                        <div class="text-sm text-neutral-400">Intermediário</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navegação Rápida -->
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
+        <h2 class="text-2xl font-bold text-neutral-100 mb-6">Navegação Rápida</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a href="#modulo-2-1" class="bg-dark-800 border border-blue-500/30 rounded-xl p-5 hover:border-blue-400 transition-colors group">
+                <div class="text-sm font-bold text-blue-400 mb-1">Módulo 2.1</div>
+                <div class="text-neutral-100 font-semibold mb-1">Framework de Decisão Arquitetural</div>
+                <div class="text-neutral-400 text-sm">Como escolher a arquitetura certa para cada contexto</div>
+            </a>
+            <a href="#modulo-2-2" class="bg-dark-800 border border-blue-500/30 rounded-xl p-5 hover:border-blue-400 transition-colors group">
+                <div class="text-sm font-bold text-blue-400 mb-1">Módulo 2.2</div>
+                <div class="text-neutral-100 font-semibold mb-1">Análise de Trade-offs</div>
+                <div class="text-neutral-400 text-sm">Toda decisão é uma troca — aprenda a fazer as certas</div>
+            </a>
+            <a href="#modulo-2-3" class="bg-dark-800 border border-blue-500/30 rounded-xl p-5 hover:border-blue-400 transition-colors group">
+                <div class="text-sm font-bold text-blue-400 mb-1">Módulo 2.3</div>
+                <div class="text-neutral-100 font-semibold mb-1">Escolhendo a Stack Certa</div>
+                <div class="text-neutral-400 text-sm">Tecnologia é meio, não fim — como escolher sem cair no hype</div>
+            </a>
+            <a href="#modulo-2-4" class="bg-dark-800 border border-blue-500/30 rounded-xl p-5 hover:border-blue-400 transition-colors group">
+                <div class="text-sm font-bold text-blue-400 mb-1">Módulo 2.4</div>
+                <div class="text-neutral-100 font-semibold mb-1">ADRs e Documentação de Decisão</div>
+                <div class="text-neutral-400 text-sm">Architecture Decision Records — a memória do projeto</div>
+            </a>
+            <a href="#modulo-2-5" class="bg-dark-800 border border-blue-500/30 rounded-xl p-5 hover:border-blue-400 transition-colors group">
+                <div class="text-sm font-bold text-blue-400 mb-1">Módulo 2.5</div>
+                <div class="text-neutral-100 font-semibold mb-1">Migração e Evolução</div>
+                <div class="text-neutral-400 text-sm">Sistemas vivos mudam — aprenda a evoluir sem quebrar</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <hr class="border-dark-700">
+    </div>
+
+    <!-- Conteúdo Detalhado -->
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-10">
+        <h2 class="text-2xl font-bold text-neutral-100 mb-2">Conteúdo Detalhado</h2>
+
+        <!-- M2.1 -->
+        <div id="modulo-2-1" class="bg-dark-800 border border-blue-500/30 rounded-2xl overflow-hidden">
+            <div class="p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-1">
+                    <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Módulo 2.1</span>
+                    <span class="text-xs text-neutral-500">~35 min</span>
+                </div>
+                <h2 class="text-2xl font-bold text-neutral-100 mb-1">🧭 Framework de Decisão Arquitetural</h2>
+                <p class="text-neutral-400 text-sm mb-6">Como escolher a arquitetura certa para cada contexto</p>
+
+                <div class="space-y-3">
+
+                    <!-- T1 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m21t1')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">1</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🎯 Custo Dominante — "Qual é o risco principal: velocidade, escala, organização ou imprevisibilidade?"</span>
+                        </button>
+                        <div id="m21t1" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Antes de escolher tecnologia, identifique o custo dominante do seu projeto. É a pergunta que antecede qualquer decisão: onde está o maior risco?</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Times que pulam essa pergunta escolhem stack por hype. Ex: Uma startup de 3 pessoas que escolhe Kubernetes "para escalar" gasta 60% do tempo em infra e 40% em produto — e fecha antes de precisar escalar.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> 4 riscos dominantes (velocidade, crescimento, organização, imprevisibilidade), Matriz de decisão, Fit-for-purpose</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T2 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m21t2')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">2</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🏃 Velocidade como Prioridade — "Aprender rápido com o mínimo de estrutura"</span>
+                        </button>
+                        <div id="m21t2" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Quando o produto não está validado, a arquitetura deve maximizar velocidade de iteração. Monolito simples, deploy rápido, feedback loop curto.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Gastar 3 meses em arquitetura para um produto que ninguém quer é desperdício. Ex: O Dropbox começou como um vídeo de demonstração — validou demanda antes de escrever uma linha de código. MVP real.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Script → Monolito → Modular, Time-to-feedback, Throwaway prototypes, "Do things that don't scale"</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T3 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m21t3')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">3</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">📈 Crescimento como Prioridade — "Preservar opções para escalar"</span>
+                        </button>
+                        <div id="m21t3" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Quando o produto tem tração e o time cresce, a arquitetura deve permitir evolução sem reescritas. Monolito modular com fronteiras claras.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> É o momento mais perigoso — pressão para adicionar features sem degradar qualidade. Ex: O Slack cresceu de 0 a 8M DAUs em 2 anos. Usaram monolito modular PHP → migraram gradualmente para serviços Go onde fazia sentido.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Monolito modular, Feature flags, Strangler fig pattern, Database boundaries, API versioning</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T4 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m21t4')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">4</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🏢 Organização como Prioridade — "Autonomia de times com alinhamento técnico"</span>
+                        </button>
+                        <div id="m21t4" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Quando múltiplos times precisam de deploys independentes sem coordenação. Aqui microsserviços fazem sentido — não pela tecnologia, mas pela organização.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Microsserviços sem autonomia de times são overhead puro. Ex: A Amazon introduziu "two-pizza teams" (6-10 pessoas) antes de introduzir microsserviços. A estrutura organizacional veio primeiro, a tecnologia seguiu.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Conway's Law, Team Topologies, Platform teams, API contracts, Ownership de serviço</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T5 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m21t5')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">5</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🌊 Imprevisibilidade como Prioridade — "Escalar o evento, não o servidor"</span>
+                        </button>
+                        <div id="m21t5" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Workloads com picos imprevisíveis (webhooks, viralizações, black friday). Serverless e event-driven absorvem a variação.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Provisionar para o pico é caro; não provisionar é catastrófico. Ex: O iFood usa autoscaling agressivo — na final da Copa do Mundo, pedidos triplicam em 15 minutos. Serverless + queues absorvem sem intervenção.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Serverless, EDA, Autoscaling, Queue-based load leveling, Burst capacity</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T6 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m21t6')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">6</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🤖 Não-Determinismo como Prioridade — "Controlar IA em produção"</span>
+                        </button>
+                        <div id="m21t6" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Quando LLMs ou modelos de ML estão no fluxo crítico. Outputs variáveis, latências imprevisíveis, custos por token. Arquitetura precisa de guardrails.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> IA sem controle é uma bomba-relógio. Ex: O Bing Chat da Microsoft teve respostas alucinantes nas primeiras semanas — faltaram guardrails de output. Agora usa classificadores de segurança em cascade antes de cada resposta.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Prompt engineering como infraestrutura, Output validation, Fallback chains, Cost control, Human-in-the-loop</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T7 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m21t7')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">7</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🔄 Combinando Prioridades — "Na prática, todo projeto tem múltiplos riscos"</span>
+                        </button>
+                        <div id="m21t7" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Projetos reais combinam riscos. Um e-commerce tem velocidade (MVP) + imprevisibilidade (Black Friday) + organização (time crescendo). A arte é priorizar.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Arquitetos inexperientes otimizam para um risco e ignoram os outros. Ex: A INEMA combina velocidade (novas features semanais) + IA (Claude Code no fluxo) + escala (comunidade crescente). Solução: monolito modular + n8n para automações + guardrails de IA.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Risk matrix, Weighted scoring, Phased architecture, Architecture fitness functions</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex gap-3 mt-6 justify-start">
+                    <button onclick="openModal('Módulo 2.1 — Framework de Decisão Arquitetural', 'modulo-2-1.html')" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">Ver em Modal</button>
+                    <a href="modulo-2-1.html" class="bg-dark-700 hover:bg-dark-600 text-neutral-300 text-sm font-medium px-4 py-2 rounded-lg transition-colors">Ver Completo</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- M2.2 -->
+        <div id="modulo-2-2" class="bg-dark-800 border border-blue-500/30 rounded-2xl overflow-hidden">
+            <div class="p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-1">
+                    <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Módulo 2.2</span>
+                    <span class="text-xs text-neutral-500">~35 min</span>
+                </div>
+                <h2 class="text-2xl font-bold text-neutral-100 mb-1">📊 Análise de Trade-offs</h2>
+                <p class="text-neutral-400 text-sm mb-6">Toda decisão é uma troca — aprenda a fazer as certas</p>
+
+                <div class="space-y-3">
+
+                    <!-- T1 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m22t1')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">1</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">⚖️ O que são Trade-offs — "Não existe almoço grátis em arquitetura"</span>
+                        </button>
+                        <div id="m22t1" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Toda decisão arquitetural favorece um atributo em detrimento de outro. Consistência vs. disponibilidade. Simplicidade vs. flexibilidade. Performance vs. manutenibilidade.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Buscar a solução "perfeita" paralisa. Ex: O Google Spanner prometia "o melhor dos dois mundos" (consistência + disponibilidade) — mas custou US$1B+ em R&amp;D e infraestrutura global com relógios atômicos. Você não tem esse budget.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> CAP Theorem revisitado, PACELC, Trade-off matrix, "Good enough" engineering</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T2 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m22t2')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">2</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">💰 Custo vs. Performance — "Quanto vale cada milissegundo?"</span>
+                        </button>
+                        <div id="m22t2" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Mais performance custa mais dinheiro (servidores maiores, caching, CDN). O ponto ótimo é onde o custo marginal de performance excede o benefício.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Over-provisionar é tão ruim quanto under-provisionar. Ex: Uma startup pagando US$5k/mês em AWS para servir 100 usuários está queimando dinheiro. Um Redis de US$50/mês resolve o bottleneck.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Cost per request, Right-sizing, Reserved vs. spot instances, CDN ROI, Caching economics</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T3 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m22t3')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">3</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🏎️ Velocidade de Entrega vs. Qualidade — "Ship fast vs. ship right"</span>
+                        </button>
+                        <div id="m22t3" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Entregar rápido acumula dívida técnica. Refatorar tudo atrasa features. O equilíbrio muda conforme o estágio do produto.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Dívida técnica é como dívida financeira — controlada é ferramenta, descontrolada é falência. Ex: O Facebook tinha o lema "move fast and break things" até 2014. Quando tinham 1.3B usuários, mudaram para "move fast with stable infrastructure" porque quebrar coisas custava muito.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Technical debt quadrant (Fowler), Quality gates, Definition of done, Refactoring budget (20% rule)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T4 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m22t4')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">4</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🔐 Segurança vs. Usabilidade — "Quanto atrito é aceitável?"</span>
+                        </button>
+                        <div id="m22t4" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Mais segurança geralmente significa mais atrito para o usuário. MFA é mais seguro mas adiciona passos. Zero Trust é ideal mas complexo de implementar.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Segurança que ninguém usa não protege ninguém. Ex: O NIST mudou suas guidelines de senha em 2017 — parou de exigir senhas complexas com símbolos porque usuários anotavam em post-its. Senhas longas e simples (passphrases) são mais seguras na prática.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Risk-based authentication, Progressive security, Passwordless auth, Biometrics, Security UX</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T5 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m22t5')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">5</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🧩 Flexibilidade vs. Complexidade — "Quanto futuro você precisa suportar?"</span>
+                        </button>
+                        <div id="m22t5" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Sistemas mais flexíveis são mais complexos. Plugin systems, feature flags, configuração dinâmica — tudo tem custo cognitivo e operacional.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> "E se precisarmos mudar isso?" é a pergunta que mais gera over-engineering. Ex: YAGNI na prática — 80% das features "para o futuro" nunca são usadas (IBM Research). Cada abstração prematura é código para manter.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> YAGNI rigoroso, Extension points seletivos, Configuration vs. code, Plugin architecture cost</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T6 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m22t6')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">6</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🌐 Consistência vs. Disponibilidade — "CAP na vida real"</span>
+                        </button>
+                        <div id="m22t6" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Em sistemas distribuídos, durante partições de rede, você escolhe consistência (rejeitar requests) ou disponibilidade (servir dados potencialmente stale).</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> A escolha depende do domínio. Banco precisa de consistência. E-commerce pode tolerar catálogo levemente desatualizado. Ex: O DynamoDB do Amazon oferece "eventually consistent reads" (mais rápido, mais barato) e "strongly consistent reads" (mais lento, mais caro) — você escolhe por operação.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Strong vs. eventual consistency, Conflict resolution (last-write-wins, CRDT), Read-your-writes, Tunable consistency</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T7 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m22t7')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">7</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">📐 Análise de Trade-offs na Prática — "Um framework para decisões difíceis"</span>
+                        </button>
+                        <div id="m22t7" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Método estruturado: (1) listar opções, (2) definir critérios, (3) avaliar cada opção contra cada critério, (4) documentar a decisão e seus motivos.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Decisões arquiteturais sem método viram "achismo do mais sênior". Ex: No ATAM (Architecture Tradeoff Analysis Method), stakeholders avaliam cenários de qualidade contra a arquitetura proposta — as discordâncias revelam riscos ocultos.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> ATAM, Weighted decision matrix, Spike/PoC, Time-boxed experiments, Reversibility score</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex gap-3 mt-6 justify-start">
+                    <button onclick="openModal('Módulo 2.2 — Análise de Trade-offs', 'modulo-2-2.html')" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">Ver em Modal</button>
+                    <a href="modulo-2-2.html" class="bg-dark-700 hover:bg-dark-600 text-neutral-300 text-sm font-medium px-4 py-2 rounded-lg transition-colors">Ver Completo</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- M2.3 -->
+        <div id="modulo-2-3" class="bg-dark-800 border border-blue-500/30 rounded-2xl overflow-hidden">
+            <div class="p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-1">
+                    <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Módulo 2.3</span>
+                    <span class="text-xs text-neutral-500">~35 min</span>
+                </div>
+                <h2 class="text-2xl font-bold text-neutral-100 mb-1">🛠️ Escolhendo a Stack Certa</h2>
+                <p class="text-neutral-400 text-sm mb-6">Tecnologia é meio, não fim — como escolher sem cair no hype</p>
+
+                <div class="space-y-3">
+
+                    <!-- T1 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m23t1')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">1</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🎪 Hype vs. Sustentabilidade — "O ciclo de vida de toda tecnologia"</span>
+                        </button>
+                        <div id="m23t1" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Toda tecnologia passa pelo Gartner Hype Cycle: trigger, pico de expectativas infladas, vale da desilusão, slope of enlightenment, platô de produtividade.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Adotar no pico é arriscado; adotar no platô é seguro mas tardio. Ex: GraphQL em 2018 era hype puro. Em 2024, é uma ferramenta madura usada onde faz sentido (mobile-first apps) e ignorada onde não faz (APIs internas simples).</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Gartner Hype Cycle, Technology Radar (ThoughtWorks), Boring technology theory, Lindy Effect</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T2 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m23t2')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">2</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">👥 Fit com o Time — "A melhor tecnologia é a que seu time domina"</span>
+                        </button>
+                        <div id="m23t2" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Stack que ninguém conhece é stack que ninguém mantém. O conhecimento existente do time é a restrição mais importante e mais ignorada.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Contratar para uma stack exótica é caro e demorado. Ex: A Etsy deliberadamente escolheu PHP (que muitos consideram "inferior") porque todo dev do mercado conhece. Resultado: time de 200+ devs contratados rapidamente, todos produtivos em semanas.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Hiring funnel, Ramp-up time, Bus factor, Polyglot pragmatism, Training investment vs. hiring</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T3 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m23t3')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">3</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🔗 Ecossistema e Comunidade — "Bibliotecas, plugins, respostas no Stack Overflow"</span>
+                        </button>
+                        <div id="m23t3" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Uma linguagem/framework é tão boa quanto seu ecossistema. Bibliotecas maduras, documentação abundante, comunidade ativa.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Ecossistema fraco = reinventar rodas constantemente. Ex: Node.js venceu não por ser "melhor" que alternativas, mas porque o npm tem 2M+ pacotes. Python domina IA porque tem NumPy, TensorFlow, PyTorch. O ecossistema é o moat.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Package ecosystem maturity, Community health metrics, Documentation quality, Long-term support (LTS), Vendor backing</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T4 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m23t4')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">4</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">💸 Total Cost of Ownership — "O custo real vai além da licença"</span>
+                        </button>
+                        <div id="m23t4" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> TCO inclui licença, infraestrutura, treinamento, contratação, manutenção, oportunidade. Um banco "gratuito" pode custar mais que um pago se exigir DBA dedicado.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Decisões baseadas apenas em custo de licença são míopes. Ex: Migrar de Oracle (caro) para PostgreSQL ("grátis") parece óbvio — mas se seu time não sabe PostgreSQL e precisa 3 meses de migração + treinamento, o TCO no primeiro ano pode ser maior.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> License cost, Infrastructure cost, People cost, Opportunity cost, Migration cost, Vendor lock-in premium</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T5 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m23t5')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">5</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🏗️ Stack para o Contexto INEMA — "n8n + Claude Code + Supabase + HTML estático"</span>
+                        </button>
+                        <div id="m23t5" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Stack prática calibrada para pequenos times que constroem produtos educacionais e automações com IA: n8n para orquestração, Claude para geração, Supabase para dados, HTML estático para front.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Não precisa de React, não precisa de Kubernetes, não precisa de microserviços. Ex: A INEMA roda cursos para milhares de alunos com HTML estático servido via CDN — custo zero de hosting, performance máxima, zero dependências JavaScript.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> n8n como orquestrador, Claude Code para geração, Supabase (auth + DB + storage), HTML estático vs. SPA, CDN-first deployment</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T6 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m23t6')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">6</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🔄 Estratégias de Migração — "Trocar o motor com o avião voando"</span>
+                        </button>
+                        <div id="m23t6" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Como migrar de uma stack para outra sem parar o sistema. Strangler fig, parallel run, canary migration.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Reescritas big-bang falham 70% das vezes (Standish Group). Migração gradual é a única abordagem confiável. Ex: O LinkedIn migrou de Java monolítico para microsserviços usando Strangler Fig — cada novo feature era um novo serviço, o monolito encolhia gradualmente por 3 anos.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Strangler Fig Pattern, Blue-green deployment, Canary releases, Feature flags como kill switch, Database migration strategies</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T7 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m23t7')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">7</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">📋 Checklist de Decisão de Stack — "10 perguntas antes de escolher"</span>
+                        </button>
+                        <div id="m23t7" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Framework prático de 10 perguntas: (1) Time conhece? (2) Contratamos fácil? (3) Comunidade ativa? (4) Resolve nosso problema principal? (5) TCO aceitável? (6) Lock-in gerenciável? (7) Escala para nosso horizonte? (8) Segura o suficiente? (9) Podemos migrar depois? (10) Testamos com PoC?</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Decisão de stack sem framework vira debate emocional. Ex: "Vamos usar Rust!" — É rápido, sim. Mas alguém do time sabe Rust? Vamos contratar devs Rust? Em quanto tempo? A que custo?</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Stack scorecard, PoC time-boxed (2 semanas max), Kill criteria, Reversibility assessment</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex gap-3 mt-6 justify-start">
+                    <button onclick="openModal('Módulo 2.3 — Escolhendo a Stack Certa', 'modulo-2-3.html')" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">Ver em Modal</button>
+                    <a href="modulo-2-3.html" class="bg-dark-700 hover:bg-dark-600 text-neutral-300 text-sm font-medium px-4 py-2 rounded-lg transition-colors">Ver Completo</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- M2.4 -->
+        <div id="modulo-2-4" class="bg-dark-800 border border-blue-500/30 rounded-2xl overflow-hidden">
+            <div class="p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-1">
+                    <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Módulo 2.4</span>
+                    <span class="text-xs text-neutral-500">~30 min</span>
+                </div>
+                <h2 class="text-2xl font-bold text-neutral-100 mb-1">📝 ADRs e Documentação de Decisão</h2>
+                <p class="text-neutral-400 text-sm mb-6">Architecture Decision Records — a memória do projeto</p>
+
+                <div class="space-y-3">
+
+                    <!-- T1 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m24t1')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">1</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">📄 O que são ADRs — "Decisões como código: versionadas, revisáveis, rastreáveis"</span>
+                        </button>
+                        <div id="m24t1" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Architecture Decision Records são documentos curtos que registram decisões arquiteturais significativas: contexto, decisão, consequências. Vivem no repositório junto ao código.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Sem ADRs, cada novo dev pergunta "por que fizeram assim?" e ninguém lembra. Ex: O Spotify tem 1000+ ADRs públicos internamente. Quando alguém questiona uma decisão, aponta para o ADR — com contexto, alternativas rejeitadas e trade-offs documentados.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Context, Decision, Consequences, Status (proposed/accepted/deprecated/superseded)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T2 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m24t2')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">2</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">✍️ Como Escrever um Bom ADR — "Contexto, decisão, consequências — nessa ordem"</span>
+                        </button>
+                        <div id="m24t2" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Template: Título, Data, Status, Contexto (o problema), Decisão (o que escolhemos), Consequências (positivas e negativas), Alternativas (o que rejeitamos e por quê).</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> ADRs ruins são piores que nenhum ADR — dão falsa sensação de documentação. Ex: "Decidimos usar PostgreSQL" não é um ADR. "Escolhemos PostgreSQL para o serviço de pagamentos porque precisamos de transações ACID e o time já tem expertise. Alternativa rejeitada: MongoDB, por falta de transações multi-document na época" — isso é um ADR.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Michael Nygard's template, MADR (Markdown ADR), Decisão com "because", Tamanho ideal (1 página)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T3 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m24t3')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">3</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🔍 Quando Criar um ADR — "Não documente tudo, documente o que importa"</span>
+                        </button>
+                        <div id="m24t3" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> ADRs são para decisões significativas: escolha de banco, estilo arquitetural, protocolo de comunicação, estratégia de deploy. Não para "usar tab ou espaço".</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Over-documentation mata a prática. Ex: Regra prática — se a decisão: (1) é difícil de reverter, (2) afeta múltiplos times, (3) tem trade-offs não-óbvios, ou (4) alguém vai perguntar "por quê?" daqui a 6 meses — escreva um ADR.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Significance threshold, Reversibility criterion, Impact radius, "Would a new team member ask about this?"</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T4 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m24t4')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">4</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">📂 Organizando ADRs no Repositório — "docs/decisions/0001-use-postgresql.md"</span>
+                        </button>
+                        <div id="m24t4" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> ADRs vivem em docs/decisions/ ou docs/adr/ no repositório. Numerados sequencialmente. Versionados com git. Linked nos PRs que implementam a decisão.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> ADRs fora do repo são ignorados. Ex: Confluência é onde documentação vai para morrer. No repo, o ADR aparece no PR review, no blame, no log — é parte do fluxo.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> docs/adr/ convention, Sequential numbering, Status lifecycle, ADR tools (adr-tools CLI, Log4brains)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T5 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m24t5')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">5</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🔄 Lifecycle de um ADR — "Proposed → Accepted → Superseded"</span>
+                        </button>
+                        <div id="m24t5" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> ADRs têm ciclo de vida: Proposed (em discussão), Accepted (aprovado), Deprecated (não mais relevante), Superseded (substituído por novo ADR).</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Decisões mudam — e isso é ok. O ADR antigo não é "errado", era certo para o contexto da época. Ex: ADR-0005: "Usar REST para todas as APIs". 2 anos depois, ADR-0023: "Usar gRPC para comunicação interna (substitui ADR-0005 para serviço-a-serviço)" — a história completa está preservada.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Status transitions, Superseding vs. deprecating, Linking ADRs, Decision timeline</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T6 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m24t6')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">6</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🗣️ ADRs como Ferramenta de Comunicação — "Alinhamento assíncrono para times distribuídos"</span>
+                        </button>
+                        <div id="m24t6" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> ADRs não são só documentação — são ferramenta de alinhamento. Um ADR "proposed" é um RFC (Request for Comments) que o time revisa antes da implementação.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Times distribuídos não podem depender de reuniões para alinhar. Ex: O Thoughtworks usa ADRs como RFCs — o autor propõe, o time comenta no PR, ajustes são feitos, e quando mergeia está aceito. Zero reuniões para 80% das decisões.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> ADR as RFC, Async decision-making, Comment period, Consensus vs. consent, Escalation path</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T7 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m24t7')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">7</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">📊 Métricas e Revisão de ADRs — "Revisitando decisões com dados"</span>
+                        </button>
+                        <div id="m24t7" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Periodicamente revisar ADRs à luz de novos dados: a decisão funcionou? Os trade-offs se confirmaram? Precisa ser revisada?</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Decisões envelhecem. O que era correto com 10 usuários pode ser errado com 10M. Ex: Architecture fitness functions — testes automatizados que verificam se a arquitetura ainda atende seus atributos de qualidade. Se a latência P99 ultrapassou o SLO, talvez o ADR que escolheu comunicação síncrona precise ser revisitado.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Architecture fitness functions, Quarterly review, Decision effectiveness metrics, Trigger-based review</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex gap-3 mt-6 justify-start">
+                    <button onclick="openModal('Módulo 2.4 — ADRs e Documentação de Decisão', 'modulo-2-4.html')" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">Ver em Modal</button>
+                    <a href="modulo-2-4.html" class="bg-dark-700 hover:bg-dark-600 text-neutral-300 text-sm font-medium px-4 py-2 rounded-lg transition-colors">Ver Completo</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- M2.5 -->
+        <div id="modulo-2-5" class="bg-dark-800 border border-blue-500/30 rounded-2xl overflow-hidden">
+            <div class="p-6 sm:p-8">
+                <div class="flex items-center gap-3 mb-1">
+                    <span class="text-xs font-bold text-blue-400 uppercase tracking-widest">Módulo 2.5</span>
+                    <span class="text-xs text-neutral-500">~35 min</span>
+                </div>
+                <h2 class="text-2xl font-bold text-neutral-100 mb-1">🔄 Migração e Evolução</h2>
+                <p class="text-neutral-400 text-sm mb-6">Sistemas vivos mudam — aprenda a evoluir sem quebrar</p>
+
+                <div class="space-y-3">
+
+                    <!-- T1 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m25t1')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">1</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🌿 Strangler Fig Pattern — "A migração mais segura que existe"</span>
+                        </button>
+                        <div id="m25t1" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Novo sistema cresce ao redor do antigo, como uma figueira estranguladora. Cada nova feature vai para o sistema novo. O antigo encolhe até desaparecer.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Reescritas big-bang falham porque o sistema antigo ainda precisa de manutenção durante a reescrita. Ex: Martin Fowler documentou o padrão no caso do The Guardian: migraram de Java para Scala/Play um módulo por vez, ao longo de anos, sem downtime.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Proxy/router layer, Gradual cutover, Feature parity tracking, Rollback safety, Timeline expectations (anos, não meses)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T2 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m25t2')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">2</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🔀 Branch by Abstraction — "Mudar implementação sem mudar interface"</span>
+                        </button>
+                        <div id="m25t2" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Introduzir uma abstração entre consumidores e a implementação que vai mudar. Trocar a implementação por trás da abstração. Remover a abstração quando a migração estiver completa.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Permite migrar componentes internos sem afetar quem os usa. Ex: O Flickr migrou de MySQL para PostgreSQL usando Branch by Abstraction — criaram uma interface de "data store", rodaram ambos em paralelo, compararam resultados, e switcharam.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Abstraction layer, Parallel run, Result comparison, Gradual cutover, Cleanup phase</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T3 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m25t3')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">3</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🐦 Canary Releases — "Testar em produção com rede de segurança"</span>
+                        </button>
+                        <div id="m25t3" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Deploy da nova versão para um pequeno percentual de usuários (1-5%). Monitorar métricas. Se ok, aumentar gradualmente. Se não, rollback instantâneo.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Testes em staging não pegam tudo. Produção tem dados, carga e comportamentos únicos. Ex: O Google faz canary de toda mudança no Gmail — 0.1% dos usuários primeiro, por 24h. Se error rate > baseline, auto-rollback. Protege os outros 1.8B usuários.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Progressive rollout (1% → 5% → 25% → 100%), Metric-based promotion, Automatic rollback triggers, Observability requirements</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T4 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m25t4')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">4</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🏗️ Database Migration Strategies — "O problema mais difícil de migração"</span>
+                        </button>
+                        <div id="m25t4" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Migrar banco é mais difícil que migrar código. Envolve schema changes, data migration, dual-write, shadow traffic.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Banco errado é a decisão mais cara para reverter. Ex: O GitHub migrou de MySQL para Vitess (MySQL sharded) sem downtime para 100M+ repositórios. Usaram dual-write por 6 meses, comparando resultados antes de cortar.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Dual-write pattern, Shadow traffic, Schema versioning, Backward-compatible migrations, Zero-downtime migrations</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T5 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m25t5')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">5</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🚩 Feature Flags — "O botão de liga/desliga em produção"</span>
+                        </button>
+                        <div id="m25t5" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Conditional logic que ativa/desativa features sem deploy. Permite trunk-based development, A/B testing, e kill switch para features problemáticas.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Feature flags desacoplam deploy de release. Ex: O Facebook deploya código 3x/dia para 3B+ usuários — tudo atrás de feature flags (Gatekeeper). Se algo quebra, desliga o flag em segundos, sem rollback de deploy.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Release flags vs. experiment flags vs. ops flags, Flag lifecycle, Technical debt de flags, LaunchDarkly vs. custom</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T6 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m25t6')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">6</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">📐 Architecture Fitness Functions — "Testes automatizados para sua arquitetura"</span>
+                        </button>
+                        <div id="m25t6" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Testes que verificam se a arquitetura continua atendendo seus atributos de qualidade. Latência &lt; 200ms? Zero dependências circulares? Cobertura > 80%?</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> Sem fitness functions, degradação arquitetural é invisível até explodir. Ex: O ArchUnit (Java) testa que "nenhum controller importa repositório diretamente" — se alguém viola a camada, o build quebra. Degradação bloqueada na CI.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> ArchUnit, NetArchTest, Dependency rules, Performance budgets, Automated architecture compliance</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- T7 -->
+                    <div class="border border-dark-700 rounded-xl overflow-hidden">
+                        <button onclick="toggleTopic('m25t7')" class="w-full flex items-center gap-3 p-4 hover:bg-dark-700/50 transition-colors justify-start">
+                            <span class="w-7 h-7 min-w-[1.75rem] rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center justify-center border border-blue-500/30">7</span>
+                            <span class="text-sm font-semibold text-neutral-100 text-left">🔮 Evolutionary Architecture — "Projetada para mudar"</span>
+                        </button>
+                        <div id="m25t7" class="topic-explanation px-4 pb-4">
+                            <div class="bg-blue-900/30 rounded-lg p-4 space-y-3 text-sm">
+                                <div>
+                                    <span class="text-blue-400 font-semibold">O que é:</span>
+                                    <span class="text-neutral-300"> Arquitetura que suporta mudanças incrementais guiadas em múltiplas dimensões. Não é "arquitetura que prevê o futuro" — é "arquitetura que aceita que não prevemos o futuro".</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Por que aprender:</span>
+                                    <span class="text-neutral-300"> O único constante é mudança. Arquitetura que resiste a mudança é dívida técnica. Ex: A Netflix fez 7 grandes migrações arquiteturais em 15 anos (datacenter → AWS → microsserviços → edge → serverless parcial) — cada uma incremental, nenhuma big-bang.</span>
+                                </div>
+                                <div>
+                                    <span class="text-blue-400 font-semibold">Conceitos-chave:</span>
+                                    <span class="text-neutral-400"> Guided incremental change, Last Responsible Moment, Fitness functions, Sacrificial architecture, "Make the change easy, then make the easy change"</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="flex gap-3 mt-6 justify-start">
+                    <button onclick="openModal('Módulo 2.5 — Migração e Evolução', 'modulo-2-5.html')" class="bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">Ver em Modal</button>
+                    <a href="modulo-2-5.html" class="bg-dark-700 hover:bg-dark-600 text-neutral-300 text-sm font-medium px-4 py-2 rounded-lg transition-colors">Ver Completo</a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Navigation -->
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div class="flex items-center justify-between">
+            <a href="../trilha1/index.html" class="flex items-center gap-2 bg-dark-800 border border-dark-700 rounded-xl px-5 py-3 text-neutral-300 hover:text-blue-400 hover:border-blue-500/30 transition-colors text-sm font-medium">
+                ← Fundamentos
+            </a>
+            <a href="../trilha3/index.html" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-500 rounded-xl px-5 py-3 text-white transition-colors text-sm font-medium">
+                Próxima: IA e Automação →
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-700">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <p class="text-center text-neutral-500 text-sm">Arquitetura DEV 2030 — 2026</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal-overlay" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="relative w-full h-full flex items-center justify-center p-4">
+            <div class="bg-dark-800 rounded-2xl border border-dark-700 w-full max-w-4xl h-[80vh] flex flex-col overflow-hidden">
+                <div class="flex items-center justify-between p-4 border-b border-dark-700">
+                    <h3 id="modal-title" class="text-lg font-bold text-neutral-100"></h3>
+                    <button onclick="closeModal()" class="p-2 hover:bg-dark-700 rounded-lg transition-colors">
+                        <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <div class="flex-1 overflow-hidden">
+                    <iframe id="modal-iframe" class="w-full h-full border-0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+            themeToggleDarkIcon.classList.remove('hidden');
+            html.classList.remove('dark');
+        } else {
+            themeToggleLightIcon.classList.remove('hidden');
+        }
+        themeToggle.addEventListener('click', () => {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Toggle topics
+        function toggleTopic(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.toggle('active');
+            }
+        }
+
+        // Modal
+        function openModal(title, url) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-iframe').src = url;
+            document.getElementById('modal-overlay').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.add('hidden');
+            document.getElementById('modal-iframe').src = '';
+            document.body.style.overflow = '';
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+
+</body>
+</html>

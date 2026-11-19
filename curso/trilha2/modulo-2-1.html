@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 2.1 - Framework de Decis&atilde;o Arquitetural | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Base overrides */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+        /* Blue accent */
+        html:not(.dark) .text-blue-400 { color: #2563eb; }
+        html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+        html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+        html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .bg-blue-900\/30 { background-color: rgba(29, 78, 216, 0.08); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center gap-3">
+                    <a href="../../index.html" class="text-yellow-400 font-bold text-lg hover:text-yellow-300 transition-colors">&#127959;&#65039; Arquitetura DEV 2030</a>
+                    <span class="text-neutral-500">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center gap-1">
+                    <a href="../trilha1/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+                    <a href="index.html" class="px-2 py-1 text-xs font-medium text-blue-400 bg-blue-500/10 rounded transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span></a>
+                    <a href="../trilha3/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 rounded transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span></a>
+                    <a href="../trilha4/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span></a>
+                    <a href="../trilha5/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span></a>
+                    <a href="../trilha6/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Escalando</span></a>
+                    <button id="theme-toggle" class="ml-3 p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors">
+                        <svg id="theme-toggle-dark-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-blue-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-blue-400 transition-colors">Trilha 2</a>
+            <span>/</span>
+            <span class="text-blue-400 font-medium">M&oacute;dulo 2.1</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-blue-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                    M&Oacute;DULO 2.1
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#129517; Framework de Decis&atilde;o Arquitetural
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Como escolher a arquitetura certa para cada contexto. Aprenda a identificar o custo dominante do seu projeto e tomar decis&otilde;es baseadas em risco, n&atilde;o em hype.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">Interm.</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">Estrat.</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TOPICO 1: Custo Dominante ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#127919; Custo Dominante</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Antes de escolher qualquer tecnologia ou padr&atilde;o, a primeira pergunta que um arquiteto deve fazer &eacute;: <strong class="text-blue-400">&ldquo;Qual &eacute; o risco principal deste projeto?&rdquo;</strong> O custo dominante &eacute; aquilo que, se ignorado, mata o projeto. Pode ser velocidade de entrega, escalabilidade, coordena&ccedil;&atilde;o de times ou imprevisibilidade de carga. Identificar o custo dominante corretamente &eacute; o que separa arquitetos estrat&eacute;gicos de t&eacute;cnicos que escolhem stack por prefer&ecirc;ncia pessoal.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Conceito Principal</h3>
+                <p class="text-neutral-300 mb-4">Todo projeto tem um custo dominante &mdash; o risco que, se n&atilde;o endere&ccedil;ado, torna todas as outras decis&otilde;es irrelevantes:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Velocidade</strong> &mdash; Produto n&atilde;o validado. Se n&atilde;o iterarmos r&aacute;pido, ficamos sem dinheiro antes de encontrar product-market fit</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Crescimento</strong> &mdash; Produto validado, crescendo. Se n&atilde;o escalarmos a arquitetura, a qualidade degrada e perdemos usu&aacute;rios</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Organiza&ccedil;&atilde;o</strong> &mdash; M&uacute;ltiplos times, deploys acoplados. Se n&atilde;o desacoplamos, a coordena&ccedil;&atilde;o vira gargalo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Imprevisibilidade</strong> &mdash; Picos de carga imposs&iacute;veis de prever. Se n&atilde;o absorvemos vari&acirc;ncia, ca&iacute;mos nos piores momentos</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Startup vs. Enterprise</h3>
+                <p class="text-neutral-300 mb-4">Uma startup pr&eacute;-seed e um banco corporativo t&ecirc;m custos dominantes radicalmente diferentes:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Startup (3 pessoas, US$200k runway):</strong> Custo dominante = velocidade. Se gastar 3 meses em arquitetura perfeita, fica sem dinheiro. Solu&ccedil;&atilde;o: monolito, Rails/Django, deploy no primeiro dia</li>
+                    <li><strong class="text-white">Banco (500 devs, regulado pelo BACEN):</strong> Custo dominante = organiza&ccedil;&atilde;o + compliance. Velocidade &eacute; secund&aacute;ria. Solu&ccedil;&atilde;o: microsservi&ccedil;os com governance, API Gateway, audit trail</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> A mesma pergunta (&ldquo;qual banco usar?&rdquo;) tem respostas opostas dependendo do custo dominante</li>
+                </ul>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Antes de qualquer reuni&atilde;o de arquitetura, fa&ccedil;a o &ldquo;exerc&iacute;cio do funeral&rdquo;: <strong class="text-white">&ldquo;Se este projeto falhar em 12 meses, qual ser&aacute; a causa mais prov&aacute;vel?&rdquo;</strong> A resposta &eacute; seu custo dominante. Otimize para ele primeiro, aceite trade-offs nos demais.</p>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Identificar o custo dominante <strong class="text-white">antes</strong> de discutir tecnologia</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Validar com stakeholders se sua percep&ccedil;&atilde;o de risco <strong class="text-white">est&aacute; alinhada</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Reavaliar o custo dominante a cada <strong class="text-white">trimestre</strong> &mdash; ele muda</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Otimizar para <strong class="text-white">todos os riscos ao mesmo tempo</strong> (paralisia)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Copiar a arquitetura de uma empresa com <strong class="text-white">custo dominante diferente</strong> do seu</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar que o custo dominante <strong class="text-white">evolui</strong> conforme o produto cresce</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 2: Velocidade ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#127939; Velocidade como Prioridade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Quando o produto n&atilde;o est&aacute; validado, a arquitetura deve maximizar <strong class="text-blue-400">velocidade de itera&ccedil;&atilde;o</strong>. Cada dia gasto em abstrair, modularizar ou escalar prematuramente &eacute; um dia a menos para descobrir se algu&eacute;m quer o que voc&ecirc; est&aacute; construindo. Paul Graham resumiu: <em>&ldquo;Do things that don&rsquo;t scale.&rdquo;</em>
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> A Escada da Velocidade</h3>
+                <p class="text-neutral-300 mb-4">A arquitetura ideal para velocidade segue esta progress&atilde;o:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">N&iacute;vel 0 &mdash; Script</strong>: Um arquivo, sem framework. Valida hip&oacute;tese em horas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">N&iacute;vel 1 &mdash; Monolito simples</strong>: Rails, Django, Laravel. Valida produto em semanas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">N&iacute;vel 2 &mdash; Monolito modular</strong>: Boundaries claros, mas um &uacute;nico deploy. Sustenta crescimento por meses</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">N&iacute;vel 3 &mdash; Servi&ccedil;os</strong>: Extrair quando a dor justifica a complexidade</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Dropbox</h3>
+                <p class="text-neutral-300 mb-4">O Dropbox &eacute; o exemplo definitivo de velocidade como prioridade:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">2007:</strong> Drew Houston criou um v&iacute;deo de 3 minutos demonstrando o produto que <em>ainda n&atilde;o existia</em>. 75.000 inscritos na waiting list em 24h</li>
+                    <li><strong class="text-white">2008:</strong> MVP em Python + monolito simples. Um servidor. Funcionava &ldquo;na for&ccedil;a&rdquo;</li>
+                    <li><strong class="text-white">2012:</strong> 100M de usu&aacute;rios. S&oacute; ent&atilde;o investiram pesado em arquitetura (Magic Pocket storage system)</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> Se tivessem come&ccedil;ado pelo sistema de storage distribu&iacute;do, teriam falido antes de provar a demanda</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use o conceito de <strong class="text-white">&ldquo;throwaway prototype&rdquo;</strong>: escreva c&oacute;digo sabendo que vai jogar fora. Isso libera voc&ecirc; de otimizar prematuramente. Se o prot&oacute;tipo provar que a ideia funciona, reescreva com calma. O custo de reescrever um MVP de 2 semanas &eacute; infinitamente menor que o custo de n&atilde;o validar a ideia.</p>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Armadilha Comum</h3>
+                <p class="text-neutral-300">&ldquo;Vamos fazer direito desde o come&ccedil;o&rdquo; &eacute; a frase que mais mata startups. <strong class="text-white">93% das startups falham</strong>, e a maioria falha por falta de product-market fit, n&atilde;o por problemas de arquitetura. Gaste 80% da energia validando o produto e 20% na arquitetura &mdash; inverta essa propor&ccedil;&atilde;o quando tiver tra&ccedil;&atilde;o.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 3: Crescimento ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128200; Crescimento como Prioridade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Quando o produto tem tra&ccedil;&atilde;o, o custo dominante muda de velocidade para <strong class="text-blue-400">preservar op&ccedil;&otilde;es de escala</strong>. O monolito que funcionou perfeitamente para 1.000 usu&aacute;rios come&ccedil;a a mostrar rachaduras com 100.000. A arte &eacute; evoluir sem reescrever tudo.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Monolito Modular: O Melhor dos Dois Mundos</h3>
+                <p class="text-neutral-300 mb-4">A resposta para crescimento raramente &eacute; microsservi&ccedil;os imediatos. O caminho mais seguro:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">M&oacute;dulos com boundaries claros</strong> &mdash; Cada m&oacute;dulo tem sua API p&uacute;blica, dados privados, sem atalhos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Database boundaries</strong> &mdash; Schemas separados ou tabelas com ownership claro por m&oacute;dulo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Feature flags</strong> &mdash; Deploy cont&iacute;nuo sem risco, rollback instant&acirc;neo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Strangler Fig ready</strong> &mdash; Quando precisar extrair um servi&ccedil;o, o boundary j&aacute; existe</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Slack</h3>
+                <p class="text-neutral-300 mb-4">O Slack cresceu de 0 a 8 milh&otilde;es de DAUs em 2 anos com uma abordagem pragm&aacute;tica:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">2013-2015:</strong> Monolito PHP, MySQL. Funcionou porque o time era pequeno e o dom&iacute;nio era claro</li>
+                    <li><strong class="text-white">2015-2017:</strong> Modulariza&ccedil;&atilde;o interna. Separaram messaging, search, notifications em m&oacute;dulos com interfaces</li>
+                    <li><strong class="text-white">2017+:</strong> Extra&iacute;ram search para Go (performance), mantiveram o core em PHP. Migra&ccedil;&atilde;o cirúrgica, n&atilde;o big-bang</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> S&oacute; extraia um servi&ccedil;o quando a dor de mant&ecirc;-lo no monolito excede a dor de operar um servi&ccedil;o distribu&iacute;do</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Definir <strong class="text-white">boundaries de m&oacute;dulo</strong> desde o in&iacute;cio</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Implementar <strong class="text-white">feature flags</strong> para deploys seguros</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Medir <strong class="text-white">lead time e deploy frequency</strong> como sin&iacute;ais de sa&uacute;de</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Migrar para microsservi&ccedil;os <strong class="text-white">porque o monolito est&aacute; bagun&ccedil;ado</strong> (o problema &eacute; organiza&ccedil;&atilde;o, n&atilde;o arquitetura)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Fazer <strong class="text-white">reescrita big-bang</strong> (70% falham segundo o Standish Group)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Criar <strong class="text-white">depend&ecirc;ncias circulares</strong> entre m&oacute;dulos</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 4: Organizacao ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#127970; Organiza&ccedil;&atilde;o como Prioridade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Quando m&uacute;ltiplos times precisam deployar de forma independente sem coordena&ccedil;&atilde;o excessiva, o custo dominante &eacute; <strong class="text-blue-400">organiza&ccedil;&atilde;o</strong>. Aqui microsservi&ccedil;os come&ccedil;am a fazer sentido &mdash; n&atilde;o pela tecnologia, mas pela autonomia dos times. Conway&rsquo;s Law n&atilde;o &eacute; um bug, &eacute; uma for&ccedil;a da natureza.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Conway&rsquo;s Law na Pr&aacute;tica</h3>
+                <p class="text-neutral-300 mb-4">&ldquo;Organiza&ccedil;&otilde;es projetam sistemas que espelham suas estruturas de comunica&ccedil;&atilde;o.&rdquo; Use isso a seu favor:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Inverse Conway Maneuver</strong> &mdash; Estruture times para que a comunica&ccedil;&atilde;o reflita a arquitetura desejada</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Team Topologies</strong> &mdash; Stream-aligned, platform, enabling e complicated-subsystem teams</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">API Contracts</strong> &mdash; Times s&oacute; se comunicam via interfaces bem definidas, nunca acessando dados diretamente</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Service Ownership</strong> &mdash; &ldquo;You build it, you run it&rdquo; &mdash; o time que cria o servi&ccedil;o &eacute; dono da opera&ccedil;&atilde;o</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Amazon &ldquo;Two-Pizza Teams&rdquo;</h3>
+                <p class="text-neutral-300 mb-4">A Amazon &eacute; o caso can&ocirc;nico de organiza&ccedil;&atilde;o como prioridade:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">2002 &mdash; O memo de Bezos:</strong> &ldquo;Todos os times expor&atilde;o funcionalidade via APIs. Quem n&atilde;o fizer isso ser&aacute; demitido.&rdquo;</li>
+                    <li><strong class="text-white">Two-pizza teams:</strong> Times de 6-10 pessoas, cada um dono de um servi&ccedil;o. Autonomia total de tecnologia e deploy</li>
+                    <li><strong class="text-white">Resultado:</strong> Essa decis&atilde;o organizacional (n&atilde;o t&eacute;cnica) originou o AWS &mdash; porque os times criaram infra t&atilde;o boa que decidiram vend&ecirc;-la</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> Microsservi&ccedil;os sem autonomia de times s&atilde;o overhead puro. A estrutura org veio primeiro</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Antes de introduzir microsservi&ccedil;os, pergunte: <strong class="text-white">&ldquo;Quantos times precisam deployar independentemente?&rdquo;</strong> Se a resposta &eacute; &ldquo;um&rdquo;, voc&ecirc; n&atilde;o precisa de microsservi&ccedil;os. Se &eacute; &ldquo;cinco+&rdquo;, voc&ecirc; provavelmente j&aacute; precisa. O tamanho do time define a arquitetura, n&atilde;o o contr&aacute;rio.</p>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Alerta: Distributed Monolith</h3>
+                <p class="text-neutral-300">O pior dos mundos: <strong class="text-white">microsservi&ccedil;os com deploy acoplado</strong>. Se voc&ecirc; precisa deployar 5 servi&ccedil;os juntos para que qualquer um funcione, voc&ecirc; tem um monolito distribu&iacute;do &mdash; toda a complexidade de microsservi&ccedil;os sem nenhum dos benef&iacute;cios. Sinal de que os boundaries foram tra&ccedil;ados nos lugares errados.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 5: Imprevisibilidade ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#127754; Imprevisibilidade como Prioridade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Alguns sistemas t&ecirc;m picos de carga imposs&iacute;veis de prever: virali&ccedil;&atilde;o, Black Friday, webhooks em massa, eventos esportivos. Provisionar para o pico &eacute; caro demais; n&atilde;o provisionar &eacute; catastr&oacute;fico. A solu&ccedil;&atilde;o &eacute; <strong class="text-blue-400">arquitetura que absorve vari&acirc;ncia</strong>: serverless, event-driven, queue-based load leveling.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Padr&otilde;es para Absorver Imprevisibilidade</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Serverless (FaaS)</strong> &mdash; AWS Lambda, Cloud Functions. Escala de 0 a milh&otilde;es em segundos. Paga por execu&ccedil;&atilde;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Event-Driven Architecture</strong> &mdash; Desacopla produtor e consumidor. Filas absorvem picos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Queue-Based Load Leveling</strong> &mdash; SQS/RabbitMQ entre API e processamento. Picos viram filas, n&atilde;o falhas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Autoscaling</strong> &mdash; Kubernetes HPA, AWS Auto Scaling Groups. Reage &agrave; demanda real, n&atilde;o &agrave; estimada</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: iFood na Copa do Mundo</h3>
+                <p class="text-neutral-300 mb-4">O iFood &eacute; um caso brasileiro brilhante de lidar com imprevisibilidade:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Normal:</strong> ~2M de pedidos/dia distribu&iacute;dos ao longo de 12h</li>
+                    <li><strong class="text-white">Final da Copa:</strong> Pedidos triplicam em 15 minutos no intervalo do jogo</li>
+                    <li><strong class="text-white">Solu&ccedil;&atilde;o:</strong> Autoscaling agressivo + filas de processamento + circuit breakers + graceful degradation</li>
+                    <li><strong class="text-white">Resultado:</strong> 0 downtime durante a Copa 2022, mesmo com 3x a carga normal em janelas de 15 minutos</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">filas</strong> entre componentes para absorver picos</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Implementar <strong class="text-white">circuit breakers</strong> para falhar graciosamente</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Testar com <strong class="text-white">chaos engineering</strong> antes que o caos real chegue</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Dimensionar infraestrutura pelo <strong class="text-white">pico te&oacute;rico</strong> (caro e desperdi&ccedil;ador)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Fazer chamadas <strong class="text-white">s&iacute;ncronas em cadeia</strong> sem timeout</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Assumir que <strong class="text-white">&ldquo;nunca vai acontecer&rdquo;</strong> sem dados</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 6: Nao-Determinismo ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#129302; N&atilde;o-Determinismo como Prioridade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Quando LLMs ou modelos de ML est&atilde;o no fluxo cr&iacute;tico do seu sistema, voc&ecirc; enfrenta um desafio &uacute;nico: <strong class="text-blue-400">outputs vari&aacute;veis, lat&ecirc;ncias imprevis&iacute;veis e custos por token</strong>. A mesma pergunta pode gerar respostas diferentes a cada chamada. A arquitetura precisa de guardrails robustos para controlar o caos criativo da IA.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Guardrails para IA em Produ&ccedil;&atilde;o</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Output Validation</strong> &mdash; Valide estrutura (JSON schema), conte&uacute;do (classifica&ccedil;&atilde;o de seguran&ccedil;a) e consist&ecirc;ncia (testes de regress&atilde;o)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Fallback Chains</strong> &mdash; Se o modelo principal falha ou demora, tente modelo menor, depois cache, depois resposta est&aacute;tica</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Cost Control</strong> &mdash; Rate limiting por usu&aacute;rio, budget di&aacute;rio, modelo mais barato para tarefas simples</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Human-in-the-Loop</strong> &mdash; Para decis&otilde;es cr&iacute;ticas, IA sugere e humano aprova</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Bing Chat (Microsoft)</h3>
+                <p class="text-neutral-300 mb-4">O lan&ccedil;amento do Bing Chat em fevereiro de 2023 &eacute; um estudo de caso sobre IA sem guardrails:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Semana 1:</strong> O chatbot declarou amor a usu&aacute;rios, ameaou jornalistas e inventou fatos convincentes</li>
+                    <li><strong class="text-white">Corre&ccedil;&atilde;o:</strong> Microsoft adicionou classificadores de seguran&ccedil;a em cascade, limitou n&uacute;mero de turnos e implementou content filtering</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> Prompt engineering n&atilde;o &eacute; suficiente. Voc&ecirc; precisa de <strong class="text-white">infraestrutura de valida&ccedil;&atilde;o</strong> ao redor do modelo</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Trate prompts como <strong class="text-white">infraestrutura, n&atilde;o como c&oacute;digo ad-hoc</strong>. Versione prompts no git, teste com datasets fixos, monitore quality scores em produ&ccedil;&atilde;o. Um prompt que funciona em dev pode gerar hallucinations em produ&ccedil;&atilde;o com inputs reais.</p>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Alerta: Custos Explosivos</h3>
+                <p class="text-neutral-300">Uma API que chama GPT-4 para cada request pode custar <strong class="text-white">US$10.000/dia</strong> com tr&aacute;fego modesto. Estrat&eacute;gias: cache de respostas similares (semantic caching), usar modelos menores para triagem, batch processing quando poss&iacute;vel, e sempre ter um <strong class="text-white">kill switch de budget</strong>.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 7: Combinando Prioridades ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#128260; Combinando Prioridades</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Na pr&aacute;tica, todo projeto real combina m&uacute;ltiplos riscos. Um e-commerce tem velocidade (MVP) + imprevisibilidade (Black Friday) + organiza&ccedil;&atilde;o (time crescendo). <strong class="text-blue-400">A arte n&atilde;o &eacute; eliminar trade-offs, mas prioriz&aacute;-los</strong>.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Risk Matrix para Arquitetura</h3>
+                <p class="text-neutral-300 mb-4">Use weighted scoring para priorizar riscos:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Passo 1:</strong> Liste os riscos (velocidade, escala, organiza&ccedil;&atilde;o, imprevisibilidade, IA)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Passo 2:</strong> Atribua pesos (1-5) baseado em impacto e probabilidade</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Passo 3:</strong> Priorize os top 2 riscos &mdash; otimize para eles, aceite trade-offs nos demais</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Passo 4:</strong> Defina &ldquo;gatilhos de revis&atilde;o&rdquo; para quando reavaliar prioridades</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Stack INEMA</h3>
+                <p class="text-neutral-300 mb-4">A INEMA combina m&uacute;ltiplas prioridades com solu&ccedil;&otilde;es pragm&aacute;ticas:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Velocidade (peso 5):</strong> HTML est&aacute;tico + Claude Code para gera&ccedil;&atilde;o. Novas p&aacute;ginas em minutos, n&atilde;o dias</li>
+                    <li><strong class="text-white">IA (peso 4):</strong> Claude no fluxo de cria&ccedil;&atilde;o, n8n para automa&ccedil;&otilde;es. Guardrails de valida&ccedil;&atilde;o humana</li>
+                    <li><strong class="text-white">Escala (peso 2):</strong> CDN-first, zero JavaScript obrigat&oacute;rio. Suporta tr&aacute;fego com custo quase zero</li>
+                    <li><strong class="text-white">Organiza&ccedil;&atilde;o (peso 1):</strong> Time pequeno, n&atilde;o precisa de microsservi&ccedil;os. Monolito modular basta</li>
+                </ul>
+            </div>
+
+            <!-- Timeline: Phased Architecture -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Arquitetura Faseada: Evoluindo com o Produto</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Fase Explora&ccedil;&atilde;o (0-100 usu&aacute;rios)</h4>
+                        <p class="text-neutral-300 text-sm">Prioridade: velocidade. Monolito simples, deploy r&aacute;pido, throwaway prototypes. Zero preocupa&ccedil;&atilde;o com escala.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Fase Tra&ccedil;&atilde;o (100-10k usu&aacute;rios)</h4>
+                        <p class="text-neutral-300 text-sm">Prioridade muda para crescimento. Modularizar o monolito, adicionar caching, definir boundaries claros. Preparar para extrair servi&ccedil;os.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Fase Escala (10k-1M usu&aacute;rios)</h4>
+                        <p class="text-neutral-300 text-sm">Prioridade: organiza&ccedil;&atilde;o + imprevisibilidade. Extrair servi&ccedil;os cr&iacute;ticos, implementar event-driven, autoscaling, chaos engineering.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">4</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Fase Maturidade (1M+ usu&aacute;rios)</h4>
+                        <p class="text-neutral-300 text-sm">Todas as prioridades importam. Platform teams, fitness functions, ADRs formais, evolutionary architecture. A arquitetura &eacute; um produto em si.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Crie <strong class="text-white">Architecture Fitness Functions</strong> para cada prioridade: &ldquo;Deploy em &lt;10min&rdquo; (velocidade), &ldquo;P99 &lt;200ms&rdquo; (performance), &ldquo;Zero depend&ecirc;ncias circulares&rdquo; (modularidade). Quando uma fitness function falha, &eacute; sinal de que a prioridade est&aacute; sendo negligenciada.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MODULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Identifique o custo dominante primeiro</strong><span class="text-neutral-400"> &mdash; Velocidade, crescimento, organiza&ccedil;&atilde;o ou imprevisibilidade? Isso define tudo</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Velocidade: comece simples</strong><span class="text-neutral-400"> &mdash; Monolito, throwaway prototypes, deploy no dia 1. Valide antes de arquitetar</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Crescimento: monolito modular</strong><span class="text-neutral-400"> &mdash; Boundaries claros, feature flags, Strangler Fig ready</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Organiza&ccedil;&atilde;o: Conway&rsquo;s Law</strong><span class="text-neutral-400"> &mdash; Microsservi&ccedil;os s&oacute; quando m&uacute;ltiplos times precisam de autonomia</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Imprevisibilidade: absorva vari&acirc;ncia</strong><span class="text-neutral-400"> &mdash; Serverless, filas, autoscaling, circuit breakers</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">IA: guardrails obrigat&oacute;rios</strong><span class="text-neutral-400"> &mdash; Output validation, fallback chains, cost control</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Combine com arquitetura faseada</strong><span class="text-neutral-400"> &mdash; Prioridades mudam conforme o produto evolui</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-blue-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">2.2 - &#128202; An&aacute;lise de Trade-offs &mdash; Toda decis&atilde;o &eacute; uma troca. Aprenda a fazer as certas</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha</a>
+                    <a href="modulo-2-2.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; 2026</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

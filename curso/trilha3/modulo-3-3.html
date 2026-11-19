@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 3.3 - Automa&ccedil;&atilde;o Inteligente com n8n | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+        /* Violet accent */
+        html:not(.dark) .text-violet-400 { color: #7c3aed; }
+        html:not(.dark) .bg-violet-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+        html:not(.dark) .bg-violet-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+        html:not(.dark) .border-violet-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+        html:not(.dark) .hover\:bg-violet-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.2); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+
+        /* Other trilha colors for nav */
+        html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+        html:not(.dark) .text-amber-400 { color: #92400e; }
+        html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(217, 119, 6, 0.08); }
+        html:not(.dark) .text-teal-400 { color: #0d9488; }
+        html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .text-rose-400 { color: #9f1239; }
+        html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(225, 29, 72, 0.08); }
+
+        /* Violet button */
+        html:not(.dark) .bg-violet-600 { background-color: #7c3aed; }
+        html:not(.dark) .hover\:bg-violet-500:hover { background-color: #6d28d9; }
+        html:not(.dark) .bg-violet-900\/20 { background-color: rgba(124, 58, 237, 0.06); }
+        html:not(.dark) .bg-violet-900\/30 { background-color: rgba(124, 58, 237, 0.08); }
+        html:not(.dark) .bg-violet-900\/40 { background-color: rgba(124, 58, 237, 0.1); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center gap-3">
+                    <a href="../../index.html" class="text-yellow-400 font-bold text-lg hover:text-yellow-300 transition-colors">&#127959;&#65039; Arquitetura DEV 2030</a>
+                    <span class="text-neutral-500">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center gap-1">
+                    <a href="../trilha1/index.html" class="px-2 py-1 text-xs font-medium text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+                    <a href="../trilha2/index.html" class="px-2 py-1 text-xs font-medium text-blue-400 hover:bg-blue-500/10 rounded transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span></a>
+                    <a href="index.html" class="px-2 py-1 text-xs font-medium text-violet-400 bg-violet-500/10 rounded transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span></a>
+                    <a href="../trilha4/index.html" class="px-2 py-1 text-xs font-medium text-amber-400 hover:bg-amber-500/10 rounded transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span></a>
+                    <a href="../trilha5/index.html" class="px-2 py-1 text-xs font-medium text-teal-400 hover:bg-teal-500/10 rounded transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span></a>
+                    <a href="../trilha6/index.html" class="px-2 py-1 text-xs font-medium text-rose-400 hover:bg-rose-500/10 rounded transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span></a>
+                    <button id="theme-toggle" class="ml-3 p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-4 h-4 text-neutral-400" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-4 h-4 text-neutral-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-violet-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-violet-400 transition-colors">Trilha 3</a>
+            <span>/</span>
+            <span class="text-violet-400 font-medium">M&oacute;dulo 3.3</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-violet-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-violet-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-violet-500/20 text-violet-400 border border-violet-500/30">
+                    M&Oacute;DULO 3.3
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#9881;&#65039; Automa&ccedil;&atilde;o Inteligente com n8n
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    De workflows simples a pipelines inteligentes: como usar o n8n para orquestrar automa&ccedil;&otilde;es que integram IA, APIs e eventos em fluxos confi&aacute;veis e escal&aacute;veis.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">Interm.</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">Pr&aacute;tica</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TOPICO 1: n8n como Orquestrador ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#127918; n8n como Orquestrador</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                O n8n &eacute; uma plataforma de automa&ccedil;&atilde;o open-source que funciona como <strong class="text-violet-400">orquestrador de workflows</strong>. Diferente de Zapier ou Make, &eacute; self-hosted, extensível via c&oacute;digo e permite workflows complexos com condi&ccedil;&otilde;es, loops e sub-workflows &mdash; ideal para arquiteturas de automa&ccedil;&atilde;o corporativa.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Por que n8n?</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Self-hosted</strong> &mdash; Seus dados nunca saem da sua infra. Compliance total com LGPD/GDPR</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Fair-code</strong> &mdash; C&oacute;digo aberto, audit&aacute;vel, sem vendor lock-in</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">400+ integra&ccedil;&otilde;es</strong> &mdash; Conecta com praticamente qualquer API ou servi&ccedil;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Code nodes</strong> &mdash; Quando os n&oacute;s visuais n&atilde;o bastam, escreva JavaScript/Python direto no workflow</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> n8n vs. Alternativas</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">vs. Zapier:</strong> n8n &eacute; self-hosted (dados seguros), sem limites de tasks, permite c&oacute;digo custom. Zapier &eacute; mais f&aacute;cil para n&atilde;o-devs</li>
+                    <li><strong class="text-white">vs. Make:</strong> n8n tem melhor suporte a workflows complexos com condi&ccedil;&otilde;es e loops</li>
+                    <li><strong class="text-white">vs. Temporal/Airflow:</strong> n8n &eacute; mais visual e r&aacute;pido para prototipar. Temporal/Airflow s&atilde;o melhores para pipelines de dados pesados</li>
+                    <li><strong class="text-white">Comunidade:</strong> 50k+ stars no GitHub, crescimento de 300% em 2024-2025</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Suba o n8n com <strong class="text-white">Docker Compose em 5 minutos</strong>: <code class="bg-dark-700 px-2 py-0.5 rounded text-violet-400">docker run -p 5678:5678 n8nio/n8n</code>. Para produ&ccedil;&atilde;o, use PostgreSQL como backend (n&atilde;o SQLite) e configure backup autom&aacute;tico dos workflows.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 2: Integrando IA nos Workflows ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#129302; Integrando IA nos Workflows</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                O n8n tem <strong class="text-violet-400">n&oacute;s nativos para IA</strong>: OpenAI, Anthropic, Ollama, e um framework completo de AI Agents. Isso permite criar workflows que classificam, resumem, traduzem, extraem dados e tomam decis&otilde;es usando LLMs &mdash; tudo visual e sem c&oacute;digo.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Padr&otilde;es de IA no n8n</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Classifica&ccedil;&atilde;o autom&aacute;tica</strong> &mdash; Email/ticket chega &rarr; LLM classifica prioridade e categoria &rarr; roteia para time certo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Extra&ccedil;&atilde;o de dados</strong> &mdash; PDF/imagem chega &rarr; LLM extrai campos estruturados &rarr; salva no banco</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Gera&ccedil;&atilde;o de conte&uacute;do</strong> &mdash; Dados de produto &rarr; LLM gera descri&ccedil;&atilde;o &rarr; publica no e-commerce</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">AI Agent workflows</strong> &mdash; Agente com tools (busca, c&aacute;lculo, API) resolve tarefas multi-step</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Atendimento Automatizado</h3>
+                <p class="text-neutral-300 mb-4">Uma startup SaaS automatizou 70% do suporte com n8n + IA:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Trigger:</strong> Novo ticket no Intercom &rarr; webhook para n8n</li>
+                    <li><strong class="text-white">Classifica&ccedil;&atilde;o:</strong> LLM classifica em billing/t&eacute;cnico/feature request</li>
+                    <li><strong class="text-white">RAG:</strong> Busca documentos relevantes na base de conhecimento</li>
+                    <li><strong class="text-white">Resposta:</strong> LLM gera resposta draft &rarr; humano revisa e envia</li>
+                    <li><strong class="text-white">Resultado:</strong> Tempo de resposta de 4h para 15min, CSAT +23%</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Comece com <strong class="text-white">workflows de classifica&ccedil;&atilde;o</strong> &mdash; s&atilde;o os mais simples e de maior ROI. Um n&oacute; de LLM que classifica emails em 5 categorias pode economizar horas/dia de trabalho manual. Use structured output (JSON) para garantir consist&ecirc;ncia.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 3: ETL com IA ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128202; ETL com IA</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                ETL tradicional &eacute; baseado em regras r&iacute;gidas. <strong class="text-violet-400">ETL com IA adiciona intelig&ecirc;ncia</strong>: dados n&atilde;o-estruturados podem ser entendidos, classificados e transformados pelo LLM. Isso abre possibilidades que antes exigiam equipes inteiras de data engineering.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Padr&otilde;es de ETL Inteligente</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Extract inteligente</strong> &mdash; LLM extrai dados de PDFs, emails, imagens (OCR + compreens&atilde;o sem&acirc;ntica)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Transform sem&acirc;ntico</strong> &mdash; Normaliza&ccedil;&atilde;o, deduplica&ccedil;&atilde;o e enriquecimento usando LLM</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Load com valida&ccedil;&atilde;o</strong> &mdash; Dados passam por valida&ccedil;&atilde;o de schema antes de carregar no destino</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Feedback loop</strong> &mdash; Erros de extra&ccedil;&atilde;o alimentam melhoria cont&iacute;nua dos prompts</span></li>
+                </ul>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Definir <strong class="text-white">schema de output</strong> claro para cada tipo de documento</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Implementar <strong class="text-white">valida&ccedil;&atilde;o autom&aacute;tica</strong> ap&oacute;s extra&ccedil;&atilde;o do LLM</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Manter <strong class="text-white">fallback para processamento manual</strong> quando confian&ccedil;a for baixa</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Confiar em <strong class="text-white">100% dos outputs do LLM</strong> sem valida&ccedil;&atilde;o</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Processar <strong class="text-white">dados sens&iacute;veis</strong> via APIs externas de IA sem avalia&ccedil;&atilde;o</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">custos de tokens</strong> em pipelines de alto volume</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Para ETL de alto volume, <strong class="text-white">use batch processing com n8n</strong>: acumule documentos em uma fila, processe em lotes de 10-50, e use modelos mais baratos para extra&ccedil;&atilde;o simples. Reserve GPT-4/Claude para documentos complexos que falharam no primeiro passo.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 4: Event-Driven Automation ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#9889; Event-Driven Automation</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Automa&ccedil;&otilde;es reativas s&atilde;o acionadas por <strong class="text-violet-400">eventos do mundo real</strong>: um email chega, um pagamento falha, um deploy acontece, um alerta dispara. O n8n suporta triggers via webhooks, polling, filas e integra&ccedil;&otilde;es nativas &mdash; criando workflows que reagem em tempo real.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Tipos de Triggers no n8n</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Webhook</strong> &mdash; Recebe POST/GET de qualquer servi&ccedil;o. Resposta instant&acirc;nea ou ass&iacute;ncrona</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Cron/Schedule</strong> &mdash; Execu&ccedil;&atilde;o peri&oacute;dica (a cada minuto, hora, dia)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Polling</strong> &mdash; Verifica novos dados em APIs/bancos a intervalos regulares</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Message Queue</strong> &mdash; Consome de RabbitMQ, Redis, SQS para processamento ass&iacute;ncrono</span></li>
+                </ul>
+            </div>
+
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Exemplos de Automa&ccedil;&otilde;es Event-Driven</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Alerta inteligente</h4>
+                        <p class="text-neutral-300 text-sm">Grafana dispara alerta &rarr; n8n recebe webhook &rarr; LLM analisa logs e sugere causa raiz &rarr; Slack notifica time com diagn&oacute;stico</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Onboarding autom&aacute;tico</h4>
+                        <p class="text-neutral-300 text-sm">Novo usu&aacute;rio se cadastra &rarr; webhook &rarr; cria conta em 5 servi&ccedil;os &rarr; gera email personalizado com IA &rarr; agenda follow-up</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Code review assistido</h4>
+                        <p class="text-neutral-300 text-sm">PR aberto no GitHub &rarr; webhook &rarr; LLM analisa diff &rarr; posta coment&aacute;rio com sugest&otilde;es &rarr; atualiza dashboard</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use <strong class="text-white">webhooks com resposta ass&iacute;ncrona</strong> para workflows que chamam LLMs. Responda 202 Accepted imediatamente e processe em background. Isso evita timeouts e melhora a experi&ecirc;ncia do servi&ccedil;o que chamou o webhook.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 5: Testando Automacoes ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#128270; Testando Automa&ccedil;&otilde;es</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Automa&ccedil;&otilde;es sem testes s&atilde;o bombas-rel&oacute;gio. <strong class="text-violet-400">Quando falham, falham silenciosamente</strong> &mdash; e voc&ecirc; s&oacute; descobre semanas depois quando um cliente reclama. Testar workflows de automa&ccedil;&atilde;o exige estrat&eacute;gias espec&iacute;ficas.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Estrat&eacute;gias de Teste</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Teste de n&oacute; individual</strong> &mdash; Cada n&oacute; do workflow &eacute; testado isoladamente com dados mock</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Teste end-to-end</strong> &mdash; Workflow completo executado com dados de teste em ambiente staging</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Teste de erro</strong> &mdash; Simular falhas em cada etapa: API fora do ar, dados inv&aacute;lidos, timeout</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Teste de idempot&ecirc;ncia</strong> &mdash; Executar o mesmo evento 2x n&atilde;o deve causar duplica&ccedil;&atilde;o</span></li>
+                </ul>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Ter <strong class="text-white">ambiente staging</strong> com n8n separado para testes</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Criar <strong class="text-white">datasets de teste</strong> com edge cases conhecidos</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Monitorar <strong class="text-white">execu&ccedil;&otilde;es falhadas</strong> com alertas autom&aacute;ticos</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Testar <strong class="text-white">direto em produ&ccedil;&atilde;o</strong> com dados reais</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Assumir que <strong class="text-white">&ldquo;funcionou uma vez, funciona sempre&rdquo;</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">testes de carga</strong> em workflows de alto volume</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Crie um <strong class="text-white">&ldquo;workflow de health check&rdquo;</strong> que testa seus workflows cr&iacute;ticos a cada hora: envia um webhook de teste, verifica se a resposta &eacute; correta e alerta no Slack se algo falhar. &Eacute; o equivalente a um synthetic monitoring para automa&ccedil;&otilde;es.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 6: Seguranca em Automacoes ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128274; Seguran&ccedil;a em Automa&ccedil;&otilde;es</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Workflows de automa&ccedil;&atilde;o t&ecirc;m <strong class="text-violet-400">acesso privilegiado a m&uacute;ltiplos sistemas</strong>: bancos de dados, APIs, servi&ccedil;os de email, CRMs. Um workflow comprometido pode causar danos massivos. Seguran&ccedil;a em automa&ccedil;&atilde;o &eacute; sobre controle de acesso, gest&atilde;o de credenciais e auditoria.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Pilares de Seguran&ccedil;a</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Credenciais criptografadas</strong> &mdash; n8n encripta credenciais com chave &uacute;nica. Nunca exponha em logs ou outputs</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Princ&iacute;pio do menor privil&eacute;gio</strong> &mdash; Cada credencial deve ter apenas as permiss&otilde;es necess&aacute;rias</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Webhook authentication</strong> &mdash; Sempre validar tokens/assinaturas em webhooks p&uacute;blicos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Audit log</strong> &mdash; Registrar quem criou/editou cada workflow e quando foi executado</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Riscos Comuns</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Webhook aberto:</strong> Qualquer pessoa pode acionar o workflow se o endpoint n&atilde;o tem autentica&ccedil;&atilde;o</li>
+                    <li><strong class="text-white">Credenciais over-permissioned:</strong> API key com acesso admin quando s&oacute; precisa de leitura</li>
+                    <li><strong class="text-white">Dados sens&iacute;veis em logs:</strong> n8n loga execu&ccedil;&otilde;es &mdash; PII e secrets podem vazar nos logs</li>
+                    <li><strong class="text-white">Acesso irrestrito ao n8n:</strong> Sem RBAC, qualquer usu&aacute;rio pode editar workflows cr&iacute;ticos</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Configure o n8n com <strong class="text-white">ENCRYPTION_KEY forte, autentica&ccedil;&atilde;o obrigat&oacute;ria e reten&ccedil;&atilde;o de logs limitada</strong>. Use um reverse proxy (Nginx/Caddy) com HTTPS na frente. Para webhooks, implemente HMAC signature validation &mdash; n&atilde;o confie apenas na obscuridade da URL.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 7: Escalando Automacoes ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#128640; Escalando Automa&ccedil;&otilde;es</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Um n8n com 10 workflows &eacute; simples. Com 200+ workflows processando milhares de execu&ccedil;&otilde;es/dia, <strong class="text-violet-400">escala se torna um desafio arquitetural</strong>. Voc&ecirc; precisa pensar em workers, filas, parti&ccedil;&atilde;o de workflows e monitoramento.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Estrat&eacute;gias de Escala para n8n</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Queue mode</strong> &mdash; n8n em modo queue com Redis: separa trigger da execu&ccedil;&atilde;o, permite m&uacute;ltiplos workers</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Workers horizontais</strong> &mdash; Adicione workers para processar mais workflows em paralelo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Inst&acirc;ncias separadas</strong> &mdash; Isolar workflows cr&iacute;ticos em inst&acirc;ncias dedicadas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Sub-workflows</strong> &mdash; Modularizar l&oacute;gica complexa em workflows reutiliz&aacute;veis</span></li>
+                </ul>
+            </div>
+
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Escala Progressiva do n8n</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Single instance (0-50 workflows)</h4>
+                        <p class="text-neutral-300 text-sm">Um n8n com PostgreSQL. Suficiente para a maioria das startups. Foco em organiza&ccedil;&atilde;o e naming conventions.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Queue mode (50-200 workflows)</h4>
+                        <p class="text-neutral-300 text-sm">n8n + Redis + 2-4 workers. Execu&ccedil;&otilde;es paralelas. Monitoramento com Prometheus/Grafana.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Multi-instance (200+ workflows)</h4>
+                        <p class="text-neutral-300 text-sm">M&uacute;ltiplas inst&acirc;ncias por dom&iacute;nio (vendas, suporte, ops). Kubernetes para orquestrar. GitOps para versionamento.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> M&eacute;tricas para Monitorar</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Execu&ccedil;&otilde;es/minuto:</strong> Quantos workflows est&atilde;o rodando &mdash; sinal de gargalo se enfileirar</li>
+                    <li><strong class="text-white">Taxa de falha:</strong> % de execu&ccedil;&otilde;es com erro &mdash; alertar se &gt; 5%</li>
+                    <li><strong class="text-white">Tempo m&eacute;dio de execu&ccedil;&atilde;o:</strong> Degradação indica problema de performance</li>
+                    <li><strong class="text-white">Queue depth:</strong> Tamanho da fila de execu&ccedil;&otilde;es pendentes &mdash; escalar se crescer</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Adote <strong class="text-white">naming conventions desde o dia 1</strong>: <code class="bg-dark-700 px-2 py-0.5 rounded text-violet-400">[DOMINIO] - [TRIGGER] - [ACAO]</code> (ex: &ldquo;[VENDAS] - Novo Lead - Enriquecer e Notificar&rdquo;). Quando voc&ecirc; tiver 100 workflows, a organiza&ccedil;&atilde;o vai salvar horas de busca.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MODULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-violet-900/40 via-dark-800 to-dark-800 rounded-xl border border-violet-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">n8n &eacute; o orquestrador ideal</strong><span class="text-neutral-400"> &mdash; Self-hosted, open-source, 400+ integra&ccedil;&otilde;es, suporte a c&oacute;digo custom</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">IA transforma workflows</strong><span class="text-neutral-400"> &mdash; Classifica&ccedil;&atilde;o, extra&ccedil;&atilde;o, gera&ccedil;&atilde;o e agents direto no n8n</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">ETL inteligente &eacute; o futuro</strong><span class="text-neutral-400"> &mdash; LLMs extraem dados de fontes n&atilde;o-estruturadas com precis&atilde;o</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Event-driven &eacute; o padr&atilde;o</strong><span class="text-neutral-400"> &mdash; Webhooks, filas e triggers fazem automa&ccedil;&otilde;es reagirem em tempo real</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Teste &eacute; obrigat&oacute;rio</strong><span class="text-neutral-400"> &mdash; Automa&ccedil;&otilde;es sem teste falham silenciosamente</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Seguran&ccedil;a &eacute; cr&iacute;tica</strong><span class="text-neutral-400"> &mdash; Credenciais encriptadas, webhooks autenticados, menor privil&eacute;gio</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Escale progressivamente</strong><span class="text-neutral-400"> &mdash; Single &rarr; queue mode &rarr; multi-instance conforme a demanda</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-violet-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">3.4 - &#129302; Agentes e Pipelines de IA &mdash; Construindo agentes aut&ocirc;nomos e pipelines de processamento</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="modulo-3-2.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; M&oacute;dulo Anterior</a>
+                    <a href="modulo-3-4.html" class="flex-1 text-center px-6 py-3 bg-violet-600 text-white rounded-lg font-semibold hover:bg-violet-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-700 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <p class="text-center text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; 2026</p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

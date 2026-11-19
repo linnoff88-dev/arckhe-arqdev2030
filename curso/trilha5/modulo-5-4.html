@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 5.4 - Segurança e Compliance | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-teal-400 { color: #0d9488; }
+        html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+        html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+        html:not(.dark) .hover\:bg-teal-500\/30:hover { background-color: rgba(13, 148, 136, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.06); }
+        html:not(.dark) .bg-teal-900\/30 { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .bg-teal-900\/40 { background-color: rgba(13, 148, 136, 0.1); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-teal-400 bg-teal-500/10">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-teal-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-teal-400 transition-colors">Trilha 5</a>
+            <span>/</span>
+            <span class="text-teal-400 font-medium">M&oacute;dulo 5.4</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-teal-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-teal-500/20 text-teal-400 border border-teal-500/30">
+                    M&Oacute;DULO 5.4
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128272; Seguran&ccedil;a e Compliance
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Proteger sem paralisar. Neste m&oacute;dulo, voc&ecirc; vai aprender seguran&ccedil;a pr&aacute;tica para desenvolvedores &mdash; do OWASP Top 10 &agrave; LGPD, de Zero Trust a security testing automatizado. Seguran&ccedil;a n&atilde;o &eacute; respons&aacute;bilidade de um time separado: &eacute; parte do c&oacute;digo que voc&ecirc; escreve todo dia.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">Avan&ccedil;ado</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">Execu&ccedil;&atilde;o</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TOPICO 1: OWASP Top 10 ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#128737;&#65039; OWASP Top 10</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                O OWASP Top 10 &eacute; a lista atualizada dos <strong class="text-teal-400">10 riscos mais cr&iacute;ticos</strong> em aplica&ccedil;&otilde;es web. Injection, Broken Authentication, Sensitive Data Exposure, XSS &mdash; esses 10 itens causam aproximadamente 90% dos breaches. Conhec&ecirc;-los &eacute; o m&iacute;nimo obrigat&oacute;rio para qualquer desenvolvedor que coloca c&oacute;digo em produ&ccedil;&atilde;o.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Os 10 Riscos Mais Cr&iacute;ticos (2021+)</h3>
+                <p class="text-neutral-300 mb-4">Cada um destes j&aacute; causou preju&iacute;zos de bilh&otilde;es de d&oacute;lares:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">A01: Broken Access Control</strong> &mdash; Usu&aacute;rios acessam recursos que n&atilde;o deveriam (subiu para #1 em 2021)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">A02: Cryptographic Failures</strong> &mdash; Dados sens&iacute;veis sem encripta&ccedil;&atilde;o adequada</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">A03: Injection</strong> &mdash; SQL, NoSQL, OS, LDAP injection via input n&atilde;o sanitizado</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">A04: Insecure Design</strong> &mdash; Falhas de design que nenhum c&oacute;digo corrige (novo em 2021)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">A05: Security Misconfiguration</strong> &mdash; Defaults inseguros, headers faltando, permiss&otilde;es excessivas</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Equifax (2017)</h3>
+                <p class="text-neutral-300 mb-4">Um dos maiores breaches da hist&oacute;ria &mdash; dados de <strong class="text-white">147 milh&otilde;es de pessoas</strong> expostos:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Causa:</strong> Vulnerabilidade conhecida no Apache Struts (CVE-2017-5638) &mdash; patch dispon&iacute;vel h&aacute; 2 meses</li>
+                    <li><strong class="text-white">OWASP:</strong> A06 (Vulnerable Components) + A05 (Security Misconfiguration)</li>
+                    <li><strong class="text-white">Custo:</strong> US$1.4 bilh&atilde;o em multas e remedia&ccedil;&atilde;o</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> Um simples <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">npm audit fix</code> ou Dependabot teria prevenido tudo</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-teal-900/20 rounded-xl border border-teal-500/30 p-6">
+                    <h4 class="font-bold text-teal-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Usar <strong class="text-white">prepared statements</strong> para toda query de banco</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Validar e sanitizar <strong class="text-white">todo input</strong> do usu&aacute;rio (server-side)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Implementar <strong class="text-white">rate limiting</strong> em endpoints de autentica&ccedil;&atilde;o</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Confiar em <strong class="text-white">valida&ccedil;&atilde;o client-side</strong> como &uacute;nica defesa</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Concatenar <strong class="text-white">input do usu&aacute;rio</strong> diretamente em queries SQL</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Deixar <strong class="text-white">stack traces</strong> vis&iacute;veis em respostas de produ&ccedil;&atilde;o</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Imprima o OWASP Top 10 e cole perto do seu monitor. Antes de cada PR, passe pelo checklist mental: <strong class="text-white">&ldquo;Esse c&oacute;digo aceita input externo? Est&aacute; sanitizado? Os acessos est&atilde;o autorizados? Dados sens&iacute;veis est&atilde;o encriptados?&rdquo;</strong> Em 30 segundos voc&ecirc; previne 90% das vulnerabilidades.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 2: Autenticacao Moderna ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#128273; Autentica&ccedil;&atilde;o Moderna</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Passwords s&atilde;o legado. A evolu&ccedil;&atilde;o da autentica&ccedil;&atilde;o vai de <strong class="text-teal-400">passwords &rarr; MFA &rarr; passwordless</strong> (magic links, passkeys, biometrics). OAuth2 e OpenID Connect s&atilde;o os protocolos padr&atilde;o para social login e SSO. Entender essa evolu&ccedil;&atilde;o &eacute; cr&iacute;tico porque 80% dos breaches envolvem credenciais comprometidas.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> A Evolu&ccedil;&atilde;o da Autentica&ccedil;&atilde;o</h3>
+                <p class="text-neutral-300 mb-4">De passwords para passwordless &mdash; cada gera&ccedil;&atilde;o resolve as fraquezas da anterior:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Passwords</strong> &mdash; Reutilizadas, fracas, phish&aacute;veis. Ainda dominam, mas est&atilde;o morrendo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">MFA (Multi-Factor Auth)</strong> &mdash; Algo que voc&ecirc; sabe + algo que voc&ecirc; tem. Reduz risco em 99.9% (Microsoft)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">OAuth2 / OIDC</strong> &mdash; Delega autentica&ccedil;&atilde;o para Google, GitHub, etc. Voc&ecirc; n&atilde;o armazena senhas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Passkeys (WebAuthn)</strong> &mdash; Chave criptogr&aacute;fica bound ao dom&iacute;nio. Imune a phishing. Apple, Google e Microsoft suportam nativamente</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Magic Links</strong> &mdash; Email com link tempor&aacute;rio. Sem senha para lembrar. Slack, Notion usam</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Dados: Verizon DBIR 2024</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">80%</strong> dos breaches envolvem credenciais comprometidas ou fracas</li>
+                    <li><strong class="text-white">MFA</strong> bloqueia 99.9% dos ataques de credential stuffing (Microsoft Security)</li>
+                    <li><strong class="text-white">Passkeys</strong> eliminam phishing completamente &mdash; a autentica&ccedil;&atilde;o &eacute; vinculada ao dom&iacute;nio</li>
+                    <li><strong class="text-white">Supabase Auth / Auth0 / Clerk</strong> implementam tudo isso em minutos, n&atilde;o meses</li>
+                </ul>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300"><strong class="text-white">Nunca implemente auth do zero.</strong> Use Supabase Auth, Auth0, Clerk ou Firebase Auth. Cada linha de c&oacute;digo de autentica&ccedil;&atilde;o que voc&ecirc; escreve &eacute; uma linha onde pode errar. Se precisar de JWT, use <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">jose</code> (lib) &mdash; nunca parse JWT manualmente. E sempre valide a assinatura no server, nunca no client.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 3: HTTPS e TLS ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128274; HTTPS e TLS</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">Encripta&ccedil;&atilde;o n&atilde;o &eacute; opcional.</strong> TLS encripta a comunica&ccedil;&atilde;o entre client e server. HTTPS = HTTP + TLS. Browsers marcam sites HTTP como &ldquo;Not Secure&rdquo;, Google penaliza no SEO, e dados em tr&acirc;nsito sem TLS podem ser interceptados por qualquer pessoa na mesma rede.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Camadas de Encripta&ccedil;&atilde;o</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">TLS 1.3</strong> &mdash; Vers&atilde;o mais recente, handshake mais r&aacute;pido (1-RTT vs 2-RTT), mais seguro</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Let&rsquo;s Encrypt</strong> &mdash; Certificados gratuitos, renova&ccedil;&atilde;o autom&aacute;tica a cada 90 dias via certbot</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Cloudflare SSL</strong> &mdash; TLS autom&aacute;tico para qualquer dom&iacute;nio. Zero config</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">HSTS</strong> &mdash; Header que for&ccedil;a HTTPS. Sem ele, o primeiro request pode ser HTTP</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">mTLS</strong> &mdash; Mutual TLS para comunica&ccedil;&atilde;o service-to-service. Ambos os lados se autenticam</span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-teal-900/20 rounded-xl border border-teal-500/30 p-6">
+                    <h4 class="font-bold text-teal-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Usar <strong class="text-white">HSTS</strong> com <code class="bg-dark-700 px-1 py-0.5 rounded text-teal-400 text-sm">max-age=31536000; includeSubDomains</code></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Configurar <strong class="text-white">redirect 301</strong> de HTTP para HTTPS</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Usar <strong class="text-white">mTLS</strong> entre servi&ccedil;os internos em produ&ccedil;&atilde;o</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar <strong class="text-white">TLS 1.0 ou 1.1</strong> &mdash; s&atilde;o vulner&aacute;veis e deprecated</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">certificate warnings</strong> no c&oacute;digo com <code class="bg-dark-700 px-1 py-0.5 rounded text-red-400 text-sm">rejectUnauthorized: false</code></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Deixar <strong class="text-white">certificados expirarem</strong> por falta de automa&ccedil;&atilde;o</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Teste seu site em <strong class="text-white">ssllabs.com/ssltest</strong> &mdash; ele analisa a configura&ccedil;&atilde;o TLS e d&aacute; nota de A a F. Busque nota A+. E adicione o header <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">Strict-Transport-Security</code> para garantir que browsers sempre usem HTTPS ap&oacute;s a primeira visita.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 4: Zero Trust ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#127984; Zero Trust</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">&ldquo;Nunca confie, sempre verifique.&rdquo;</strong> O modelo Zero Trust assume que nada &eacute; confi&aacute;vel por padr&atilde;o &mdash; nem a rede interna, nem os servi&ccedil;os pr&oacute;prios. Cada request &eacute; autenticada, autorizada e encriptada, independente de onde vem. O modelo de &ldquo;per&iacute;metro seguro&rdquo; (firewall) falha quando o atacante j&aacute; est&aacute; dentro.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Princ&iacute;pios do Zero Trust</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Identity-based access</strong> &mdash; Acesso baseado em identidade verificada, n&atilde;o em localiza&ccedil;&atilde;o de rede</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Micro-segmentation</strong> &mdash; Cada servi&ccedil;o s&oacute; se comunica com quem precisa, nada mais</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Least privilege</strong> &mdash; M&iacute;nimo de permiss&otilde;es necess&aacute;rias, por menor tempo poss&iacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Continuous verification</strong> &mdash; N&atilde;o basta autenticar uma vez &mdash; verifique continuamente</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Caso Real: SolarWinds (2020)</h3>
+                <p class="text-neutral-300 mb-4">Um dos ataques mais sofisticados da hist&oacute;ria &mdash; e Zero Trust teria limitado drasticamente o impacto:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">O ataque:</strong> Atacantes comprometeram o build system do SolarWinds e injetaram malware no update</li>
+                    <li><strong class="text-white">Resultado:</strong> 18.000 organiza&ccedil;&otilde;es instalaram o update infectado, incluindo ag&ecirc;ncias do governo dos EUA</li>
+                    <li><strong class="text-white">9 meses sem detec&ccedil;&atilde;o:</strong> A rede interna era &ldquo;trusted&rdquo;, ent&atilde;o lateral movement n&atilde;o disparou alertas</li>
+                    <li><strong class="text-white">Com Zero Trust:</strong> Cada lateral movement exigiria autentica&ccedil;&atilde;o, e a comunica&ccedil;&atilde;o an&ocirc;mala seria detectada</li>
+                </ul>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Comece implementando Zero Trust de forma incremental: <strong class="text-white">1) mTLS entre servi&ccedil;os, 2) Identity-aware proxy (como o BeyondCorp do Google), 3) Pol&iacute;ticas de least privilege em IAM.</strong> N&atilde;o precisa migrar tudo de uma vez &mdash; cada camada adiciona seguran&ccedil;a.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 5: LGPD na Pratica ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#128203; LGPD na Pr&aacute;tica</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                A Lei Geral de Prote&ccedil;&atilde;o de Dados n&atilde;o &eacute; s&oacute; um problema jur&iacute;dico &mdash; &eacute; um <strong class="text-teal-400">problema de arquitetura</strong>. Consentimento, minimiza&ccedil;&atilde;o de dados, direito de exclus&atilde;o, portabilidade e notifica&ccedil;&atilde;o de breach exigem que o sistema seja desenhado para compliance desde o in&iacute;cio. Multas podem chegar a 2% do faturamento.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> O que a LGPD Exige do Desenvolvedor</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Consentimento</strong> &mdash; Coletar dados pessoais s&oacute; com consentimento expl&iacute;cito e espec&iacute;fico</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Minimiza&ccedil;&atilde;o</strong> &mdash; Coletar apenas os dados estritamente necess&aacute;rios para o prop&oacute;sito</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Right to be forgotten</strong> &mdash; DELETE de todos os dados do usu&aacute;rio em todas as tabelas, caches, backups e terceiros</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Portabilidade</strong> &mdash; Exportar todos os dados pessoais em formato leg&iacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Notifica&ccedil;&atilde;o de breach</strong> &mdash; Comunicar a ANPD e usu&aacute;rios afetados em prazo razo&aacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Audit trail</strong> &mdash; Registrar quem acessou dados pessoais, quando e por qu&ecirc;</span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-teal-900/20 rounded-xl border border-teal-500/30 p-6">
+                    <h4 class="font-bold text-teal-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Ter uma tabela/servi&ccedil;o de <strong class="text-white">consent management</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Encriptar dados pessoais <strong class="text-white">at rest e in transit</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Implementar endpoint de <strong class="text-white">data export</strong> para portabilidade</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Logar <strong class="text-white">dados pessoais</strong> (CPF, email) em plain text nos logs</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Espalhar dados pessoais por <strong class="text-white">dezenas de tabelas</strong> sem mapeamento</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar <strong class="text-white">soft delete sem TTL</strong> &mdash; dados &ldquo;deletados&rdquo; que ficam para sempre</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Crie um <strong class="text-white">Data Map</strong>: um documento que lista onde cada tipo de dado pessoal &eacute; armazenado (tabela, cache, log, backup, servi&ccedil;o externo). Sem esse mapa, implementar &ldquo;right to be forgotten&rdquo; &eacute; imposs&iacute;vel. Ferramentas como <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">OneTrust</code> e <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">Securiti</code> ajudam a automatizar.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 6: Dependency Scanning ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128269; Dependency Scanning</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">Suas depend&ecirc;ncias s&atilde;o seu risco.</strong> Aplica&ccedil;&otilde;es modernas t&ecirc;m centenas de depend&ecirc;ncias transitivas. Cada uma &eacute; um vetor de ataque potencial. CVEs em libs desatualizadas s&atilde;o o vetor mais comum de ataque em 2024. Se voc&ecirc; n&atilde;o monitora, n&atilde;o sabe se est&aacute; vulner&aacute;vel.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> O Ecossistema de Scanning</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Dependabot (GitHub)</strong> &mdash; Abre PR autom&aacute;tico quando encontra CVE nas suas deps. Merge = seguro</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Snyk</strong> &mdash; Scanning profundo com fix autom&aacute;tico. Suporta containers e IaC tamb&eacute;m</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">npm audit / pip-audit</strong> &mdash; Ferramentas nativas do ecossistema. <code class="bg-dark-700 px-1 py-0.5 rounded text-teal-400 text-sm">npm audit fix</code> resolve automaticamente</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">SBOM</strong> &mdash; Software Bill of Materials: invent&aacute;rio de todas as depend&ecirc;ncias. Exigido por regulamenta&ccedil;&otilde;es</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Caso Real: Log4Shell (2021)</h3>
+                <p class="text-neutral-300 mb-4">A vulnerabilidade mais impactante da d&eacute;cada &mdash; e um alerta sobre depend&ecirc;ncias:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">CVE-2021-44228:</strong> Vulnerabilidade cr&iacute;tica no Log4j (lib de logging Java)</li>
+                    <li><strong class="text-white">Impacto:</strong> 35.000+ pacotes Java afetados, incluindo Minecraft, iCloud, Twitter, Steam</li>
+                    <li><strong class="text-white">Severidade:</strong> CVSS 10.0 (m&aacute;ximo) &mdash; execu&ccedil;&atilde;o remota de c&oacute;digo com uma string de log</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> Quem tinha Dependabot/Snyk foi alertado em horas. Quem n&atilde;o tinha, levou semanas para descobrir se era afetado</li>
+                </ul>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Ative o <strong class="text-white">Dependabot agora</strong> &mdash; leva 2 minutos. V&aacute; em Settings &rarr; Security &rarr; Enable Dependabot no seu reposit&oacute;rio GitHub. Adicione tamb&eacute;m <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">npm audit</code> no seu pipeline de CI como step obrigat&oacute;rio. Se falhar, o deploy n&atilde;o acontece.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 7: Security Testing ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#129514; Security Testing</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Bugs de seguran&ccedil;a pegos em code review custam <strong class="text-teal-400">10x menos</strong> que em produ&ccedil;&atilde;o, e <strong class="text-teal-400">100x menos</strong> que ap&oacute;s um breach. SAST, DAST e pentest s&atilde;o as tr&ecirc;s camadas de security testing que todo sistema sério precisa. Automatize SAST e DAST na CI &mdash; pentest periodicamente.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> As 3 Camadas de Security Testing</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">SAST (Static Analysis)</strong> &mdash; Analisa o c&oacute;digo fonte sem executar. Semgrep, CodeQL. Roda em cada PR. Encontra SQL injection, XSS, path traversal automaticamente</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">DAST (Dynamic Analysis)</strong> &mdash; Testa a aplica&ccedil;&atilde;o rodando. OWASP ZAP, Burp Suite. Simula ataques reais contra endpoints</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Pentest</strong> &mdash; Hacker &eacute;tico atacando o sistema com criatividade humana. Encontra falhas l&oacute;gicas que ferramentas n&atilde;o pegam</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Bug Bounty</strong> &mdash; Programa p&uacute;blico onde pesquisadores reportam vulnerabilidades por recompensa. HackerOne, Bugcrowd</span></li>
+                </ul>
+            </div>
+
+            <!-- Timeline: Pipeline de Seguranca -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Pipeline de Seguran&ccedil;a Automatizado</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Pre-commit: Secrets Scanning</h4>
+                        <p class="text-neutral-300 text-sm">git-secrets ou truffleHog scaneia cada commit por API keys, passwords e tokens hardcoded. Bloqueia antes do push.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">CI: SAST + Dependency Scan</h4>
+                        <p class="text-neutral-300 text-sm">Semgrep/CodeQL analisa c&oacute;digo, Dependabot/Snyk verifica CVEs. Roda em cada PR. Se encontrar vuln cr&iacute;tica, bloqueia merge.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Staging: DAST</h4>
+                        <p class="text-neutral-300 text-sm">OWASP ZAP roda contra staging ap&oacute;s deploy. Testa endpoints reais por injection, XSS, auth bypass.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">4</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Trimestral: Pentest</h4>
+                        <p class="text-neutral-300 text-sm">Hacker &eacute;tico com escopo definido. Encontra falhas de l&oacute;gica de neg&oacute;cio, privilege escalation, e vulnerabilidades criativas que ferramentas n&atilde;o detectam.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Comece pelo mais f&aacute;cil: ative o <strong class="text-white">GitHub Code Scanning (CodeQL)</strong> &mdash; &eacute; gratuito para repos p&uacute;blicos e roda SAST em cada PR automaticamente. Em 5 minutos de configura&ccedil;&atilde;o, voc&ecirc; tem um security scanner que encontra SQL injection, XSS e path traversal sem esfor&ccedil;o manual.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MODULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-teal-900/40 via-dark-800 to-dark-800 rounded-xl border border-teal-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">OWASP Top 10 &eacute; o m&iacute;nimo</strong><span class="text-neutral-400"> &mdash; Conhecer os 10 riscos previne 90% dos ataques. Prepared statements e input validation s&atilde;o obrigat&oacute;rios</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Passwords est&atilde;o morrendo</strong><span class="text-neutral-400"> &mdash; MFA, Passkeys e OAuth2 s&atilde;o o presente. Nunca implemente auth do zero</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">HTTPS n&atilde;o &eacute; opcional</strong><span class="text-neutral-400"> &mdash; TLS 1.3, HSTS, Let&rsquo;s Encrypt. Teste no ssllabs.com e busque nota A+</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Zero Trust: nunca confie</strong><span class="text-neutral-400"> &mdash; mTLS entre servi&ccedil;os, identity-based access, least privilege</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">LGPD &eacute; arquitetura</strong><span class="text-neutral-400"> &mdash; Data map, consent management e right to be forgotten exigem design intencional</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Depend&ecirc;ncias s&atilde;o risco</strong><span class="text-neutral-400"> &mdash; Ative Dependabot e npm audit na CI. Log4Shell provou que monitoramento &eacute; essencial</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Automatize security testing</strong><span class="text-neutral-400"> &mdash; SAST em cada PR, DAST em staging, pentest trimestral</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-teal-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">5.5 - &#128293; Incident Response e SRE &mdash; Quando o sistema cai &mdash; e ele VAI cair</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha</a>
+                    <a href="modulo-5-5.html" class="flex-1 text-center px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; Trilha 5: DevOps e Opera&ccedil;&otilde;es</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Set initial icon
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

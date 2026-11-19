@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 1.4 — Qualidade e Atributos de Qualidade | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+        html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+        html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-emerald-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-emerald-400 transition-colors">Trilha 1</a>
+            <span>/</span>
+            <span class="text-emerald-400 font-medium">M&oacute;dulo 1.4</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-emerald-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <div class="flex items-center gap-3">
+                    <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        TRILHA 1 &middot; FUNDAMENTOS
+                    </span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-dark-700 text-neutral-400 border border-dark-600">
+                        Teoria
+                    </span>
+                </div>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128274; Qualidade e Atributos de Qualidade
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Performance, seguran&ccedil;a, disponibilidade &mdash; os <em>-ilities</em> que definem o sucesso de uma arquitetura. Cada decis&atilde;o arquitetural &eacute; um trade-off entre esses atributos.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-emerald-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-emerald-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-emerald-400">B&aacute;sico</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-emerald-400">1.4</div>
+                        <div class="text-sm text-neutral-400 mt-1">M&oacute;dulo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+
+        <!-- ===================== TOPIC 1: Performance ===================== -->
+        <section id="topic-1" class="space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">1</span>
+                <h2 class="text-3xl font-bold">&#9889; Performance</h2>
+            </div>
+            <p class="text-neutral-300 text-lg leading-relaxed">
+                Cada <strong class="text-emerald-400">100ms</strong> a mais no carregamento reduz convers&atilde;o em <strong class="text-emerald-400">1%</strong> (Amazon). Performance n&atilde;o &eacute; sobre ser r&aacute;pido &mdash; &eacute; sobre atender expectativas mensuradas em percentis: P50, P95, P99.
+            </p>
+
+            <!-- Box Conceito: Latência vs Throughput -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128218;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Conceito &mdash; Lat&ecirc;ncia vs Throughput</h3>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">Lat&ecirc;ncia</h4>
+                        <p class="text-neutral-300 text-sm">Tempo que uma &uacute;nica requisi&ccedil;&atilde;o leva do in&iacute;cio ao fim. Medida em milissegundos. &Eacute; o que o usu&aacute;rio <em>sente</em>.</p>
+                        <div class="mt-3 text-xs text-neutral-400">
+                            <code class="bg-dark-700 px-2 py-1 rounded">GET /api/users &rarr; 45ms</code>
+                        </div>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">Throughput</h4>
+                        <p class="text-neutral-300 text-sm">Quantidade de requisi&ccedil;&otilde;es processadas por unidade de tempo. Medido em RPS (requests per second). &Eacute; o que o sistema <em>aguenta</em>.</p>
+                        <div class="mt-3 text-xs text-neutral-400">
+                            <code class="bg-dark-700 px-2 py-1 rounded">12.000 RPS no pico</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-sm text-neutral-300">
+                    <strong class="text-emerald-400">Cuidado:</strong> Otimizar lat&ecirc;ncia pode reduzir throughput e vice-versa. Um cache reduz lat&ecirc;ncia mas pode ser bottleneck de throughput se o cache server n&atilde;o escalar.
+                </div>
+            </div>
+
+            <!-- Box Dados: Amazon Stats, Percentiles -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128202;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Dados &mdash; N&uacute;meros que Importam</h3>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-4 mb-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-extrabold text-emerald-400">100ms</div>
+                        <div class="text-sm text-neutral-400 mt-1">= -1% convers&atilde;o (Amazon)</div>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-extrabold text-emerald-400">1s</div>
+                        <div class="text-sm text-neutral-400 mt-1">= -7% convers&atilde;o (Walmart)</div>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-extrabold text-emerald-400">3s</div>
+                        <div class="text-sm text-neutral-400 mt-1">= 53% abandono mobile (Google)</div>
+                    </div>
+                </div>
+                <div class="bg-dark-700/50 rounded-lg p-4">
+                    <h4 class="font-semibold text-neutral-100 mb-3">Percentis explicados</h4>
+                    <div class="space-y-2 text-sm text-neutral-300">
+                        <div class="flex items-center gap-3">
+                            <code class="bg-dark-700 px-2 py-1 rounded text-emerald-400 font-mono w-12 text-center">P50</code>
+                            <span>Mediana &mdash; 50% das requisi&ccedil;&otilde;es s&atilde;o mais r&aacute;pidas que esse valor. O &ldquo;caso t&iacute;pico&rdquo;.</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <code class="bg-dark-700 px-2 py-1 rounded text-yellow-400 font-mono w-12 text-center">P95</code>
+                            <span>95% est&atilde;o abaixo. Mostra como &eacute; a experi&ecirc;ncia para a maioria dos usu&aacute;rios.</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <code class="bg-dark-700 px-2 py-1 rounded text-red-400 font-mono w-12 text-center">P99</code>
+                            <span>O &ldquo;tail latency&rdquo; &mdash; 1% pior. Frequentemente s&atilde;o seus maiores clientes (mais dados).</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Box Dica Prática: Caching Strategies -->
+            <div class="bg-dark-800 rounded-xl border border-emerald-500/30 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128161;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Dica Pr&aacute;tica &mdash; Caching Strategies</h3>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">&#127760; CDN Cache</h4>
+                        <p class="text-neutral-300 text-sm">Assets est&aacute;ticos (imagens, JS, CSS) na borda. CloudFront, Cloudflare. Reduz lat&ecirc;ncia global.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">&#9889; Application Cache</h4>
+                        <p class="text-neutral-300 text-sm">Redis/Memcached para dados quentes. Cache de queries, sess&otilde;es, resultados computados. TTL inteligente.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">&#128421;&#65039; Database Cache</h4>
+                        <p class="text-neutral-300 text-sm">Query cache, materialized views, read replicas. Reduz carga no banco prim&aacute;rio.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Fazer/Evitar -->
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-dark-800 rounded-xl border border-emerald-500/30 p-6">
+                    <h3 class="font-bold text-emerald-400 mb-4">&#9989; Fazer</h3>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Medir antes de otimizar (profile first)</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Definir SLAs com P95/P99, n&atilde;o m&eacute;dia</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Implementar cache em camadas (CDN &rarr; app &rarr; DB)</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Usar load testing regularmente (k6, Locust)</li>
+                    </ul>
+                </div>
+                <div class="bg-dark-800 rounded-xl border border-red-500/30 p-6">
+                    <h3 class="font-bold text-red-400 mb-4">&#10060; Evitar</h3>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Otimizar prematuramente sem dados</li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Usar m&eacute;dia como m&eacute;trica principal (esconde outliers)</li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Cache sem estrat&eacute;gia de invalida&ccedil;&atilde;o</li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Ignorar tail latency (P99) &mdash; afeta seus maiores clientes</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="border-t border-dark-600"></div>
+
+        <!-- ===================== TOPIC 2: Escalabilidade ===================== -->
+        <section id="topic-2" class="space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">2</span>
+                <h2 class="text-3xl font-bold">&#128200; Escalabilidade</h2>
+            </div>
+            <p class="text-neutral-300 text-lg leading-relaxed">
+                Instagram escalou de 0 a <strong class="text-emerald-400">30 milh&otilde;es de usu&aacute;rios</strong> em 2 anos com apenas <strong class="text-emerald-400">3 engenheiros</strong>. A chave? Decis&otilde;es arquiteturais que permitiam crescer sem reescrever.
+            </p>
+
+            <!-- Box Conceito: Vertical vs Horizontal -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128218;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Conceito &mdash; Vertical vs Horizontal</h3>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">&#11014;&#65039; Escalar Verticalmente (Scale Up)</h4>
+                        <p class="text-neutral-300 text-sm mb-3">Adicionar mais recursos &agrave; mesma m&aacute;quina: mais CPU, RAM, SSD. Simples, mas tem teto f&iacute;sico e custo exponencial.</p>
+                        <div class="text-xs text-neutral-500">
+                            <code class="bg-dark-700 px-2 py-1 rounded">4 vCPU &rarr; 16 vCPU &rarr; 64 vCPU &rarr; &#128176;&#128176;&#128176;</code>
+                        </div>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">&#8596;&#65039; Escalar Horizontalmente (Scale Out)</h4>
+                        <p class="text-neutral-300 text-sm mb-3">Adicionar mais inst&acirc;ncias iguais atr&aacute;s de um load balancer. Escala &ldquo;infinita&rdquo;, mas exige arquitetura stateless.</p>
+                        <div class="text-xs text-neutral-500">
+                            <code class="bg-dark-700 px-2 py-1 rounded">1 server &rarr; 3 servers &rarr; 50 servers &rarr; auto-scaling</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline: Passos para Escalar -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="text-emerald-400 text-lg">&#128336;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Timeline &mdash; Passos para Escalar</h3>
+                </div>
+                <div class="space-y-0">
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center">1</div>
+                            <div class="w-0.5 h-full bg-dark-600 my-1"></div>
+                        </div>
+                        <div class="pb-6">
+                            <h4 class="font-semibold text-neutral-100">Otimizar o que existe</h4>
+                            <p class="text-neutral-400 text-sm">Indexar queries, adicionar cache, otimizar c&oacute;digo. 80% dos problemas resolvem aqui.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center">2</div>
+                            <div class="w-0.5 h-full bg-dark-600 my-1"></div>
+                        </div>
+                        <div class="pb-6">
+                            <h4 class="font-semibold text-neutral-100">Scale up (vertical)</h4>
+                            <p class="text-neutral-400 text-sm">Trocar a m&aacute;quina por uma maior. R&aacute;pido, sem mudan&ccedil;a de c&oacute;digo. Funciona at&eacute; certo ponto.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center">3</div>
+                            <div class="w-0.5 h-full bg-dark-600 my-1"></div>
+                        </div>
+                        <div class="pb-6">
+                            <h4 class="font-semibold text-neutral-100">Read replicas + CDN</h4>
+                            <p class="text-neutral-400 text-sm">Separar leitura de escrita. Servir est&aacute;ticos via CDN. Reduzir carga no prim&aacute;rio.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center">4</div>
+                            <div class="w-0.5 h-full bg-dark-600 my-1"></div>
+                        </div>
+                        <div class="pb-6">
+                            <h4 class="font-semibold text-neutral-100">Scale out (horizontal)</h4>
+                            <p class="text-neutral-400 text-sm">Tornar servi&ccedil;os stateless, load balancer, auto-scaling groups. Exige refatorar estado.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center">5</div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-neutral-100">Sharding + decomposi&ccedil;&atilde;o</h4>
+                            <p class="text-neutral-400 text-sm">Particionar dados, quebrar em microsservi&ccedil;os. &Uacute;ltimo recurso &mdash; complexidade alta.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Box Dados: Instagram Case -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128202;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Case &mdash; Instagram (2010-2012)</h3>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-4 mb-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-extrabold text-emerald-400">3</div>
+                        <div class="text-sm text-neutral-400 mt-1">engenheiros</div>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-extrabold text-emerald-400">30M</div>
+                        <div class="text-sm text-neutral-400 mt-1">usu&aacute;rios em 2 anos</div>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-extrabold text-emerald-400">$1B</div>
+                        <div class="text-sm text-neutral-400 mt-1">aquisi&ccedil;&atilde;o pelo Facebook</div>
+                    </div>
+                </div>
+                <div class="bg-dark-700/50 rounded-lg p-4 text-sm text-neutral-300">
+                    <strong class="text-emerald-400">Stack:</strong> Python/Django + PostgreSQL + Redis + Memcached + S3. Nada exot&eacute;rico. O segredo foi manter stateless, cachear agressivamente e usar tecnologias proven com excelente scaling path.
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="border-t border-dark-600"></div>
+
+        <!-- ===================== TOPIC 3: Segurança ===================== -->
+        <section id="topic-3" class="space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">3</span>
+                <h2 class="text-3xl font-bold">&#128737;&#65039; Seguran&ccedil;a</h2>
+            </div>
+            <p class="text-neutral-300 text-lg leading-relaxed">
+                O breach da Equifax (2017) exp&ocirc;s dados de <strong class="text-emerald-400">147 milh&otilde;es de pessoas</strong> por um patch n&atilde;o aplicado. Custou <strong class="text-emerald-400">US$ 700M</strong> em multas. Seguran&ccedil;a n&atilde;o &eacute; feature &mdash; &eacute; atributo fundamental.
+            </p>
+
+            <!-- Box Conceito: OWASP e Zero Trust -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128218;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Conceito &mdash; OWASP Top 10 e Zero Trust</h3>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">OWASP Top 10</h4>
+                        <p class="text-neutral-300 text-sm mb-3">As 10 vulnerabilidades mais cr&iacute;ticas em aplica&ccedil;&otilde;es web. Atualizado periodicamente.</p>
+                        <ul class="text-xs text-neutral-400 space-y-1">
+                            <li>&#8226; Broken Access Control</li>
+                            <li>&#8226; Cryptographic Failures</li>
+                            <li>&#8226; Injection (SQL, NoSQL, OS)</li>
+                            <li>&#8226; Insecure Design</li>
+                            <li>&#8226; Security Misconfiguration</li>
+                        </ul>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">Zero Trust Architecture</h4>
+                        <p class="text-neutral-300 text-sm mb-3">&ldquo;Nunca confie, sempre verifique.&rdquo; Nenhum request &eacute; confi&aacute;vel por padr&atilde;o, mesmo vindo da rede interna.</p>
+                        <ul class="text-xs text-neutral-400 space-y-1">
+                            <li>&#8226; Autenticar todo request</li>
+                            <li>&#8226; Least privilege por padr&atilde;o</li>
+                            <li>&#8226; Encrypt tudo (at rest + in transit)</li>
+                            <li>&#8226; Monitorar e auditar continuamente</li>
+                            <li>&#8226; Micro-segmenta&ccedil;&atilde;o de rede</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Box Alerta: Consequências de Falha -->
+            <div class="bg-dark-800 rounded-xl border border-red-500/30 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-red-400 text-lg">&#9888;&#65039;</span>
+                    <h3 class="text-lg font-bold text-red-400">Alerta &mdash; Consequ&ecirc;ncias de Falhas de Seguran&ccedil;a</h3>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-red-500/50">
+                        <h4 class="font-semibold text-neutral-100 mb-1">Equifax (2017)</h4>
+                        <p class="text-neutral-400 text-sm">147M registros expostos. Patch de Apache Struts n&atilde;o aplicado. <strong class="text-red-400">US$ 700M</strong> em multas.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-red-500/50">
+                        <h4 class="font-semibold text-neutral-100 mb-1">Yahoo (2013-2014)</h4>
+                        <p class="text-neutral-400 text-sm">3 bilh&otilde;es de contas comprometidas. Pre&ccedil;o de venda caiu <strong class="text-red-400">US$ 350M</strong> na aquisi&ccedil;&atilde;o pela Verizon.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-red-500/50">
+                        <h4 class="font-semibold text-neutral-100 mb-1">SolarWinds (2020)</h4>
+                        <p class="text-neutral-400 text-sm">Supply chain attack atingiu 18.000+ organiza&ccedil;&otilde;es incluindo governo dos EUA. Impacto imensur&aacute;vel.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Fazer/Evitar -->
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-dark-800 rounded-xl border border-emerald-500/30 p-6">
+                    <h3 class="font-bold text-emerald-400 mb-4">&#9989; Fazer</h3>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Security by design desde o dia 1</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Encrypt at rest e in transit (TLS 1.3)</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Principle of Least Privilege em tudo</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Automated security scanning no CI/CD</li>
+                    </ul>
+                </div>
+                <div class="bg-dark-800 rounded-xl border border-red-500/30 p-6">
+                    <h3 class="font-bold text-red-400 mb-4">&#10060; Evitar</h3>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> &ldquo;Vamos adicionar seguran&ccedil;a depois&rdquo;</li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Secrets no c&oacute;digo ou reposit&oacute;rio Git</li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Confiar em valida&ccedil;&atilde;o apenas no frontend</li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Ignorar depend&ecirc;ncias desatualizadas</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="border-t border-dark-600"></div>
+
+        <!-- ===================== TOPIC 4: Disponibilidade ===================== -->
+        <section id="topic-4" class="space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">4</span>
+                <h2 class="text-3xl font-bold">&#9989; Disponibilidade</h2>
+            </div>
+            <p class="text-neutral-300 text-lg leading-relaxed">
+                <strong class="text-emerald-400">99.9%</strong> parece excelente at&eacute; voc&ecirc; calcular: s&atilde;o <strong class="text-emerald-400">8.7 horas</strong> de downtime por ano. Quando o AWS S3 caiu por 4h em 2017, derrubou metade da internet junto &mdash; Netflix, Slack, Trello.
+            </p>
+
+            <!-- Box Conceito: SLA/SLO/SLI -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128218;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Conceito &mdash; SLA / SLO / SLI</h3>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-emerald-400 mb-2">SLI</h4>
+                        <p class="text-neutral-100 text-sm font-medium mb-1">Service Level Indicator</p>
+                        <p class="text-neutral-400 text-sm">A m&eacute;trica real medida. Ex: &ldquo;99.95% dos requests responderam em &lt;200ms&rdquo;.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-yellow-400 mb-2">SLO</h4>
+                        <p class="text-neutral-100 text-sm font-medium mb-1">Service Level Objective</p>
+                        <p class="text-neutral-400 text-sm">A meta interna. Ex: &ldquo;Queremos 99.9% de disponibilidade&rdquo;. Mais rigoroso que o SLA.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-red-400 mb-2">SLA</h4>
+                        <p class="text-neutral-100 text-sm font-medium mb-1">Service Level Agreement</p>
+                        <p class="text-neutral-400 text-sm">O contrato com o cliente. Se violar, h&aacute; penalidades (cr&eacute;ditos, multas). Sempre abaixo do SLO.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Box Dados: Níveis de 9s -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128202;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Dados &mdash; A Tabela dos &ldquo;Noves&rdquo;</h3>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-neutral-400 border-b border-dark-600">
+                                <th class="py-3 px-4 text-left">Disponibilidade</th>
+                                <th class="py-3 px-4 text-left">Downtime/ano</th>
+                                <th class="py-3 px-4 text-left">Downtime/m&ecirc;s</th>
+                                <th class="py-3 px-4 text-left">Exemplo</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-neutral-300">
+                            <tr class="border-b border-dark-700">
+                                <td class="py-3 px-4 font-mono text-emerald-400">99%</td>
+                                <td class="py-3 px-4">3.65 dias</td>
+                                <td class="py-3 px-4">7.3h</td>
+                                <td class="py-3 px-4 text-neutral-500">Sistemas internos</td>
+                            </tr>
+                            <tr class="border-b border-dark-700">
+                                <td class="py-3 px-4 font-mono text-emerald-400">99.9%</td>
+                                <td class="py-3 px-4">8.7h</td>
+                                <td class="py-3 px-4">43.8min</td>
+                                <td class="py-3 px-4 text-neutral-500">SaaS t&iacute;pico</td>
+                            </tr>
+                            <tr class="border-b border-dark-700">
+                                <td class="py-3 px-4 font-mono text-yellow-400">99.99%</td>
+                                <td class="py-3 px-4">52.6min</td>
+                                <td class="py-3 px-4">4.4min</td>
+                                <td class="py-3 px-4 text-neutral-500">E-commerce grande</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 font-mono text-red-400">99.999%</td>
+                                <td class="py-3 px-4">5.3min</td>
+                                <td class="py-3 px-4">26s</td>
+                                <td class="py-3 px-4 text-neutral-500">Financeiro / sa&uacute;de</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-sm text-neutral-300">
+                    <strong class="text-emerald-400">Regra:</strong> Cada &ldquo;9&rdquo; adicional custa ~10x mais em infra e engenharia. Escolha o n&iacute;vel que o neg&oacute;cio realmente precisa.
+                </div>
+            </div>
+
+            <!-- Box Dica Prática: Circuit Breaker -->
+            <div class="bg-dark-800 rounded-xl border border-emerald-500/30 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128161;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Dica Pr&aacute;tica &mdash; Circuit Breaker Pattern</h3>
+                </div>
+                <div class="bg-dark-700/50 rounded-lg p-4 mb-4">
+                    <p class="text-neutral-300 text-sm mb-3">Quando um servi&ccedil;o dependente falha, o circuit breaker &ldquo;abre o circuito&rdquo; e retorna fallback imediatamente, evitando cascata de falhas.</p>
+                    <div class="grid sm:grid-cols-3 gap-3 text-center">
+                        <div class="bg-dark-700 rounded-lg p-3">
+                            <div class="text-emerald-400 font-bold text-sm">CLOSED</div>
+                            <p class="text-neutral-400 text-xs mt-1">Normal. Requests passam. Monitorando falhas.</p>
+                        </div>
+                        <div class="bg-dark-700 rounded-lg p-3">
+                            <div class="text-red-400 font-bold text-sm">OPEN</div>
+                            <p class="text-neutral-400 text-xs mt-1">Muitas falhas. Requests bloqueados. Retorna fallback.</p>
+                        </div>
+                        <div class="bg-dark-700 rounded-lg p-3">
+                            <div class="text-yellow-400 font-bold text-sm">HALF-OPEN</div>
+                            <p class="text-neutral-400 text-xs mt-1">Testando. Permite poucos requests para verificar recupera&ccedil;&atilde;o.</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-neutral-400 text-sm">
+                    <strong class="text-emerald-400">Implementa&ccedil;&otilde;es:</strong> Resilience4j (Java), Polly (.NET), Hystrix (legado), ou nativo em service meshes como Istio.
+                </p>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="border-t border-dark-600"></div>
+
+        <!-- ===================== TOPIC 5: Manutenibilidade ===================== -->
+        <section id="topic-5" class="space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">5</span>
+                <h2 class="text-3xl font-bold">&#128295; Manutenibilidade</h2>
+            </div>
+            <p class="text-neutral-300 text-lg leading-relaxed">
+                O Google estima que <strong class="text-emerald-400">70% do custo de software</strong> est&aacute; na manuten&ccedil;&atilde;o, n&atilde;o no desenvolvimento inicial. C&oacute;digo &eacute; escrito uma vez e lido centenas de vezes &mdash; <em>readability</em> &gt; <em>cleverness</em>.
+            </p>
+
+            <!-- Box Conceito: Readability > Cleverness -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128218;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Conceito &mdash; Readability &gt; Cleverness</h3>
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">Operabilidade</h4>
+                        <p class="text-neutral-300 text-sm">Facilidade de operar em produ&ccedil;&atilde;o. Deploy automatizado, rollback r&aacute;pido, logs claros, runbooks documentados.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">Simplicidade</h4>
+                        <p class="text-neutral-300 text-sm">Remover complexidade acidental. Abstra&ccedil;&otilde;es claras, sem heran&ccedil;a profunda, nomes que comunicam inten&ccedil;&atilde;o.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">Evolvabilidade</h4>
+                        <p class="text-neutral-300 text-sm">Facilidade de mudar requisitos. Arquitetura modular, interfaces bem definidas, testes que d&atilde;o confian&ccedil;a para refatorar.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-neutral-100 mb-2">M&eacute;tricas de Qualidade</h4>
+                        <p class="text-neutral-300 text-sm">Cyclomatic complexity, cognitive complexity, code churn, time-to-fix. Medir &eacute; o primeiro passo para melhorar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Fazer/Evitar -->
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-dark-800 rounded-xl border border-emerald-500/30 p-6">
+                    <h3 class="font-bold text-emerald-400 mb-4">&#9989; Fazer</h3>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Code review como pr&aacute;tica sagrada</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Refactoring cont&iacute;nuo (Boy Scout Rule)</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Nomes descritivos &gt; coment&aacute;rios</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Documentar decis&otilde;es (ADRs)</li>
+                    </ul>
+                </div>
+                <div class="bg-dark-800 rounded-xl border border-red-500/30 p-6">
+                    <h3 class="font-bold text-red-400 mb-4">&#10060; Evitar</h3>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> &ldquo;Clever code&rdquo; que s&oacute; o autor entende</li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Fun&ccedil;&otilde;es com 500+ linhas</li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> D&iacute;vida t&eacute;cnica sem tracking</li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> &ldquo;Vou arrumar depois&rdquo; sem criar issue</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Box Dica Prática -->
+            <div class="bg-dark-800 rounded-xl border border-emerald-500/30 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128161;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Dica Pr&aacute;tica &mdash; Regra do Teto de 20%</h3>
+                </div>
+                <p class="text-neutral-300 text-sm">
+                    Reserve <strong class="text-emerald-400">20% de cada sprint</strong> para pagar d&iacute;vida t&eacute;cnica. N&atilde;o negocie isso. Times que ignoram d&iacute;vida t&eacute;cnica v&ecirc;em a velocidade cair a cada sprint at&eacute; quase parar. O Google, Spotify e Nubank praticam isso sistematicamente.
+                </p>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="border-t border-dark-600"></div>
+
+        <!-- ===================== TOPIC 6: Observabilidade ===================== -->
+        <section id="topic-6" class="space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">6</span>
+                <h2 class="text-3xl font-bold">&#128269; Observabilidade</h2>
+            </div>
+            <p class="text-neutral-300 text-lg leading-relaxed">
+                Os 3 pilares da observabilidade. O Stripe usa <strong class="text-emerald-400">distributed tracing</strong> para acompanhar cada requisi&ccedil;&atilde;o de pagamento por <strong class="text-emerald-400">15+ servi&ccedil;os</strong> &mdash; sem isso, debugar levaria horas em vez de minutos.
+            </p>
+
+            <!-- Box Conceito: Logs, Métricas, Traces -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128218;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Conceito &mdash; Os 3 Pilares</h3>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-emerald-400 mb-2">&#128220; Logs</h4>
+                        <p class="text-neutral-300 text-sm mb-2">Eventos discretos com timestamp. O &ldquo;di&aacute;rio&rdquo; do sistema.</p>
+                        <div class="text-xs text-neutral-500">
+                            <p><strong>Ferramenta:</strong> ELK Stack, Loki</p>
+                            <p class="mt-1"><strong>Dica:</strong> Logs estruturados (JSON) &gt; texto livre</p>
+                        </div>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-yellow-400 mb-2">&#128200; M&eacute;tricas</h4>
+                        <p class="text-neutral-300 text-sm mb-2">Valores num&eacute;ricos ao longo do tempo. Ideais para alertas e dashboards.</p>
+                        <div class="text-xs text-neutral-500">
+                            <p><strong>Ferramenta:</strong> Prometheus + Grafana</p>
+                            <p class="mt-1"><strong>Tipos:</strong> Counter, Gauge, Histogram, Summary</p>
+                        </div>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-sky-400 mb-2">&#128279; Traces</h4>
+                        <p class="text-neutral-300 text-sm mb-2">Caminho de um request atrav&eacute;s de m&uacute;ltiplos servi&ccedil;os. Essencial em microsservi&ccedil;os.</p>
+                        <div class="text-xs text-neutral-500">
+                            <p><strong>Ferramenta:</strong> Jaeger, OpenTelemetry</p>
+                            <p class="mt-1"><strong>Chave:</strong> Correlation ID propagado entre servi&ccedil;os</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline: Implementando Observabilidade -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-6">
+                    <span class="text-emerald-400 text-lg">&#128336;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Timeline &mdash; Implementando Observabilidade</h3>
+                </div>
+                <div class="space-y-0">
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center">1</div>
+                            <div class="w-0.5 h-full bg-dark-600 my-1"></div>
+                        </div>
+                        <div class="pb-6">
+                            <h4 class="font-semibold text-neutral-100">Logs estruturados</h4>
+                            <p class="text-neutral-400 text-sm">Comece com JSON logs. Inclua request_id, user_id, action, duration. Centralize com ELK ou Loki.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center">2</div>
+                            <div class="w-0.5 h-full bg-dark-600 my-1"></div>
+                        </div>
+                        <div class="pb-6">
+                            <h4 class="font-semibold text-neutral-100">M&eacute;tricas RED/USE</h4>
+                            <p class="text-neutral-400 text-sm">RED (Rate, Errors, Duration) para servi&ccedil;os. USE (Utilization, Saturation, Errors) para recursos. Prometheus + Grafana.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center">3</div>
+                            <div class="w-0.5 h-full bg-dark-600 my-1"></div>
+                        </div>
+                        <div class="pb-6">
+                            <h4 class="font-semibold text-neutral-100">Distributed tracing</h4>
+                            <p class="text-neutral-400 text-sm">OpenTelemetry como padr&atilde;o. Propagar trace context entre servi&ccedil;os. Visualizar com Jaeger ou Tempo.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 text-sm font-bold flex items-center justify-center">4</div>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-neutral-100">Alerting inteligente</h4>
+                            <p class="text-neutral-400 text-sm">Alertas baseados em sintomas (SLO burn rate), n&atilde;o causas. Evitar alert fatigue. PagerDuty ou OpsGenie.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Box Dados -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128202;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Dados &mdash; Impacto da Observabilidade</h3>
+                </div>
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-extrabold text-emerald-400">90%</div>
+                        <div class="text-sm text-neutral-400 mt-1">redu&ccedil;&atilde;o no MTTR com tracing (Stripe)</div>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-extrabold text-emerald-400">15+</div>
+                        <div class="text-sm text-neutral-400 mt-1">servi&ccedil;os monitorados por request (Stripe)</div>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-extrabold text-emerald-400">73%</div>
+                        <div class="text-sm text-neutral-400 mt-1">das empresas adotam OpenTelemetry (CNCF 2024)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="border-t border-dark-600"></div>
+
+        <!-- ===================== TOPIC 7: Testabilidade ===================== -->
+        <section id="topic-7" class="space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">7</span>
+                <h2 class="text-3xl font-bold">&#128260; Testabilidade</h2>
+            </div>
+            <p class="text-neutral-300 text-lg leading-relaxed">
+                Nubank tem <strong class="text-emerald-400">90%+ de cobertura</strong> em Clojure porque a arquitetura facilita: fun&ccedil;&otilde;es puras, imutabilidade, inje&ccedil;&atilde;o de depend&ecirc;ncia em todo lugar. Se testar &eacute; dif&iacute;cil, o time para de testar.
+            </p>
+
+            <!-- Box Conceito: Test Pyramid -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128218;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Conceito &mdash; Pir&acirc;mide de Testes</h3>
+                </div>
+                <div class="flex flex-col items-center gap-2 mb-4">
+                    <div class="bg-red-500/20 border border-red-500/30 rounded-lg px-6 py-3 text-center w-40">
+                        <div class="text-red-400 font-bold text-sm">E2E</div>
+                        <div class="text-neutral-400 text-xs">Poucos, lentos, caros</div>
+                    </div>
+                    <div class="bg-yellow-500/20 border border-yellow-500/30 rounded-lg px-8 py-3 text-center w-56">
+                        <div class="text-yellow-400 font-bold text-sm">Integra&ccedil;&atilde;o</div>
+                        <div class="text-neutral-400 text-xs">M&eacute;dios, testam contratos</div>
+                    </div>
+                    <div class="bg-emerald-500/20 border border-emerald-500/30 rounded-lg px-10 py-3 text-center w-72">
+                        <div class="text-emerald-400 font-bold text-sm">Unit&aacute;rios</div>
+                        <div class="text-neutral-400 text-xs">Muitos, r&aacute;pidos, baratos</div>
+                    </div>
+                </div>
+                <div class="grid md:grid-cols-3 gap-4 mt-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-emerald-400 mb-2">Unit&aacute;rios (~70%)</h4>
+                        <p class="text-neutral-300 text-sm">Testam fun&ccedil;&otilde;es/classes isoladas. Millisegundos para rodar. Sem depend&ecirc;ncias externas.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-yellow-400 mb-2">Integra&ccedil;&atilde;o (~20%)</h4>
+                        <p class="text-neutral-300 text-sm">Testam intera&ccedil;&atilde;o entre componentes. API + banco, servi&ccedil;o A + servi&ccedil;o B. Testcontainers.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-semibold text-red-400 mb-2">E2E (~10%)</h4>
+                        <p class="text-neutral-300 text-sm">Fluxo completo do usu&aacute;rio. Lentos, fr&aacute;geis, mas essenciais para caminhos cr&iacute;ticos. Playwright, Cypress.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Fazer/Evitar -->
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-dark-800 rounded-xl border border-emerald-500/30 p-6">
+                    <h3 class="font-bold text-emerald-400 mb-4">&#9989; Fazer</h3>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Design for testability (DI, interfaces, fun&ccedil;&otilde;es puras)</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Testes rodam no CI a cada push</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Contract testing entre servi&ccedil;os (Pact)</li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#10003;</span> Mutation testing para validar qualidade dos testes</li>
+                    </ul>
+                </div>
+                <div class="bg-dark-800 rounded-xl border border-red-500/30 p-6">
+                    <h3 class="font-bold text-red-400 mb-4">&#10060; Evitar</h3>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Pir&acirc;mide invertida (muitos E2E, poucos unit&aacute;rios)</li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Testes que dependem de ordem de execu&ccedil;&atilde;o</li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Mockar tudo (testa implementa&ccedil;&atilde;o, n&atilde;o comportamento)</li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#10007;</span> Cobertura como m&eacute;trica de vaidade sem avaliar qualidade</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Box Dica Prática -->
+            <div class="bg-dark-800 rounded-xl border border-emerald-500/30 p-6">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="text-emerald-400 text-lg">&#128161;</span>
+                    <h3 class="text-lg font-bold text-emerald-400">Dica Pr&aacute;tica &mdash; Testcontainers + Arquitetura Hexagonal</h3>
+                </div>
+                <p class="text-neutral-300 text-sm mb-3">
+                    Use <strong class="text-emerald-400">Arquitetura Hexagonal</strong> (Ports &amp; Adapters) para separar l&oacute;gica de neg&oacute;cio de infraestrutura. O core &eacute; test&aacute;vel com mocks simples. A integra&ccedil;&atilde;o usa <strong class="text-emerald-400">Testcontainers</strong> para subir banco e servi&ccedil;os reais em containers descart&aacute;veis.
+                </p>
+                <div class="bg-dark-700/50 rounded-lg p-3 text-sm text-neutral-400 font-mono">
+                    Core (puro) &rarr; Ports (interfaces) &rarr; Adapters (implementa&ccedil;&otilde;es)<br>
+                    Testes unit&aacute;rios no Core | Testes integra&ccedil;&atilde;o nos Adapters
+                </div>
+            </div>
+        </section>
+
+        <!-- Divider -->
+        <div class="border-t border-dark-600"></div>
+
+        <!-- ===================== SUMMARY ===================== -->
+        <section id="summary" class="space-y-6">
+            <h2 class="text-3xl font-bold">&#128203; Checklist do M&oacute;dulo 1.4</h2>
+            <p class="text-neutral-300 text-lg">Antes de seguir para o pr&oacute;ximo m&oacute;dulo, verifique se voc&ecirc; entende:</p>
+
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div class="space-y-3">
+                        <label class="flex items-start gap-3 text-sm text-neutral-300 cursor-pointer">
+                            <input type="checkbox" class="mt-1 accent-emerald-500">
+                            <span>Diferen&ccedil;a entre lat&ecirc;ncia e throughput, e quando usar P50/P95/P99</span>
+                        </label>
+                        <label class="flex items-start gap-3 text-sm text-neutral-300 cursor-pointer">
+                            <input type="checkbox" class="mt-1 accent-emerald-500">
+                            <span>Escalar vertical vs horizontal e quando usar cada abordagem</span>
+                        </label>
+                        <label class="flex items-start gap-3 text-sm text-neutral-300 cursor-pointer">
+                            <input type="checkbox" class="mt-1 accent-emerald-500">
+                            <span>OWASP Top 10 e princ&iacute;pios de Zero Trust</span>
+                        </label>
+                        <label class="flex items-start gap-3 text-sm text-neutral-300 cursor-pointer">
+                            <input type="checkbox" class="mt-1 accent-emerald-500">
+                            <span>Diferen&ccedil;a entre SLA, SLO e SLI</span>
+                        </label>
+                    </div>
+                    <div class="space-y-3">
+                        <label class="flex items-start gap-3 text-sm text-neutral-300 cursor-pointer">
+                            <input type="checkbox" class="mt-1 accent-emerald-500">
+                            <span>Circuit breaker pattern e seus estados</span>
+                        </label>
+                        <label class="flex items-start gap-3 text-sm text-neutral-300 cursor-pointer">
+                            <input type="checkbox" class="mt-1 accent-emerald-500">
+                            <span>Os 3 pilares da observabilidade e ferramentas de cada um</span>
+                        </label>
+                        <label class="flex items-start gap-3 text-sm text-neutral-300 cursor-pointer">
+                            <input type="checkbox" class="mt-1 accent-emerald-500">
+                            <span>Pir&acirc;mide de testes e propor&ccedil;&otilde;es ideais</span>
+                        </label>
+                        <label class="flex items-start gap-3 text-sm text-neutral-300 cursor-pointer">
+                            <input type="checkbox" class="mt-1 accent-emerald-500">
+                            <span>Trade-offs entre atributos de qualidade</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Module -->
+            <div class="bg-dark-800 rounded-xl border border-emerald-500/30 p-6">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-emerald-400 font-bold">Pr&oacute;ximo</span>
+                </div>
+                <h3 class="text-xl font-bold mb-2">&#127760; M&oacute;dulo 1.5 &mdash; Comunica&ccedil;&atilde;o entre Sistemas</h3>
+                <p class="text-neutral-400 text-sm">REST, GraphQL, gRPC, mensageria &mdash; como sistemas conversam</p>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex items-center justify-between pt-8 border-t border-dark-600">
+                <a href="modulo-1-3.html" class="flex items-center gap-2 px-5 py-3 bg-dark-800 border border-dark-600 rounded-xl text-neutral-300 hover:bg-dark-700 transition-colors font-medium text-sm">
+                    &larr; M&oacute;dulo 1.3
+                </a>
+                <a href="index.html" class="flex items-center gap-2 px-5 py-3 bg-dark-800 border border-dark-600 rounded-xl text-neutral-300 hover:bg-dark-700 transition-colors font-medium text-sm">
+                    Trilha 1
+                </a>
+                <a href="modulo-1-5.html" class="flex items-center gap-2 px-5 py-3 bg-emerald-500/20 border border-emerald-500/30 rounded-xl text-emerald-400 hover:bg-emerald-500/30 transition-colors font-medium text-sm">
+                    M&oacute;dulo 1.5 &rarr;
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 mt-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-neutral-500 text-sm">
+            Arquitetura DEV 2030 &mdash; 2026
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'light') { themeToggleDarkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { themeToggleLightIcon.classList.remove('hidden'); }
+        themeToggle.addEventListener('click', () => {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 4.3 - Banco de Dados e Modelagem | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-amber-400 { color: #92400e; }
+        html:not(.dark) .bg-amber-500\/20 { background-color: rgba(217, 119, 6, 0.12); }
+        html:not(.dark) .bg-amber-500\/10 { background-color: rgba(217, 119, 6, 0.08); }
+        html:not(.dark) .border-amber-500\/30 { border-color: rgba(217, 119, 6, 0.25); }
+        html:not(.dark) .hover\:bg-amber-500\/30:hover { background-color: rgba(217, 119, 6, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-amber-900\/20 { background-color: rgba(217, 119, 6, 0.06); }
+        html:not(.dark) .bg-amber-900\/30 { background-color: rgba(217, 119, 6, 0.08); }
+        html:not(.dark) .bg-amber-900\/40 { background-color: rgba(217, 119, 6, 0.1); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 106, 0.06); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 106, 0.2); }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-amber-400 bg-amber-500/10">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-amber-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-amber-400 transition-colors">Trilha 4</a>
+            <span>/</span>
+            <span class="text-amber-400 font-medium">M&oacute;dulo 4.3</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-amber-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                    M&Oacute;DULO 4.3
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128452;&#65039; Banco de Dados e Modelagem
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    O banco de dados &eacute; o cora&ccedil;&atilde;o da sua aplica&ccedil;&atilde;o &mdash; a decis&atilde;o mais dif&iacute;cil de reverter. Neste m&oacute;dulo, voc&ecirc; vai dominar PostgreSQL, modelagem relacional, migrations, NoSQL, caching e otimiza&ccedil;&atilde;o de performance com &iacute;ndices.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-amber-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-amber-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-amber-400">Pr&aacute;tico</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-amber-400">Execu&ccedil;&atilde;o</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== T&Oacute;PICO 1: PostgreSQL ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#128024; PostgreSQL</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                PostgreSQL &eacute; o <strong class="text-amber-400">banco de dados mais vers&aacute;til do mundo</strong>. Relacional com suporte a JSON, full-text search, geoespacial, vetores (pgvector para IA) e extens&otilde;es infinitas. Se voc&ecirc; n&atilde;o sabe qual banco usar, a resposta &eacute; PostgreSQL. Ponto.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Por que PostgreSQL em 2026</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">JSONB nativo</strong> &mdash; Armazene dados semi-estruturados sem precisar de MongoDB</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">pgvector</strong> &mdash; Busca vetorial para embeddings de IA direto no banco</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Full-text search</strong> &mdash; Busca textual poderosa sem precisar de Elasticsearch</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Row Level Security (RLS)</strong> &mdash; Autoriza&ccedil;&atilde;o no n&iacute;vel do banco, usado pelo Supabase</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Ecossistema</strong> &mdash; Neon (serverless), Supabase (BaaS), Crunchy (enterprise), Tembo (extensible)</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Quem Usa PostgreSQL</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Instagram</strong> &mdash; Bilh&otilde;es de rows, PostgreSQL como banco prim&aacute;rio desde o dia 1</li>
+                    <li><strong class="text-white">Discord</strong> &mdash; Trilh&otilde;es de mensagens armazenadas com sharding sobre PostgreSQL</li>
+                    <li><strong class="text-white">Supabase</strong> &mdash; Todo o produto &eacute; constru&iacute;do em cima de PostgreSQL com extens&otilde;es</li>
+                    <li><strong class="text-white">Apple, Spotify, Reddit</strong> &mdash; Todos usam PostgreSQL em sistemas cr&iacute;ticos</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Para desenvolvimento local, use <strong class="text-white">Docker</strong>: <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">docker run -e POSTGRES_PASSWORD=dev -p 5432:5432 postgres:16</code>. Para produ&ccedil;&atilde;o, use <strong class="text-white">Neon</strong> (serverless, free tier generoso) ou <strong class="text-white">Supabase</strong> (PostgreSQL + auth + API autom&aacute;tica).</p>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 2: Modelagem Relacional ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#128208; Modelagem Relacional</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Modelagem relacional &eacute; <strong class="text-amber-400">a base de tudo</strong>. Entender normaliza&ccedil;&atilde;o, relacionamentos, chaves e constraints &eacute; o que separa um banco bem estruturado de um pesadelo de manuten&ccedil;&atilde;o. Erros de modelagem s&atilde;o os mais caros de corrigir depois.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Princ&iacute;pios de Modelagem</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Normaliza&ccedil;&atilde;o (3NF)</strong> &mdash; Elimine redund&acirc;ncia. Cada dado em um &uacute;nico lugar. Mas n&atilde;o exagere</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Foreign Keys</strong> &mdash; Sempre use constraints de integridade referencial. O banco &eacute; a &uacute;ltima linha de defesa</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">UUIDs vs. Auto-increment</strong> &mdash; UUIDs s&atilde;o melhores para sistemas distribu&iacute;dos. Auto-increment para simplicidade</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Timestamps</strong> &mdash; Sempre tenha <code class="bg-dark-700 px-1 rounded text-amber-400">created_at</code> e <code class="bg-dark-700 px-1 rounded text-amber-400">updated_at</code> em toda tabela</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Soft delete</strong> &mdash; Use <code class="bg-dark-700 px-1 rounded text-amber-400">deleted_at</code> em vez de deletar registros em dom&iacute;nios cr&iacute;ticos</span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; Boas Pr&aacute;ticas</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Nomes de tabela no <strong class="text-white">plural e snake_case</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">ENUMs do banco</strong> para estados finitos</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Documentar o schema com <strong class="text-white">COMMENT ON</strong></span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; Antipadr&otilde;es</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Tabela <strong class="text-white">&ldquo;God Table&rdquo;</strong> com 50+ colunas</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Armazenar <strong class="text-white">JSON em VARCHAR</strong> (use JSONB)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">foreign keys</strong> &ldquo;por performance&rdquo;</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 3: Migrations ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128259; Migrations</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Migrations s&atilde;o o <strong class="text-amber-400">controle de vers&atilde;o do banco de dados</strong>. Assim como Git rastreia mudan&ccedil;as no c&oacute;digo, migrations rastreiam mudan&ccedil;as no schema. Sem elas, &eacute; imposs&iacute;vel manter consist&ecirc;ncia entre ambientes (dev, staging, produ&ccedil;&atilde;o).
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Boas Pr&aacute;ticas de Migrations</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Uma migration por mudan&ccedil;a</strong> &mdash; Pequenas, atm&ocirc;micas, revers&iacute;veis</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Sempre teste rollback</strong> &mdash; Se voc&ecirc; n&atilde;o pode reverter, n&atilde;o fa&ccedil;a deploy na sexta</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Sem dados em migrations</strong> &mdash; Migrations mudam schema, seeds inserem dados</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Nomes descritivos</strong> &mdash; <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">20260321_add_status_to_orders</code>, n&atilde;o <code class="bg-dark-700 px-2 py-0.5 rounded text-red-400">migration_42</code></span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Ferramentas de Migration</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Prisma Migrate</strong> &mdash; Gera migrations a partir do schema declarativo. TypeScript-first</li>
+                    <li><strong class="text-white">Drizzle Kit</strong> &mdash; Leve, r&aacute;pido, migrations SQL puras com type safety</li>
+                    <li><strong class="text-white">Knex.js</strong> &mdash; Query builder com sistema de migrations maduro</li>
+                    <li><strong class="text-white">Flyway / Liquibase</strong> &mdash; Enterprise, Java-based, robusto para projetos grandes</li>
+                    <li><strong class="text-white">Supabase CLI</strong> &mdash; Migrations integradas com diff autom&aacute;tico do schema</li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Migrations Perigosas em Produ&ccedil;&atilde;o</h3>
+                <p class="text-neutral-300 mb-4">Estas opera&ccedil;&otilde;es podem derrubar sua aplica&ccedil;&atilde;o se executadas descuidadamente:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><strong class="text-white">ALTER TABLE ... ADD COLUMN ... NOT NULL</strong> sem default &mdash; Bloqueia a tabela inteira</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><strong class="text-white">CREATE INDEX</strong> sem CONCURRENTLY &mdash; Trava writes durante a cria&ccedil;&atilde;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><strong class="text-white">DROP COLUMN</strong> de uma coluna ainda usada pelo c&oacute;digo em produ&ccedil;&atilde;o</span></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 4: NoSQL ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128195; NoSQL</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                NoSQL n&atilde;o &eacute; &ldquo;melhor que SQL&rdquo; &mdash; &eacute; <strong class="text-amber-400">diferente, para problemas diferentes</strong>. Bancos NoSQL brilham quando o modelo relacional n&atilde;o encaixa: dados hier&aacute;rquicos, alta velocidade de escrita, schemas flex&iacute;veis ou escala horizontal massiva.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Tipos de NoSQL e Quando Usar</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Documento (MongoDB, Firestore)</strong> &mdash; Dados hier&aacute;rquicos, schemas vari&aacute;veis. Bom para CMS, cat&aacute;logos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Key-Value (Redis, DynamoDB)</strong> &mdash; Lat&ecirc;ncia ultra-baixa, cache, sess&otilde;es, rate limiting</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Wide-Column (Cassandra, ScyllaDB)</strong> &mdash; Escrita massiva, s&eacute;ries temporais, IoT</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Grafo (Neo4j, DGraph)</strong> &mdash; Relacionamentos complexos: redes sociais, recomenda&ccedil;&otilde;es, fraude</span></li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Em 90% dos casos, <strong class="text-white">PostgreSQL com JSONB resolve o que voc&ecirc; usaria MongoDB</strong>. S&oacute; considere NoSQL dedicado quando: (1) o volume de dados excede o que PostgreSQL aguenta, (2) o padr&atilde;o de acesso &eacute; fundamentalmente diferente (grafos, time-series), ou (3) voc&ecirc; precisa de lat&ecirc;ncia sub-millisecond (Redis).</p>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 5: Caching ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#9889; Caching</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-amber-400">&ldquo;There are only two hard things in Computer Science: cache invalidation and naming things.&rdquo;</strong> Caching &eacute; a forma mais eficaz de melhorar performance, mas tamb&eacute;m a fonte mais comum de bugs sutis. Entender quando e como cachear &eacute; uma habilidade cr&iacute;tica.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Camadas de Cache</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Browser cache</strong> &mdash; Cache-Control headers, ETags, Service Workers</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">CDN cache</strong> &mdash; Cloudflare, Vercel Edge, CloudFront. Cache na borda, perto do usu&aacute;rio</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Application cache</strong> &mdash; In-memory (Node.js Map), Redis, Memcached</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Database cache</strong> &mdash; Query cache, materialized views, connection pooling (PgBouncer)</span></li>
+                </ul>
+            </div>
+
+            <!-- Timeline: Estrat&eacute;gias -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Estrat&eacute;gias de Invalida&ccedil;&atilde;o</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
+                        <span class="text-amber-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">TTL (Time-To-Live)</h4>
+                        <p class="text-neutral-300 text-sm">Cache expira automaticamente ap&oacute;s X segundos. Simples, mas pode servir dados desatualizados.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
+                        <span class="text-amber-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Write-through</h4>
+                        <p class="text-neutral-300 text-sm">Atualiza cache e banco simultaneamente. Consist&ecirc;ncia forte, mas mais lento na escrita.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
+                        <span class="text-amber-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Cache-aside (Lazy loading)</h4>
+                        <p class="text-neutral-300 text-sm">Leia do cache; se miss, leia do banco e popule o cache. Padr&atilde;o mais comum e flex&iacute;vel.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
+                        <span class="text-amber-400 font-bold">4</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Event-driven invalidation</h4>
+                        <p class="text-neutral-300 text-sm">Invalide o cache quando um evento de mudan&ccedil;a ocorre. Mais complexo, mais preciso.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 6: &Iacute;ndices e Performance ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128202; &Iacute;ndices e Performance</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                &Iacute;ndices s&atilde;o a diferen&ccedil;a entre uma query que leva <strong class="text-amber-400">2ms e uma que leva 20 segundos</strong>. Mas &iacute;ndices demais pioram a escrita e consomem espa&ccedil;o. O segredo &eacute; indexar com base nos padr&otilde;es reais de consulta, n&atilde;o em suposic&otilde;es.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Tipos de &Iacute;ndice no PostgreSQL</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">B-tree (padr&atilde;o)</strong> &mdash; Para igualdade e range queries. Cobre 90% dos casos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">GIN</strong> &mdash; Para JSONB, arrays, full-text search. Essencial para dados semi-estruturados</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">GiST</strong> &mdash; Para dados geoespaciais (PostGIS) e range types</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">BRIN</strong> &mdash; Para tabelas muito grandes com dados naturalmente ordenados (timestamps)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Partial index</strong> &mdash; <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">WHERE status = 'active'</code> &mdash; Indexa s&oacute; o que importa</span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">EXPLAIN ANALYZE</strong> antes de otimizar</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Indexar colunas usadas em <strong class="text-white">WHERE e JOIN</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">composite indexes</strong> para queries multi-coluna</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Indexar <strong class="text-white">todas as colunas</strong> &ldquo;por via das d&uacute;vidas&rdquo;</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Otimizar queries que rodam <strong class="text-white">1x por dia</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar <strong class="text-white">SELECT *</strong> quando s&oacute; precisa de 3 colunas</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Instale a extens&atilde;o <strong class="text-white">pg_stat_statements</strong> em produ&ccedil;&atilde;o. Ela mostra as queries mais lentas e mais executadas. Otimize as <strong class="text-white">top 5 queries por tempo total</strong> (frequ&ecirc;ncia &times; dura&ccedil;&atilde;o) &mdash; isso cobre 80% dos ganhos de performance.</p>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 7: Supabase na Pr&aacute;tica ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#9889; Supabase na Pr&aacute;tica</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Supabase &eacute; o <strong class="text-amber-400">&ldquo;Firebase open-source&rdquo;</strong> constru&iacute;do sobre PostgreSQL. Oferece banco, autentica&ccedil;&atilde;o, storage, realtime e edge functions em uma plataforma integrada. Para MVPs e startups, &eacute; a forma mais r&aacute;pida de ter um backend completo sem construir do zero.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> O que o Supabase Oferece</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">PostgreSQL completo</strong> &mdash; Acesso direto ao banco, sem abstra&ccedil;&otilde;es que limitam</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Auto-generated API</strong> &mdash; PostgREST gera API REST automaticamente a partir das tabelas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Realtime</strong> &mdash; WebSockets para mudan&ccedil;as no banco em tempo real</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Auth integrado</strong> &mdash; Email, OAuth, magic links, MFA &mdash; tudo pronto</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Edge Functions</strong> &mdash; Deno-based serverless functions para l&oacute;gica customizada</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Row Level Security</strong> &mdash; Autoriza&ccedil;&atilde;o no n&iacute;vel do banco &mdash; seguro por default</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Supabase em N&uacute;meros</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">1M+</strong> projetos criados na plataforma</li>
+                    <li><strong class="text-white">Open-source</strong> &mdash; Voc&ecirc; pode self-host com Docker Compose</li>
+                    <li><strong class="text-white">Free tier</strong> &mdash; 500MB de banco, 1GB de storage, 50k MAU de auth</li>
+                    <li><strong class="text-white">Usado por:</strong> Mozilla, Peerlist, HappyScribe, Chatbase</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">RLS</strong> para seguran&ccedil;a no n&iacute;vel do banco</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">Supabase CLI</strong> para migrations e desenvolvimento local</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Combinar com <strong class="text-white">Next.js ou Remix</strong> para full-stack completo</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Expor o <strong class="text-white">service_role key</strong> no client-side</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">RLS</strong> e confiar apenas no frontend</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar <strong class="text-white">Supabase como &uacute;nico backend</strong> para l&oacute;gica de neg&oacute;cio complexa</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Comece com Supabase para MVP e migre para PostgreSQL gerenciado (Neon, RDS) quando precisar de mais controle. Como &eacute; PostgreSQL puro por baixo, a <strong class="text-white">migra&ccedil;&atilde;o &eacute; trivial</strong>: exporte com <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">pg_dump</code> e importe com <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">pg_restore</code>. Zero vendor lock-in.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO M&Oacute;DULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-amber-900/40 via-dark-800 to-dark-800 rounded-xl border border-amber-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">PostgreSQL &eacute; a resposta padr&atilde;o</strong><span class="text-neutral-400"> &mdash; JSONB, pgvector, full-text search e RLS cobrem 90% dos cen&aacute;rios</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Modelagem importa</strong><span class="text-neutral-400"> &mdash; Normaliza&ccedil;&atilde;o, foreign keys, timestamps e soft delete s&atilde;o fundamentais</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Migrations s&atilde;o obrigat&oacute;rias</strong><span class="text-neutral-400"> &mdash; Controle de vers&atilde;o do schema garante consist&ecirc;ncia entre ambientes</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">NoSQL para problemas espec&iacute;ficos</strong><span class="text-neutral-400"> &mdash; Redis para cache, DynamoDB para escala, Neo4j para grafos</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Cache com cuidado</strong><span class="text-neutral-400"> &mdash; Invalida&ccedil;&atilde;o &eacute; dif&iacute;cil. TTL + cache-aside cobrem a maioria dos casos</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">&Iacute;ndices baseados em dados</strong><span class="text-neutral-400"> &mdash; EXPLAIN ANALYZE + pg_stat_statements antes de otimizar</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Supabase para velocidade</strong><span class="text-neutral-400"> &mdash; Backend completo sobre PostgreSQL, sem vendor lock-in</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-amber-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">4.4 - &#127912; Frontend e Arquitetura de UI &mdash; React, componentes, design systems e performance</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="modulo-4-2.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; M&oacute;dulo Anterior</a>
+                    <a href="modulo-4-4.html" class="flex-1 text-center px-6 py-3 bg-amber-600 text-white rounded-lg font-semibold hover:bg-amber-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; 2026</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

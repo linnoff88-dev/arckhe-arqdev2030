@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 6.3 - Multi-tenancy e SaaS | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-rose-400 { color: #9f1239; }
+        html:not(.dark) .bg-rose-500\/20 { background-color: rgba(225, 29, 72, 0.12); }
+        html:not(.dark) .bg-rose-500\/10 { background-color: rgba(225, 29, 72, 0.08); }
+        html:not(.dark) .border-rose-500\/30 { border-color: rgba(225, 29, 72, 0.25); }
+        html:not(.dark) .hover\:bg-rose-500\/30:hover { background-color: rgba(225, 29, 72, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .bg-emerald-900\/30 { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .bg-emerald-900\/40 { background-color: rgba(5, 150, 105, 0.1); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.2); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .bg-rose-900\/20 { background-color: rgba(225, 29, 72, 0.06); }
+        html:not(.dark) .bg-rose-900\/30 { background-color: rgba(225, 29, 72, 0.08); }
+        html:not(.dark) .bg-rose-900\/40 { background-color: rgba(225, 29, 72, 0.1); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-rose-400 bg-rose-500/10">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-rose-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-rose-400 transition-colors">Trilha 6</a>
+            <span>/</span>
+            <span class="text-rose-400 font-medium">M&oacute;dulo 6.3</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-rose-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-rose-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                    M&Oacute;DULO 6.3
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#127970; Multi-tenancy e SaaS
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Um sistema, muitos clientes &mdash; como isolar dados, gerenciar billing, controlar features e escalar sem criar um sistema separado para cada cliente. A base arquitetural de todo produto SaaS moderno.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">Avan&ccedil;ado</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">Estrat&eacute;gia</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TOPICO 1: Modelos de Multi-tenancy ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#127970; Modelos de Multi-tenancy</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Multi-tenancy &eacute; a capacidade de um <strong class="text-rose-400">&uacute;nico sistema servir m&uacute;ltiplos clientes (tenants)</strong> de forma isolada. A escolha do modelo de tenancy impacta diretamente custo, seguran&ccedil;a, performance e complexidade operacional.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Os 3 Modelos Fundamentais</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Banco Compartilhado (Shared DB)</strong> &mdash; Todos os tenants na mesma tabela, diferenciados por tenant_id. Mais barato, menor isolamento</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Schema por Tenant</strong> &mdash; Mesmo banco, schemas separados. Bom equil&iacute;brio entre custo e isolamento</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Banco por Tenant</strong> &mdash; Cada cliente tem seu pr&oacute;prio banco. M&aacute;ximo isolamento, custo mais alto, mais complexo para gerenciar</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Salesforce vs Slack</h3>
+                <p class="text-neutral-300 mb-4">Dois gigantes SaaS com abordagens opostas:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Salesforce</strong> &mdash; Shared DB com metadata-driven architecture. Um &uacute;nico banco Oracle serve 150k+ empresas. Custo por tenant &eacute; m&iacute;nimo</li>
+                    <li><strong class="text-white">Slack</strong> &mdash; Shard por workspace. Cada workspace tem seus dados em shards dedicados. Facilita compliance e data residency</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o</strong> &mdash; N&atilde;o existe modelo universalmente melhor. Requisitos de compliance, custo e escala definem a escolha</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Come&ccedil;ar com <strong class="text-white">shared DB + tenant_id</strong> &mdash; mais simples e barato para come&ccedil;ar</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">Row-Level Security (RLS)</strong> do PostgreSQL para garantir isolamento a n&iacute;vel de banco</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Projetar para <strong class="text-white">migrar entre modelos</strong> no futuro sem reescrever a aplica&ccedil;&atilde;o</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Confiar <strong class="text-white">apenas na aplica&ccedil;&atilde;o</strong> para isolamento &mdash; um bug expõe dados de outros tenants</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Escolher <strong class="text-white">banco por tenant</strong> com 10 clientes &mdash; overhead operacional injustific&aacute;vel</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">noisy neighbor</strong> &mdash; um tenant pesado afetando performance de todos</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use <strong class="text-white">PostgreSQL RLS (Row-Level Security)</strong> como rede de seguran&ccedil;a. Mesmo que a aplica&ccedil;&atilde;o filtre por tenant_id, o RLS garante que uma query sem filtro nunca retorne dados de outro tenant. Seguran&ccedil;a em profundidade &eacute; obrigat&oacute;ria em multi-tenancy.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 2: Isolamento de Dados ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#128274; Isolamento de Dados</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Isolamento de dados &eacute; o aspecto mais cr&iacute;tico de multi-tenancy. Um <strong class="text-rose-400">vazamento de dados entre tenants</strong> pode destruir a confian&ccedil;a no produto e resultar em multas milion&aacute;rias (LGPD, GDPR). Isolamento precisa ser implementado em m&uacute;ltiplas camadas.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Camadas de Isolamento</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Banco de Dados</strong> &mdash; RLS, schemas separados, ou bancos dedicados. Primeira e mais importante barreira</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Aplica&ccedil;&atilde;o</strong> &mdash; Middleware que injeta tenant_id em toda query. Contexto de tenant em cada request</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Storage</strong> &mdash; Buckets separados ou prefixos por tenant no S3/GCS. Preven&ccedil;&atilde;o de acesso cruzado</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Cache</strong> &mdash; Namespace por tenant no Redis. Chave: tenant:{id}:user:{user_id} para evitar colis&otilde;es</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Logs e M&eacute;tricas</strong> &mdash; Tenant ID como label obrigat&oacute;rio em todos os logs e traces</span></li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Riscos de Vazamento Mais Comuns</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Query sem WHERE tenant_id</strong> &mdash; Retorna dados de todos os tenants. Mais comum do que parece, especialmente em queries manuais</li>
+                    <li><strong class="text-white">Cache poisoning</strong> &mdash; Dados de um tenant cacheados e servidos para outro por chave de cache gen&eacute;rica</li>
+                    <li><strong class="text-white">Background jobs</strong> &mdash; Jobs que processam dados sem contexto de tenant, misturando resultados</li>
+                    <li><strong class="text-white">API endpoints sem valida&ccedil;&atilde;o</strong> &mdash; /api/orders/123 acessado por tenant que n&atilde;o &eacute; dono do pedido 123</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Crie <strong class="text-white">testes automatizados espec&iacute;ficos para isolamento</strong>: crie 2 tenants, insira dados em ambos, e valide que cada um s&oacute; v&ecirc; seus pr&oacute;prios dados em TODA opera&ccedil;&atilde;o (list, get, search, export). Rode esses testes no CI/CD em cada PR.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 3: Billing e Subscription ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128176; Billing e Subscription</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                O modelo de billing define <strong class="text-rose-400">como o produto gera receita</strong>. Em SaaS, isso geralmente envolve planos de assinatura, cobran&ccedil;a por uso, ou modelos h&iacute;bridos. A arquitetura de billing precisa ser robusta, audit&aacute;vel e flex&iacute;vel para mudan&ccedil;as de pre&ccedil;o.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Modelos de Monetiza&ccedil;&atilde;o SaaS</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Flat Rate</strong> &mdash; Pre&ccedil;o fixo mensal por plano (Starter, Pro, Enterprise). Simples de entender e implementar</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Per Seat</strong> &mdash; Cobran&ccedil;a por usu&aacute;rio ativo. Slack, GitHub, Notion. Escala com ado&ccedil;&atilde;o dentro da empresa</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Usage-Based</strong> &mdash; Pague pelo que usar. AWS, Twilio, Stripe. Alinha custo com valor recebido</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">H&iacute;brido</strong> &mdash; Base fixa + vari&aacute;vel por uso. Tend&ecirc;ncia crescente. Ex: plano base + cobran&ccedil;a por API calls excedentes</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Stripe como Infraestrutura de Billing</h3>
+                <p class="text-neutral-300 mb-4">A maioria dos SaaS modernos usa Stripe Billing como plataforma:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Stripe Billing</strong> &mdash; Gerencia subscriptions, invoices, proration, trials e downgrades</li>
+                    <li><strong class="text-white">Webhooks</strong> &mdash; Events como invoice.paid, subscription.canceled disparam a&ccedil;&otilde;es no backend</li>
+                    <li><strong class="text-white">Metered Billing</strong> &mdash; Reporte uso via API, Stripe calcula e cobra no fim do per&iacute;odo</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o</strong> &mdash; N&atilde;o reinvente billing. Use Stripe, Paddle ou similar. Billing customizado &eacute; uma armadilha</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Implemente <strong class="text-white">billing como um servi&ccedil;o separado</strong> que se comunica por eventos. Quando o billing diz &ldquo;plano mudou para Pro&rdquo;, o sistema de features atualiza as permiss&otilde;es. Essa separa&ccedil;&atilde;o permite mudar de Stripe para outro provedor sem tocar na l&oacute;gica de neg&oacute;cio.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 4: Feature Flags por Tenant ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#127991;&#65039; Feature Flags por Tenant</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Feature flags permitem <strong class="text-rose-400">ativar funcionalidades seletivamente</strong> por tenant, plano, ou segmento. S&atilde;o essenciais para diferenciar planos (Free vs Pro), beta testing com clientes espec&iacute;ficos e rollout gradual de features novas.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Tipos de Feature Flags</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Plan-based</strong> &mdash; Features atreladas ao plano. Free tem X, Pro tem Y, Enterprise tem Z</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Tenant-specific</strong> &mdash; Feature habilitada para tenants espec&iacute;ficos (beta testers, parceiros estrat&eacute;gicos)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Percentage rollout</strong> &mdash; Feature ativa para X% dos tenants. Aumenta gradualmente monitorando m&eacute;tricas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Kill switch</strong> &mdash; Desabilitar feature instant&acirc;neamente em produ&ccedil;&atilde;o sem deploy</span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar ferramentas como <strong class="text-white">LaunchDarkly, Unleash ou Flagsmith</strong> em vez de if/else hardcoded</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Verificar flags <strong class="text-white">tanto no frontend quanto no backend</strong> &mdash; esconder UI n&atilde;o basta</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Definir <strong class="text-white">ciclo de vida</strong> para cada flag &mdash; flags permanentes e tempor&aacute;rias</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Acumular <strong class="text-white">centenas de flags</strong> sem limpeza &mdash; vira d&iacute;vida t&eacute;cnica</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Validar acesso a features <strong class="text-white">s&oacute; no frontend</strong> &mdash; API direta burla qualquer valida&ccedil;&atilde;o UI</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar feature flags como <strong class="text-white">sistema de permiss&otilde;es</strong> &mdash; s&atilde;o coisas diferentes</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Crie uma <strong class="text-white">matriz de features por plano</strong> como fonte de verdade. Mantenha essa matriz em configura&ccedil;&atilde;o (n&atilde;o no c&oacute;digo) para que o time de produto possa ajustar sem deploy. Exemplo: features.yaml com plan_id &rarr; lista de features habilitadas.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 5: Onboarding Automatizado ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#128640; Onboarding Automatizado</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Em SaaS, o onboarding precisa ser <strong class="text-rose-400">self-service e instant&acirc;neo</strong>. O cliente cria conta, escolhe plano, configura o workspace e come&ccedil;a a usar &mdash; tudo sem interven&ccedil;&atilde;o humana. Quanto mais atrito no onboarding, maior o churn antes da primeira experi&ecirc;ncia de valor.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Pipeline de Onboarding</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Tenant Provisioning</strong> &mdash; Criar registros no banco, schema/namespace, configura&ccedil;&otilde;es padr&atilde;o, usu&aacute;rio admin</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">DNS e Subdom&iacute;nio</strong> &mdash; tenant.app.com ou dom&iacute;nio customizado. Wildcard DNS + TLS autom&aacute;tico (Let&rsquo;s Encrypt)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Seed Data</strong> &mdash; Dados iniciais para que o tenant veja valor imediatamente (templates, exemplos, wizards)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Integrações</strong> &mdash; OAuth setup, import de dados, conex&atilde;o com ferramentas existentes</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Notion</h3>
+                <p class="text-neutral-300 mb-4">O Notion &eacute; refer&ecirc;ncia em onboarding self-service:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Tempo de valor:</strong> Workspace funcional em &lt;30 segundos ap&oacute;s sign-up</li>
+                    <li><strong class="text-white">Templates:</strong> Conte&uacute;do pr&eacute;-populado que mostra o potencial da ferramenta imediatamente</li>
+                    <li><strong class="text-white">Progressive disclosure:</strong> Features avan&ccedil;adas aparecem conforme o uso, sem sobrecarregar no in&iacute;cio</li>
+                    <li><strong class="text-white">Resultado:</strong> Product-led growth com milh&otilde;es de usu&aacute;rios sem time de vendas tradicional</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Meça o <strong class="text-white">Time to First Value (TTFV)</strong> &mdash; quanto tempo leva do sign-up at&eacute; o usu&aacute;rio realizar a primeira a&ccedil;&atilde;o de valor. Se o TTFV &eacute; &gt; 5 minutos, voc&ecirc; est&aacute; perdendo clientes. Reduza atrito: login social, wizard de setup, templates pr&eacute;-configurados.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 6: Scaling Multi-tenant ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128200; Scaling Multi-tenant</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Escalar um sistema multi-tenant traz desafios &uacute;nicos: <strong class="text-rose-400">noisy neighbors</strong> (um tenant consumindo recursos excessivos), distribui&ccedil;&atilde;o desigual de carga entre tenants, e a necessidade de escalar sem afetar a experi&ecirc;ncia de outros clientes.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Estrat&eacute;gias de Scaling Multi-tenant</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Rate Limiting por Tenant</strong> &mdash; Limites de API calls por plano. Previne abuso e protege outros tenants</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Tenant Tiering</strong> &mdash; Tenants grandes em infra dedicada, pequenos compartilhados. Custo proporcional ao tamanho</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Queue Isolation</strong> &mdash; Filas separadas por prioridade de tenant. Enterprise n&atilde;o espera na fila do Free</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Shard Migration</strong> &mdash; Mover tenants entre shards conforme crescem, sem downtime</span></li>
+                </ul>
+            </div>
+
+            <!-- Timeline: Noisy Neighbor -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Combatendo o Noisy Neighbor</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+                        <span class="text-rose-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Monitorar uso por tenant</h4>
+                        <p class="text-neutral-300 text-sm">M&eacute;tricas de CPU, mem&oacute;ria, I/O e API calls segmentadas por tenant_id. Dashboards que mostram os top 10 consumers.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+                        <span class="text-rose-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Aplicar rate limiting e throttling</h4>
+                        <p class="text-neutral-300 text-sm">Limites por plano: Free = 100 req/min, Pro = 1000 req/min, Enterprise = custom. Token bucket algorithm.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+                        <span class="text-rose-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Isolar ou migrar tenants problem&aacute;ticos</h4>
+                        <p class="text-neutral-300 text-sm">Quando um tenant cresce demais para o pool compartilhado, migre para infra dedicada. Automatize essa migra&ccedil;&atilde;o.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Implemente <strong class="text-white">fair-share scheduling</strong>: mesmo que um tenant tenha rate limit alto, ele n&atilde;o pode monopolizar 100% dos recursos compartilhados. Reserve capacidade m&iacute;nima para cada tenant ativo, garantindo SLA b&aacute;sico para todos.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 7: Internacionalização ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#127760; Internacionaliza&ccedil;&atilde;o</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Internacionaliza&ccedil;&atilde;o (i18n) vai muito al&eacute;m de <strong class="text-rose-400">traduzir strings</strong>. Envolve moedas, fusos hor&aacute;rios, formatos de data, compliance regulat&oacute;rio por pa&iacute;s (LGPD no Brasil, GDPR na Europa), e at&eacute; data residency &mdash; onde os dados s&atilde;o armazenados fisicamente.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Dimens&otilde;es da Internacionaliza&ccedil;&atilde;o</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Localiza&ccedil;&atilde;o (l10n)</strong> &mdash; Tradu&ccedil;&atilde;o de strings, formatos de n&uacute;meros e datas, RTL para &aacute;rabe/hebraico</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Moedas e Pagamentos</strong> &mdash; Multi-currency pricing, tax calculation por regi&atilde;o (VAT, ICMS), payment methods locais (PIX, Boleto)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Data Residency</strong> &mdash; Onde os dados ficam armazenados. GDPR exige dados de europeus na EU. LGPD tem requisitos similares</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Timezone Handling</strong> &mdash; Armazene tudo em UTC, converta na camada de apresenta&ccedil;&atilde;o. Use bibliotecas (date-fns-tz, Luxon)</span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><strong class="text-white">UTC everywhere</strong> no backend, convers&atilde;o no frontend</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">ICU MessageFormat</strong> para pluraliza&ccedil;&atilde;o e g&ecirc;nero &mdash; n&atilde;o concatene strings</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Planejar i18n <strong class="text-white">desde o in&iacute;cio</strong> &mdash; retrofitar &eacute; 10x mais caro</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Hardcodar <strong class="text-white">R$, US$</strong> ou formato de data no c&oacute;digo</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Assumir que <strong class="text-white">Google Translate</strong> resolve tradu&ccedil;&atilde;o de produto</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Armazenar datas em <strong class="text-white">timezone local</strong> do servidor</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use <strong class="text-white">Intl API do JavaScript</strong> (Intl.NumberFormat, Intl.DateTimeFormat) para formata&ccedil;&atilde;o no frontend &mdash; &eacute; nativa, suporta todos os locales e n&atilde;o precisa de biblioteca externa. No backend, guarde o <strong class="text-white">locale e timezone do tenant</strong> como configura&ccedil;&atilde;o, n&atilde;o do usu&aacute;rio individual.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MODULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-rose-900/40 via-dark-800 to-dark-800 rounded-xl border border-rose-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Shared DB &eacute; o in&iacute;cio</strong><span class="text-neutral-400"> &mdash; Come&ccedil;e com tenant_id + RLS, migre para modelos mais isolados conforme a necessidade</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Isolamento em m&uacute;ltiplas camadas</strong><span class="text-neutral-400"> &mdash; Banco, aplica&ccedil;&atilde;o, storage, cache e logs &mdash; todas precisam de isolamento</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">N&atilde;o reinvente billing</strong><span class="text-neutral-400"> &mdash; Stripe/Paddle gerenciam subscriptions, invoices e metered billing</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Feature flags diferenciam planos</strong><span class="text-neutral-400"> &mdash; Valide no backend, n&atilde;o apenas no frontend. Limpe flags tempor&aacute;rias</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Onboarding &lt;5 min at&eacute; o valor</strong><span class="text-neutral-400"> &mdash; Self-service, templates, progressive disclosure. Meça TTFV</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Noisy neighbor &eacute; o maior risco</strong><span class="text-neutral-400"> &mdash; Rate limiting, tenant tiering e fair-share scheduling protegem todos</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">i18n desde o dia 1</strong><span class="text-neutral-400"> &mdash; UTC everywhere, ICU MessageFormat, data residency e multi-currency</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-rose-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">6.4 - &#127891; Produto Educacional e Comunidade &mdash; Construindo neg&oacute;cios de conhecimento escal&aacute;veis</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="modulo-6-2.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; M&oacute;dulo Anterior</a>
+                    <a href="modulo-6-4.html" class="flex-1 text-center px-6 py-3 bg-rose-600 text-white rounded-lg font-semibold hover:bg-rose-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; 2026</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

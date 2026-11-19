@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 2.5 - Migração e Evolução | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+        /* Blue accent */
+        html:not(.dark) .text-blue-400 { color: #2563eb; }
+        html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+        html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+        html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .bg-blue-900\/30 { background-color: rgba(29, 78, 216, 0.08); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.2); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .text-violet-400 { color: #7c3aed; }
+        html:not(.dark) .bg-violet-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center gap-3">
+                    <a href="../../index.html" class="text-yellow-400 font-bold text-lg hover:text-yellow-300 transition-colors">&#127959;&#65039; Arquitetura DEV 2030</a>
+                    <span class="text-neutral-500">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center gap-1">
+                    <a href="../trilha1/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+                    <a href="index.html" class="px-2 py-1 text-xs font-medium text-blue-400 bg-blue-500/10 rounded transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span></a>
+                    <a href="../trilha3/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span></a>
+                    <a href="../trilha4/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span></a>
+                    <a href="../trilha5/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span></a>
+                    <a href="../trilha6/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Escalando</span></a>
+                    <button id="theme-toggle" class="ml-3 p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors">
+                        <svg id="theme-toggle-dark-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-blue-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-blue-400 transition-colors">Trilha 2</a>
+            <span>/</span>
+            <span class="text-blue-400 font-medium">M&oacute;dulo 2.5</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-blue-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                    M&Oacute;DULO 2.5
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128260; Migra&ccedil;&atilde;o e Evolu&ccedil;&atilde;o
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Sistemas vivos mudam &mdash; e a arte est&aacute; em evoluir sem quebrar. Neste m&oacute;dulo, voc&ecirc; vai aprender as estrat&eacute;gias comprovadas para migrar arquiteturas, trocar tecnologias e evoluir sistemas em produ&ccedil;&atilde;o com seguran&ccedil;a.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">Interm.</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">Estrat.</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TÓPICO 1: Strangler Fig Pattern ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#127807; Strangler Fig Pattern</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                A migra&ccedil;&atilde;o mais segura que existe: o novo sistema <strong class="text-blue-400">cresce ao redor do antigo</strong>, como uma figueira estranguladora. Cada nova feature vai para o sistema novo, cada m&oacute;dulo migrado &eacute; redirecionado. O sistema antigo encolhe gradualmente at&eacute; desaparecer. Zero big-bang, zero downtime.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Como Funciona</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Proxy/Router layer</strong> &mdash; Um proxy roteia requests entre sistema antigo e novo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Migra&ccedil;&atilde;o gradual</strong> &mdash; Um m&oacute;dulo por vez &eacute; reimplementado no novo sistema</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Rollback safety</strong> &mdash; Se algo falhar, o proxy volta a rotear para o antigo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Feature parity tracking</strong> &mdash; Dashboard mostra % do tr&aacute;fego j&aacute; migrado</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: The Guardian</h3>
+                <p class="text-neutral-300 mb-4">Martin Fowler documentou o padr&atilde;o no caso do The Guardian:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Sistema antigo:</strong> Monolito Java legado com 10+ anos</li>
+                    <li><strong class="text-white">Sistema novo:</strong> Scala/Play Framework</li>
+                    <li><strong class="text-white">Estrat&eacute;gia:</strong> Cada se&ccedil;&atilde;o do site migrada individualmente (esportes, cultura, not&iacute;cias)</li>
+                    <li><strong class="text-white">Timeline:</strong> Anos, n&atilde;o meses &mdash; e isso &eacute; esperado</li>
+                    <li><strong class="text-white">Resultado:</strong> Zero downtime durante toda a migra&ccedil;&atilde;o</li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Por que Reescritas Big-Bang Falham</h3>
+                <p class="text-neutral-300 mb-4">Dados do Standish Group mostram que <strong class="text-white">70% das reescritas big-bang falham</strong>:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>O sistema antigo <strong class="text-white">continua recebendo features</strong> durante a reescrita</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>O novo sistema nunca alcança <strong class="text-white">feature parity</strong></span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>O budget acaba antes da migra&ccedil;&atilde;o completar &mdash; <strong class="text-white">ficam com dois sistemas</strong></span></li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Comece pelo m&oacute;dulo com <strong class="text-white">menor acoplamento e maior dor</strong>. Se o m&oacute;dulo de busca &eacute; lento e tem interface clara, migre primeiro. Vit&oacute;rias r&aacute;pidas criam momentum e confian&ccedil;a no processo.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 2: Branch by Abstraction ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#128256; Branch by Abstraction</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-blue-400">Mudar implementa&ccedil;&atilde;o sem mudar interface.</strong> Introduza uma abstra&ccedil;&atilde;o entre consumidores e a implementa&ccedil;&atilde;o que vai mudar. Troque a implementa&ccedil;&atilde;o por tr&aacute;s da abstra&ccedil;&atilde;o. Remova a abstra&ccedil;&atilde;o quando a migra&ccedil;&atilde;o estiver completa. Ningu&eacute;m que usa o componente percebe a mudan&ccedil;a.
+            </p>
+
+            <!-- Timeline: Passos -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; 4 Passos do Branch by Abstraction</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Criar abstra&ccedil;&atilde;o</h4>
+                        <p class="text-neutral-300 text-sm">Introduza uma interface entre os consumidores e a implementa&ccedil;&atilde;o atual. Todos passam a usar a interface.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Implementar nova vers&atilde;o</h4>
+                        <p class="text-neutral-300 text-sm">Crie a nova implementa&ccedil;&atilde;o atr&aacute;s da mesma interface. Rode ambas em paralelo.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Comparar e validar</h4>
+                        <p class="text-neutral-300 text-sm">Compare resultados das duas implementa&ccedil;&otilde;es. Shadow traffic: requests reais v&atilde;o para ambas, s&oacute; a antiga responde ao usu&aacute;rio.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">4</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Switchover e cleanup</h4>
+                        <p class="text-neutral-300 text-sm">Aponte para a nova implementa&ccedil;&atilde;o. Remova a antiga. Opcionalmente, remova a abstra&ccedil;&atilde;o se n&atilde;o for mais necess&aacute;ria.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Flickr</h3>
+                <p class="text-neutral-300">O Flickr migrou de MySQL para PostgreSQL usando Branch by Abstraction &mdash; criaram uma interface de &ldquo;data store&rdquo;, rodaram ambos em paralelo por semanas comparando resultados, e fizeram o switch quando tinham <strong class="text-white">100% de confian&ccedil;a</strong> que os resultados eram id&ecirc;nticos.</p>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Branch by Abstraction funciona melhor quando a <strong class="text-white">interface j&aacute; existe naturalmente</strong>. Se voc&ecirc; precisa criar uma abstra&ccedil;&atilde;o muito for&ccedil;ada, talvez Strangler Fig seja mais adequado. Escolha a estrat&eacute;gia que se encaixa na arquitetura atual.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 3: Canary Releases ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128038; Canary Releases</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-blue-400">Testar em produ&ccedil;&atilde;o com rede de seguran&ccedil;a.</strong> Deploy da nova vers&atilde;o para um pequeno percentual de usu&aacute;rios (1-5%). Monitorar m&eacute;tricas. Se tudo estiver ok, aumentar gradualmente. Se n&atilde;o, rollback instant&acirc;neo. Staging n&atilde;o pega tudo &mdash; produ&ccedil;&atilde;o tem dados, carga e comportamentos &uacute;nicos.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Progressive Rollout</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">1%</strong> &mdash; Deploy inicial. Monitorar error rate, lat&ecirc;ncia, convers&atilde;o por 1-24h</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">5%</strong> &mdash; Se m&eacute;tricas ok, expandir. Volume suficiente para detectar edge cases</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">25%</strong> &mdash; Volume significativo. Se sobreviver aqui, provavelmente est&aacute; ok</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">100%</strong> &mdash; Rollout completo. Manter vers&atilde;o anterior pronta para rollback por 24-48h</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Google Gmail</h3>
+                <p class="text-neutral-300 mb-4">O Google faz canary de toda mudan&ccedil;a no Gmail:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">0.1%</strong> dos usu&aacute;rios primeiro, por 24 horas</li>
+                    <li><strong class="text-white">Automatic rollback</strong> se error rate > baseline</li>
+                    <li><strong class="text-white">1.8 bilh&otilde;es</strong> de usu&aacute;rios protegidos de bugs que staging n&atilde;o pegou</li>
+                    <li><strong class="text-white">Observabilidade extrema</strong> &mdash; m&eacute;tricas, logs, traces em cada stage</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Definir <strong class="text-white">automatic rollback triggers</strong> antes do deploy</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Monitorar <strong class="text-white">business metrics</strong> al&eacute;m de m&eacute;tricas t&eacute;cnicas</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Manter <strong class="text-white">vers&atilde;o anterior pronta</strong> para rollback instant&acirc;neo</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Fazer canary sem <strong class="text-white">observabilidade adequada</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Pular de 1% para 100% porque <strong class="text-white">&ldquo;parece ok&rdquo;</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Fazer canary em <strong class="text-white">sexta-feira &agrave; tarde</strong></span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 4: Database Migration ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#127959;&#65039; Database Migration Strategies</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-blue-400">O problema mais dif&iacute;cil de migra&ccedil;&atilde;o.</strong> C&oacute;digo &eacute; stateless &mdash; voc&ecirc; reescreve e deploya. Banco de dados &eacute; stateful &mdash; tem dados reais, schemas complexos e depend&ecirc;ncias que n&atilde;o aparecem no diagrama. Migrar banco errado &eacute; a decis&atilde;o mais cara para reverter.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Estrat&eacute;gias de Migra&ccedil;&atilde;o de Banco</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Dual-write</strong> &mdash; Escrever nos dois bancos simultaneamente durante a transi&ccedil;&atilde;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Shadow traffic</strong> &mdash; Enviar reads para ambos, comparar resultados, servir do antigo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Schema versioning</strong> &mdash; Migra&ccedil;&otilde;es backward-compatible, nunca breaking changes diretas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Expand-contract</strong> &mdash; Adicione nova coluna, migre dados, remova antiga (3 deploys)</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: GitHub</h3>
+                <p class="text-neutral-300 mb-4">O GitHub migrou de MySQL para Vitess (MySQL sharded) sem downtime para 100M+ reposit&oacute;rios:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Dual-write</strong> por 6 meses, comparando resultados antes de cortar</li>
+                    <li><strong class="text-white">Shadow reads</strong> validavam consist&ecirc;ncia entre os dois sistemas</li>
+                    <li><strong class="text-white">Zero downtime</strong> &mdash; usu&aacute;rios nunca perceberam a migra&ccedil;&atilde;o</li>
+                    <li><strong class="text-white">Rollback plan</strong> testado semanalmente durante todo o processo</li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Armadilhas de Migra&ccedil;&atilde;o de Banco</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span><strong class="text-white">Stored procedures</strong> &mdash; L&oacute;gica de neg&oacute;cio escondida no banco que ningu&eacute;m lembra</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span><strong class="text-white">Implicit schemas</strong> &mdash; JSON columns sem valida&ccedil;&atilde;o; dados em formatos inesperados</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span><strong class="text-white">Data volume</strong> &mdash; Migrar 1TB de dados leva tempo; planeje janelas de manutencão</span></li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Regra de ouro para migra&ccedil;&otilde;es de schema: <strong class="text-white">nunca fa&ccedil;a breaking changes em um &uacute;nico deploy</strong>. Use o padr&atilde;o expand-contract: (1) adicione nova coluna, (2) migre dados e c&oacute;digo, (3) remova coluna antiga. Tr&ecirc;s deploys, zero downtime.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 5: Feature Flags ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#128681; Feature Flags</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-blue-400">O bot&atilde;o de liga/desliga em produ&ccedil;&atilde;o.</strong> Feature flags s&atilde;o l&oacute;gica condicional que ativa ou desativa funcionalidades sem deploy. Permitem trunk-based development, A/B testing e kill switch para features problem&aacute;ticas. Desacoplam <strong class="text-blue-400">deploy de release</strong>.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Tipos de Feature Flags</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Release flags</strong> &mdash; Ativa/desativa features novas. Vida curta (dias a semanas)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Experiment flags</strong> &mdash; A/B testing. Mostrar variante A ou B para grupos diferentes</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Ops flags</strong> &mdash; Kill switches para situa&ccedil;&otilde;es de emerg&ecirc;ncia. Vida longa</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Permission flags</strong> &mdash; Funcionalidades por segmento (beta users, plano premium)</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Facebook (Gatekeeper)</h3>
+                <p class="text-neutral-300 mb-4">O Facebook deploya c&oacute;digo 3x por dia para 3B+ usu&aacute;rios &mdash; tudo atr&aacute;s de feature flags:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Gatekeeper</strong> &mdash; Sistema interno de feature flags com milh&otilde;es de configura&ccedil;&otilde;es</li>
+                    <li><strong class="text-white">Kill switch</strong> &mdash; Se algo quebra, desliga o flag em segundos, sem rollback de deploy</li>
+                    <li><strong class="text-white">Gradual rollout</strong> &mdash; Nova feature para 1% &rarr; 10% &rarr; 50% &rarr; 100%</li>
+                    <li><strong class="text-white">Targeting</strong> &mdash; Flags por pa&iacute;s, dispositivo, segmento de usu&aacute;rio</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Definir <strong class="text-white">lifecycle</strong> para cada flag (data de remo&ccedil;&atilde;o)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Tratar flags antigos como <strong class="text-white">d&iacute;vida t&eacute;cnica</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Testar <strong class="text-white">ambos os estados</strong> (flag on e flag off) na CI</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Acumular <strong class="text-white">centenas de flags</strong> sem limpeza</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Aninhar flags: <strong class="text-white">if flag_a AND flag_b AND flag_c</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar flags para <strong class="text-white">l&oacute;gica permanente</strong> de neg&oacute;cio</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 6: Architecture Fitness Functions ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128208; Architecture Fitness Functions</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-blue-400">Testes automatizados para sua arquitetura.</strong> Fitness functions verificam se a arquitetura continua atendendo seus atributos de qualidade: lat&ecirc;ncia < 200ms? Zero depend&ecirc;ncias circulares? Cobertura > 80%? Sem fitness functions, degrada&ccedil;&atilde;o arquitetural &eacute; invis&iacute;vel at&eacute; explodir.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Tipos de Fitness Functions</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Structural</strong> &mdash; Regras de depend&ecirc;ncia entre camadas (ArchUnit, NetArchTest)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Performance</strong> &mdash; Budgets de lat&ecirc;ncia, throughput e bundle size na CI</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Security</strong> &mdash; Scan de depend&ecirc;ncias vulner&aacute;veis, checagem de secrets no c&oacute;digo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Observability</strong> &mdash; Todo endpoint tem health check? Todos os erros t&ecirc;m correlation ID?</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Exemplos Pr&aacute;ticos</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">ArchUnit (Java)</strong> &mdash; <code class="bg-dark-700 px-2 py-0.5 rounded text-blue-400">noClasses().that().resideInPackage("..controller..").should().dependOnClassesThat().resideInPackage("..repository..")</code></li>
+                    <li><strong class="text-white">Bundle size check</strong> &mdash; CI falha se o JavaScript bundle ultrapassar 200KB gzipped</li>
+                    <li><strong class="text-white">API response time</strong> &mdash; Testes de contrato que validam p95 &lt; 200ms</li>
+                    <li><strong class="text-white">Dependency graph</strong> &mdash; Alertas se depend&ecirc;ncias circulares forem introduzidas</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Comece com <strong class="text-white">3 fitness functions simples</strong>: (1) nenhuma depend&ecirc;ncia circular, (2) bundle size < threshold, (3) nenhuma depend&ecirc;ncia com vulnerabilidade cr&iacute;tica. Rode na CI. Adicione mais conforme a maturidade do time cresce.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 7: Evolutionary Architecture ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#128302; Evolutionary Architecture</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-blue-400">Projetada para mudar.</strong> Evolutionary Architecture suporta mudan&ccedil;as incrementais guiadas em m&uacute;ltiplas dimens&otilde;es. N&atilde;o &eacute; &ldquo;arquitetura que prev&ecirc; o futuro&rdquo; &mdash; &eacute; &ldquo;arquitetura que aceita que n&atilde;o prevemos o futuro&rdquo; e por isso facilita a adapta&ccedil;&atilde;o cont&iacute;nua.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Princ&iacute;pios da Evolutionary Architecture</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Guided incremental change</strong> &mdash; Mudan&ccedil;as pequenas e frequentes, n&atilde;o revolu&ccedil;&otilde;es</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Last Responsible Moment</strong> &mdash; Adie decis&otilde;es irrevers&iacute;veis at&eacute; ter informa&ccedil;&atilde;o suficiente</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Fitness functions</strong> &mdash; Testes automatizados que guardam a integridade da arquitetura</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Sacrificial architecture</strong> &mdash; Aceitar que partes do sistema ser&atilde;o substitu&iacute;das &eacute; libert&aacute;rio</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Netflix &mdash; 7 Migra&ccedil;&otilde;es em 15 Anos</h3>
+                <p class="text-neutral-300 mb-4">A Netflix fez 7 grandes migra&ccedil;&otilde;es arquiteturais, cada uma incremental:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">2007</strong> &mdash; Datacenter pr&oacute;prio (monolito)</li>
+                    <li><strong class="text-white">2009</strong> &mdash; In&iacute;cio da migra&ccedil;&atilde;o para AWS</li>
+                    <li><strong class="text-white">2012</strong> &mdash; Microsservi&ccedil;os (centenas de servi&ccedil;os)</li>
+                    <li><strong class="text-white">2016</strong> &mdash; Edge computing (Open Connect CDN)</li>
+                    <li><strong class="text-white">2019</strong> &mdash; Serverless parcial para workloads espec&iacute;ficos</li>
+                    <li><strong class="text-white">2022+</strong> &mdash; IA/ML integrada no pipeline de encoding e recomenda&ccedil;&atilde;o</li>
+                </ul>
+                <p class="text-neutral-300 mt-3"><strong class="text-white">Nenhuma foi big-bang.</strong> Cada migra&ccedil;&atilde;o levou anos e foi guiada por fitness functions e m&eacute;tricas de neg&oacute;cio.</p>
+            </div>
+
+            <!-- Citação -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128172;</span> Kent Beck</h3>
+                <p class="text-neutral-300 text-lg italic">&ldquo;Make the change easy, then make the easy change.&rdquo;</p>
+                <p class="text-neutral-400 mt-2 text-sm">Primeiro, refatore para que a mudan&ccedil;a seja simples. Depois, fa&ccedil;a a mudan&ccedil;a simples. Dois passos pequenos em vez de um salto arriscado.</p>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Pergunte-se regularmente: <strong class="text-white">&ldquo;Se precis&aacute;ssemos trocar [componente X] amanh&atilde;, quanto custaria?&rdquo;</strong> Se a resposta &eacute; &ldquo;meses de trabalho&rdquo;, voc&ecirc; tem acoplamento excessivo. Evolutionary architecture mant&eacute;m o custo de mudan&ccedil;a baixo e previs&iacute;vel.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MÓDULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Strangler Fig &eacute; a migra&ccedil;&atilde;o mais segura</strong><span class="text-neutral-400"> &mdash; Novo sistema cresce ao redor do antigo; zero big-bang, zero downtime</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Branch by Abstraction troca implementa&ccedil;&atilde;o sem mudar interface</strong><span class="text-neutral-400"> &mdash; Ideal para migrar componentes internos de forma transparente</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Canary Releases testam em produ&ccedil;&atilde;o com seguran&ccedil;a</strong><span class="text-neutral-400"> &mdash; 1% &rarr; 5% &rarr; 25% &rarr; 100% com rollback autom&aacute;tico</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Migra&ccedil;&atilde;o de banco &eacute; o problema mais dif&iacute;cil</strong><span class="text-neutral-400"> &mdash; Dual-write, shadow traffic e expand-contract s&atilde;o seus aliados</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Feature Flags desacoplam deploy de release</strong><span class="text-neutral-400"> &mdash; Liga/desliga features sem deploy, mas gerencie o lifecycle</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Fitness Functions guardam a arquitetura</strong><span class="text-neutral-400"> &mdash; Testes automatizados que detectam degrada&ccedil;&atilde;o antes que exploda</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Evolutionary Architecture aceita a mudan&ccedil;a</strong><span class="text-neutral-400"> &mdash; Projetada para adapta&ccedil;&atilde;o cont&iacute;nua, n&atilde;o para prever o futuro</span></div>
+                    </div>
+                </div>
+
+                <!-- Trilha 2 Completa -->
+                <div class="bg-blue-900/30 rounded-lg p-6 mb-8 border border-blue-500/30">
+                    <h3 class="font-bold text-blue-400 text-xl mb-3">&#127942; Parab&eacute;ns! Voc&ecirc; completou a Trilha 2!</h3>
+                    <p class="text-neutral-300 mb-4">Voc&ecirc; agora domina os frameworks, trade-offs e estrat&eacute;gias para tomar decis&otilde;es arquiteturais com confian&ccedil;a. De frameworks de decis&atilde;o a ADRs, de an&aacute;lise de trade-offs a migra&ccedil;&otilde;es seguras &mdash; voc&ecirc; tem o toolkit completo do arquiteto.</p>
+                    <p class="text-neutral-300"><strong class="text-white">Pr&oacute;xima trilha:</strong> Na Trilha 3, voc&ecirc; vai aprender como IA e Large Language Models est&atilde;o transformando a arquitetura de software &mdash; e como projetar sistemas que integram IA de forma segura e escal&aacute;vel.</p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha 2</a>
+                    <a href="../trilha3/index.html" class="flex-1 text-center px-6 py-3 bg-violet-600 text-white rounded-lg font-semibold hover:bg-violet-500 transition-colors">Trilha 3: IA &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; Trilha 2: Estrat&eacute;gias de Decis&atilde;o</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

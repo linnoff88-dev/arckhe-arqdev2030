@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 1.3 &mdash; Princ&iacute;pios de Design | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+        html:not(.dark) .bg-emerald-500\/10 { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+        html:not(.dark) .hover\:bg-emerald-500\/30:hover { background-color: rgba(5, 150, 105, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-emerald-400 bg-emerald-500/10">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-500">
+            <a href="../../index.html" class="hover:text-emerald-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-emerald-400 transition-colors">Trilha 1</a>
+            <span>/</span>
+            <span class="text-emerald-400 font-medium">M&oacute;dulo 1.3</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-emerald-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                    M&Oacute;DULO 1.3
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#9889; Princ&iacute;pios de Design
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    SOLID, DRY, KISS e os padr&otilde;es que todo arquiteto deve conhecer. Os fundamentos que separam c&oacute;digo fr&aacute;gil de sistemas resilientes.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-emerald-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-emerald-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-emerald-400">B&aacute;sico</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-emerald-400">Teoria</div>
+                        <div class="text-sm text-neutral-400 mt-1">Formato</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+
+        <!-- ============================================================ -->
+        <!-- TOPIC 1: SOLID -->
+        <!-- ============================================================ -->
+        <section id="topico-1">
+            <div class="flex items-center gap-3 mb-8">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">1</span>
+                <h2 class="text-3xl font-extrabold">&#127919; SOLID &mdash; 5 princ&iacute;pios contra c&oacute;digo fr&aacute;gil</h2>
+            </div>
+
+            <!-- Box Conceito: cada principio explicado -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+                <h3 class="text-lg font-bold text-emerald-400 mb-4">&#128218; Os 5 Princ&iacute;pios SOLID</h3>
+                <p class="text-neutral-300 text-sm mb-5">Criados por Robert C. Martin (Uncle Bob), os princ&iacute;pios SOLID s&atilde;o a base para escrever c&oacute;digo orient&aacute;vel a objetos que n&atilde;o se torna uma bola de lama com o tempo. Exemplo cl&aacute;ssico de viola&ccedil;&atilde;o: um <code class="bg-dark-700 px-1.5 py-0.5 rounded text-emerald-400 text-xs">PaymentProcessor</code> que valida cart&atilde;o, calcula taxa, processa pagamento, envia email e gera relat&oacute;rio &mdash; viola praticamente todos os princ&iacute;pios.</p>
+                <div class="space-y-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-emerald-500">
+                        <span class="font-bold text-emerald-400">S &mdash; Single Responsibility Principle (SRP)</span>
+                        <p class="text-neutral-300 text-sm mt-1">Uma classe deve ter apenas <strong>uma raz&atilde;o para mudar</strong>. Se voc&ecirc; precisa alterar uma classe por motivos diferentes (mudan&ccedil;a de regra de neg&oacute;cio E mudan&ccedil;a de formato de relat&oacute;rio), ela faz coisa demais.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-emerald-500">
+                        <span class="font-bold text-emerald-400">O &mdash; Open/Closed Principle (OCP)</span>
+                        <p class="text-neutral-300 text-sm mt-1">Aberto para extens&atilde;o, fechado para modifica&ccedil;&atilde;o. Adicione novos comportamentos sem alterar c&oacute;digo existente &mdash; use interfaces, heran&ccedil;a ou composi&ccedil;&atilde;o.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-emerald-500">
+                        <span class="font-bold text-emerald-400">L &mdash; Liskov Substitution Principle (LSP)</span>
+                        <p class="text-neutral-300 text-sm mt-1">Subtipos devem ser substitu&iacute;veis por seus tipos base sem quebrar o programa. Se <code class="bg-dark-700 px-1 py-0.5 rounded text-emerald-400 text-xs">Square</code> herda de <code class="bg-dark-700 px-1 py-0.5 rounded text-emerald-400 text-xs">Rectangle</code> mas muda o comportamento de setWidth, viola LSP.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-emerald-500">
+                        <span class="font-bold text-emerald-400">I &mdash; Interface Segregation Principle (ISP)</span>
+                        <p class="text-neutral-300 text-sm mt-1">Nenhum cliente deve ser for&ccedil;ado a depender de m&eacute;todos que n&atilde;o usa. Prefira v&aacute;rias interfaces espec&iacute;ficas a uma interface &uacute;nica e gorda.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-emerald-500">
+                        <span class="font-bold text-emerald-400">D &mdash; Dependency Inversion Principle (DIP)</span>
+                        <p class="text-neutral-300 text-sm mt-1">M&oacute;dulos de alto n&iacute;vel n&atilde;o devem depender de m&oacute;dulos de baixo n&iacute;vel. Ambos devem depender de abstra&ccedil;&otilde;es (interfaces).</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Fazer/Evitar -->
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10060; Evitar &mdash; Viola&ccedil;&otilde;es Comuns</h4>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span><code class="bg-dark-700 px-1 py-0.5 rounded text-xs">UserService</code> que faz CRUD, envia email, gera PDF e valida permiss&otilde;es (viola SRP)</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Adicionar <code class="bg-dark-700 px-1 py-0.5 rounded text-xs">if/else</code> para cada novo tipo de pagamento em vez de criar novo handler (viola OCP)</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Interface <code class="bg-dark-700 px-1 py-0.5 rounded text-xs">IWorker</code> com <code class="bg-dark-700 px-1 py-0.5 rounded text-xs">work()</code> e <code class="bg-dark-700 px-1 py-0.5 rounded text-xs">eat()</code> &mdash; rob&ocirc;s n&atilde;o comem (viola ISP)</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Instanciar <code class="bg-dark-700 px-1 py-0.5 rounded text-xs">new MySQLConnection()</code> dentro da l&oacute;gica de neg&oacute;cio (viola DIP)</span></li>
+                    </ul>
+                </div>
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#9989; Fazer &mdash; C&oacute;digo Correto</h4>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Classes pequenas e focadas: <code class="bg-dark-700 px-1 py-0.5 rounded text-xs">UserRepository</code>, <code class="bg-dark-700 px-1 py-0.5 rounded text-xs">EmailSender</code>, <code class="bg-dark-700 px-1 py-0.5 rounded text-xs">PdfGenerator</code></span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Strategy pattern para novos tipos: <code class="bg-dark-700 px-1 py-0.5 rounded text-xs">PaymentStrategy</code> interface + implementa&ccedil;&otilde;es</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Interfaces segregadas: <code class="bg-dark-700 px-1 py-0.5 rounded text-xs">IWorkable</code>, <code class="bg-dark-700 px-1 py-0.5 rounded text-xs">IFeedable</code> separados</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Injetar <code class="bg-dark-700 px-1 py-0.5 rounded text-xs">IDatabase</code> via construtor em vez de instanciar concreto</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Box Dica Pratica -->
+            <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6">
+                <h4 class="font-bold text-emerald-400 mb-2">&#128161; Dica Pr&aacute;tica</h4>
+                <p class="text-neutral-300 text-sm">N&atilde;o tente aplicar SOLID de forma dogm&aacute;tica desde o in&iacute;cio. Comece escrevendo c&oacute;digo simples e refatore quando sentir dor: quando uma classe cresce demais, quando um <code class="bg-dark-700 px-1.5 py-0.5 rounded text-emerald-400 text-xs">switch/case</code> aparece pela terceira vez, quando um teste fica imposs&iacute;vel de escrever. SOLID resolve problemas reais &mdash; n&atilde;o &eacute; checklist para c&oacute;digo novo.</p>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- TOPIC 2: DRY, KISS e YAGNI -->
+        <!-- ============================================================ -->
+        <section id="topico-2">
+            <div class="flex items-center gap-3 mb-8">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">2</span>
+                <h2 class="text-3xl font-extrabold">&#128161; DRY, KISS e YAGNI &mdash; Simplicidade como virtude</h2>
+            </div>
+
+            <!-- Box Conceito -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+                <h3 class="text-lg font-bold text-emerald-400 mb-4">&#128218; Os 3 Princ&iacute;pios da Simplicidade</h3>
+                <p class="text-neutral-300 text-sm mb-5">Enquanto SOLID foca em orienta&ccedil;&atilde;o a objetos, estes tr&ecirc;s princ&iacute;pios s&atilde;o universais &mdash; aplicam-se a qualquer paradigma, linguagem ou escala. O mantra: fa&ccedil;a simples, n&atilde;o repita, n&atilde;o antecipe.</p>
+                <div class="space-y-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-emerald-500">
+                        <span class="font-bold text-emerald-400">DRY &mdash; Don&rsquo;t Repeat Yourself</span>
+                        <p class="text-neutral-300 text-sm mt-1">Cada peda&ccedil;o de conhecimento deve ter uma &uacute;nica representa&ccedil;&atilde;o autoritativa no sistema. N&atilde;o confunda com &ldquo;nunca copie c&oacute;digo&rdquo; &mdash; &eacute; sobre <strong>conhecimento</strong>, n&atilde;o sobre linhas de c&oacute;digo.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-emerald-500">
+                        <span class="font-bold text-emerald-400">KISS &mdash; Keep It Simple, Stupid</span>
+                        <p class="text-neutral-300 text-sm mt-1">A maioria dos sistemas funciona melhor quando s&atilde;o mantidos simples. Complexidade deve ser adicionada por necessidade, n&atilde;o por preven&ccedil;&atilde;o. Se uma solu&ccedil;&atilde;o precisa de um diagrama de 30 min para ser explicada, provavelmente h&aacute; uma mais simples.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-emerald-500">
+                        <span class="font-bold text-emerald-400">YAGNI &mdash; You Aren&rsquo;t Gonna Need It</span>
+                        <p class="text-neutral-300 text-sm mt-1">N&atilde;o implemente funcionalidade at&eacute; que ela seja realmente necess&aacute;ria. Exemplo: criar um <code class="bg-dark-700 px-1 py-0.5 rounded text-emerald-400 text-xs">ValidationFramework</code> inteiro quando 3 linhas de <code class="bg-dark-700 px-1 py-0.5 rounded text-emerald-400 text-xs">if</code> resolveriam para um time de 2 pessoas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Box Alerta -->
+            <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 mb-6">
+                <h4 class="font-bold text-yellow-400 mb-2">&#9888;&#65039; Alerta: DRY mal aplicado gera abstra&ccedil;&otilde;es prematuras</h4>
+                <p class="text-neutral-300 text-sm">O erro mais comum &eacute; ver 2 trechos de c&oacute;digo parecidos e imediatamente extrair uma fun&ccedil;&atilde;o &ldquo;gen&eacute;rica&rdquo;. Resultado: uma abstra&ccedil;&atilde;o que n&atilde;o serve bem para nenhum dos dois casos e acopla c&oacute;digo que deveria evoluir independentemente. A regra de ouro: <strong>espere a terceira repeti&ccedil;&atilde;o</strong> (Rule of Three) antes de abstrair. C&oacute;digo duplicado &eacute; melhor que a abstra&ccedil;&atilde;o errada.</p>
+            </div>
+
+            <!-- Box Dados -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <h4 class="font-bold text-emerald-400 mb-3">&#128202; Dados que Importam</h4>
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-extrabold text-emerald-400">80%</div>
+                        <p class="text-neutral-400 text-sm mt-2">das features &ldquo;para o futuro&rdquo; nunca s&atilde;o usadas (IBM Research)</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-extrabold text-emerald-400">64%</div>
+                        <p class="text-neutral-400 text-sm mt-2">das features de software s&atilde;o raramente ou nunca utilizadas (Standish Group)</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-extrabold text-emerald-400">3x</div>
+                        <p class="text-neutral-400 text-sm mt-2">mais caro manter c&oacute;digo complexo vs. reescrever simples (IEEE Study)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- TOPIC 3: Design Patterns Essenciais -->
+        <!-- ============================================================ -->
+        <section id="topico-3">
+            <div class="flex items-center gap-3 mb-8">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">3</span>
+                <h2 class="text-3xl font-extrabold">&#129516; Design Patterns Essenciais</h2>
+            </div>
+
+            <!-- Box Conceito: categorias -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+                <h3 class="text-lg font-bold text-emerald-400 mb-4">&#128218; Categorias de Patterns (GoF)</h3>
+                <p class="text-neutral-300 text-sm mb-5">Os Design Patterns do Gang of Four (1994) s&atilde;o vocabul&aacute;rio compartilhado. Quando voc&ecirc; diz &ldquo;usa Strategy aqui&rdquo;, o time inteiro entende. N&atilde;o &eacute; sobre decorar 23 patterns &mdash; &eacute; sobre reconhecer problemas recorrentes.</p>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-bold text-emerald-400 mb-2">&#127959;&#65039; Creational</h4>
+                        <p class="text-neutral-400 text-xs mb-2">Como objetos s&atilde;o criados</p>
+                        <ul class="text-sm text-neutral-300 space-y-1">
+                            <li>&#8226; <strong>Factory Method</strong> &mdash; cria&ccedil;&atilde;o via subclasses</li>
+                            <li>&#8226; <strong>Abstract Factory</strong> &mdash; fam&iacute;lias de objetos</li>
+                            <li>&#8226; <strong>Builder</strong> &mdash; constru&ccedil;&atilde;o passo a passo</li>
+                            <li>&#8226; <strong>Singleton</strong> &mdash; inst&acirc;ncia &uacute;nica (cuidado!)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-bold text-emerald-400 mb-2">&#128295; Structural</h4>
+                        <p class="text-neutral-400 text-xs mb-2">Como objetos s&atilde;o compostos</p>
+                        <ul class="text-sm text-neutral-300 space-y-1">
+                            <li>&#8226; <strong>Adapter</strong> &mdash; interface compat&iacute;vel</li>
+                            <li>&#8226; <strong>Facade</strong> &mdash; interface simplificada</li>
+                            <li>&#8226; <strong>Decorator</strong> &mdash; comportamento extra</li>
+                            <li>&#8226; <strong>Proxy</strong> &mdash; acesso controlado</li>
+                        </ul>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-bold text-emerald-400 mb-2">&#128640; Behavioral</h4>
+                        <p class="text-neutral-400 text-xs mb-2">Como objetos se comunicam</p>
+                        <ul class="text-sm text-neutral-300 space-y-1">
+                            <li>&#8226; <strong>Strategy</strong> &mdash; algoritmos intercambi&aacute;veis</li>
+                            <li>&#8226; <strong>Observer</strong> &mdash; notifica&ccedil;&atilde;o de mudan&ccedil;as</li>
+                            <li>&#8226; <strong>Command</strong> &mdash; a&ccedil;&otilde;es como objetos</li>
+                            <li>&#8226; <strong>Template Method</strong> &mdash; esqueleto de algoritmo</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline: exemplos praticos -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+                <h3 class="text-lg font-bold text-emerald-400 mb-4">&#128337; Exemplos Pr&aacute;ticos no Mundo Real</h3>
+                <div class="space-y-6 relative before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-0.5 before:bg-emerald-500/30">
+                    <div class="flex gap-4 items-start relative">
+                        <span class="w-10 h-10 rounded-full bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center flex-shrink-0 z-10 text-sm font-bold text-emerald-400">S</span>
+                        <div>
+                            <span class="font-bold text-neutral-100">Strategy &mdash; Stripe</span>
+                            <p class="text-neutral-300 text-sm mt-1">Processadores de pagamento como strategies. Adicionar Pix? Crie <code class="bg-dark-700 px-1 py-0.5 rounded text-emerald-400 text-xs">PixPaymentStrategy</code> sem tocar no core do checkout.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start relative">
+                        <span class="w-10 h-10 rounded-full bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center flex-shrink-0 z-10 text-sm font-bold text-emerald-400">O</span>
+                        <div>
+                            <span class="font-bold text-neutral-100">Observer &mdash; React/Vue</span>
+                            <p class="text-neutral-300 text-sm mt-1">Estado muda &#8594; UI re-renderiza automaticamente. O componente &ldquo;observa&rdquo; o state e reage sem acoplamento direto.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start relative">
+                        <span class="w-10 h-10 rounded-full bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center flex-shrink-0 z-10 text-sm font-bold text-emerald-400">F</span>
+                        <div>
+                            <span class="font-bold text-neutral-100">Factory &mdash; Frameworks DI</span>
+                            <p class="text-neutral-300 text-sm mt-1">Spring, NestJS, .NET &mdash; o container cria objetos para voc&ecirc;. Voc&ecirc; pede <code class="bg-dark-700 px-1 py-0.5 rounded text-emerald-400 text-xs">ILogger</code>, o factory decide se &eacute; Console, File ou CloudWatch.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start relative">
+                        <span class="w-10 h-10 rounded-full bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center flex-shrink-0 z-10 text-sm font-bold text-emerald-400">A</span>
+                        <div>
+                            <span class="font-bold text-neutral-100">Adapter &mdash; Migra&ccedil;&otilde;es de API</span>
+                            <p class="text-neutral-300 text-sm mt-1">Migrando de Twilio para AWS SNS? Crie um adapter que implementa a interface antiga usando o SDK novo. Zero mudan&ccedil;a no c&oacute;digo de neg&oacute;cio.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Box Dica Pratica -->
+            <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6">
+                <h4 class="font-bold text-emerald-400 mb-2">&#128161; Quando Usar Patterns</h4>
+                <p class="text-neutral-300 text-sm">Patterns s&atilde;o solu&ccedil;&otilde;es para problemas <strong>recorrentes</strong>. Se voc&ecirc; n&atilde;o tem o problema, n&atilde;o use o pattern. N&atilde;o crie um Abstract Factory para criar 1 tipo de objeto. N&atilde;o use Observer para 2 componentes. A regra: sinta a dor primeiro, depois aplique o rem&eacute;dio. O excesso de patterns &eacute; t&atilde;o prejudicial quanto a falta deles &mdash; chama-se &ldquo;pattern-itis&rdquo;.</p>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- TOPIC 4: Acoplamento e Coesao -->
+        <!-- ============================================================ -->
+        <section id="topico-4">
+            <div class="flex items-center gap-3 mb-8">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">4</span>
+                <h2 class="text-3xl font-extrabold">&#128268; Acoplamento e Coes&atilde;o</h2>
+            </div>
+
+            <!-- Box Conceito -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+                <h3 class="text-lg font-bold text-emerald-400 mb-4">&#128218; Tipos de Acoplamento (do pior ao melhor)</h3>
+                <p class="text-neutral-300 text-sm mb-5">Acoplamento &eacute; o grau de depend&ecirc;ncia entre m&oacute;dulos. Coes&atilde;o &eacute; o grau em que elementos de um m&oacute;dulo pertencem juntos. O objetivo &eacute; sempre: <strong>baixo acoplamento, alta coes&atilde;o</strong>. Exemplo cl&aacute;ssico: se seu m&oacute;dulo de auth depende diretamente do m&oacute;dulo de billing, uma mudan&ccedil;a no billing pode derrubar o login.</p>
+                <div class="space-y-3">
+                    <div class="bg-dark-700/50 rounded-lg p-4 flex items-center gap-4">
+                        <span class="text-red-400 font-bold text-sm min-w-[80px]">&#128308; Content</span>
+                        <p class="text-neutral-300 text-sm">Um m&oacute;dulo acessa diretamente dados internos de outro. O pior tipo.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 flex items-center gap-4">
+                        <span class="text-orange-400 font-bold text-sm min-w-[80px]">&#128992; Common</span>
+                        <p class="text-neutral-300 text-sm">M&oacute;dulos compartilham vari&aacute;veis globais. Mudar uma afeta todos.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 flex items-center gap-4">
+                        <span class="text-yellow-400 font-bold text-sm min-w-[80px]">&#128993; Control</span>
+                        <p class="text-neutral-300 text-sm">Um m&oacute;dulo controla o fluxo de outro via flags ou par&acirc;metros.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 flex items-center gap-4">
+                        <span class="text-blue-400 font-bold text-sm min-w-[80px]">&#128309; Stamp</span>
+                        <p class="text-neutral-300 text-sm">M&oacute;dulos compartilham estruturas de dados compostas, usando apenas parte delas.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 flex items-center gap-4">
+                        <span class="text-emerald-400 font-bold text-sm min-w-[80px]">&#128994; Data</span>
+                        <p class="text-neutral-300 text-sm">M&oacute;dulos se comunicam apenas via par&acirc;metros simples. O melhor tipo.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Fazer/Evitar -->
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10060; Evitar</h4>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Servi&ccedil;os que acessam o banco de dados de outros servi&ccedil;os diretamente</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Vari&aacute;veis globais compartilhadas entre m&oacute;dulos</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Depend&ecirc;ncias circulares: A depende de B que depende de A</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Classes &ldquo;God Object&rdquo; que sabem e fazem tudo</span></li>
+                    </ul>
+                </div>
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#9989; Fazer</h4>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Comunicar via APIs/contratos bem definidos entre servi&ccedil;os</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Usar eventos para desacoplar (event-driven architecture)</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Agrupar c&oacute;digo que muda junto (alta coes&atilde;o funcional)</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Dependency injection para inverter depend&ecirc;ncias</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Box Dados -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                <h4 class="font-bold text-emerald-400 mb-3">&#128202; M&eacute;tricas de Acoplamento</h4>
+                <div class="grid sm:grid-cols-3 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-extrabold text-emerald-400">Ce</div>
+                        <p class="text-neutral-300 text-sm mt-1 font-semibold">Efferent Coupling</p>
+                        <p class="text-neutral-400 text-xs mt-1">Quantos m&oacute;dulos este m&oacute;dulo depende. Alto Ce = m&oacute;dulo fr&aacute;gil.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-extrabold text-emerald-400">Ca</div>
+                        <p class="text-neutral-300 text-sm mt-1 font-semibold">Afferent Coupling</p>
+                        <p class="text-neutral-400 text-xs mt-1">Quantos m&oacute;dulos dependem deste. Alto Ca = mudan&ccedil;as s&atilde;o arriscadas.</p>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 text-center">
+                        <div class="text-2xl font-extrabold text-emerald-400">I</div>
+                        <p class="text-neutral-300 text-sm mt-1 font-semibold">Instabilidade</p>
+                        <p class="text-neutral-400 text-xs mt-1">I = Ce/(Ca+Ce). Varia de 0 (est&aacute;vel) a 1 (inst&aacute;vel). M&oacute;dulos est&aacute;veis devem ser abstratos.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- TOPIC 5: Separacao de Concerns -->
+        <!-- ============================================================ -->
+        <section id="topico-5">
+            <div class="flex items-center gap-3 mb-8">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">5</span>
+                <h2 class="text-3xl font-extrabold">&#128230; Separa&ccedil;&atilde;o de Concerns</h2>
+            </div>
+
+            <!-- Box Conceito -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+                <h3 class="text-lg font-bold text-emerald-400 mb-4">&#128218; Vertical vs. Horizontal Slicing</h3>
+                <p class="text-neutral-300 text-sm mb-5">Cada parte do sistema deve lidar com uma &uacute;nica preocupa&ccedil;&atilde;o. Quando SQL aparece no template HTML (viola&ccedil;&atilde;o cl&aacute;ssica), mudar o layout pode quebrar a query &mdash; e vice-versa.</p>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-bold text-emerald-400 mb-2">&#8596;&#65039; Horizontal Slicing (por camada)</h4>
+                        <p class="text-neutral-300 text-sm mb-2">Separa&ccedil;&atilde;o t&eacute;cnica: Controllers, Services, Repositories, Models. Tradicional e familiar.</p>
+                        <div class="bg-dark-700 rounded p-3 text-xs text-neutral-400 font-mono">
+                            src/<br>
+                            &nbsp;&nbsp;controllers/<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;UserController<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;OrderController<br>
+                            &nbsp;&nbsp;services/<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;UserService<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;OrderService<br>
+                            &nbsp;&nbsp;repositories/<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;UserRepository<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;OrderRepository
+                        </div>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4">
+                        <h4 class="font-bold text-emerald-400 mb-2">&#8597;&#65039; Vertical Slicing (por feature)</h4>
+                        <p class="text-neutral-300 text-sm mb-2">Separa&ccedil;&atilde;o por dom&iacute;nio: tudo de User junto, tudo de Order junto. Escala melhor em times grandes.</p>
+                        <div class="bg-dark-700 rounded p-3 text-xs text-neutral-400 font-mono">
+                            src/<br>
+                            &nbsp;&nbsp;users/<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;UserController<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;UserService<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;UserRepository<br>
+                            &nbsp;&nbsp;orders/<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;OrderController<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;OrderService<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;OrderRepository
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid Fazer/Evitar -->
+            <div class="grid md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10060; Evitar</h4>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>SQL queries dentro de templates HTML/JSX</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Regras de neg&oacute;cio no controller da API</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>L&oacute;gica de UI no backend (formata&ccedil;&atilde;o de moeda, cores)</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Logging, auth e valida&ccedil;&atilde;o espalhados em todo lugar (cross-cutting mal resolvido)</span></li>
+                    </ul>
+                </div>
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#9989; Fazer</h4>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Camada de acesso a dados separada da l&oacute;gica de neg&oacute;cio</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Middlewares para cross-cutting concerns (auth, logging, rate limit)</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>DTOs para isolar modelo interno do modelo de API</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Organiza&ccedil;&atilde;o por feature quando o time cresce acima de 5 devs</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Box Dica Pratica -->
+            <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6">
+                <h4 class="font-bold text-emerald-400 mb-2">&#128161; Dica Pr&aacute;tica</h4>
+                <p class="text-neutral-300 text-sm">O teste da separa&ccedil;&atilde;o: <strong>consigo trocar o banco de dados sem mudar regras de neg&oacute;cio?</strong> Consigo trocar o framework web sem reescrever dom&iacute;nio? Se a resposta &eacute; &ldquo;n&atilde;o&rdquo;, seus concerns est&atilde;o misturados. Comece separando o que muda por raz&otilde;es diferentes &mdash; UI muda por UX, neg&oacute;cio muda por regras, infra muda por performance.</p>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- TOPIC 6: SRP na Arquitetura -->
+        <!-- ============================================================ -->
+        <section id="topico-6">
+            <div class="flex items-center gap-3 mb-8">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">6</span>
+                <h2 class="text-3xl font-extrabold">&#128737;&#65039; SRP na Arquitetura</h2>
+            </div>
+
+            <!-- Box Conceito -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+                <h3 class="text-lg font-bold text-emerald-400 mb-4">&#128218; Bounded Context &mdash; SRP em escala</h3>
+                <p class="text-neutral-300 text-sm mb-4">Na arquitetura, SRP significa: <strong>um servi&ccedil;o, uma raz&atilde;o para mudar</strong>. Isso se conecta diretamente ao conceito de Bounded Context do Domain-Driven Design (DDD). Cada contexto tem seu pr&oacute;prio modelo, vocabul&aacute;rio e limites claros.</p>
+                <div class="bg-dark-700/50 rounded-lg p-4">
+                    <p class="text-neutral-300 text-sm mb-3">Exemplo: Um <code class="bg-dark-700 px-1.5 py-0.5 rounded text-emerald-400 text-xs">UserService</code> que gerencia autentica&ccedil;&atilde;o, perfil, prefer&ecirc;ncias e billing &eacute; um monolito disfar&ccedil;ado de microsservi&ccedil;o. Decomposi&ccedil;&atilde;o correta:</p>
+                    <div class="grid sm:grid-cols-4 gap-3 mt-3">
+                        <div class="bg-dark-700 rounded-lg p-3 text-center border border-emerald-500/20">
+                            <span class="text-lg">&#128272;</span>
+                            <p class="text-emerald-400 text-sm font-bold mt-1">Auth Service</p>
+                            <p class="text-neutral-400 text-xs mt-1">Login, registro, tokens, MFA</p>
+                        </div>
+                        <div class="bg-dark-700 rounded-lg p-3 text-center border border-emerald-500/20">
+                            <span class="text-lg">&#128100;</span>
+                            <p class="text-emerald-400 text-sm font-bold mt-1">Profile Service</p>
+                            <p class="text-neutral-400 text-xs mt-1">Nome, avatar, bio, settings</p>
+                        </div>
+                        <div class="bg-dark-700 rounded-lg p-3 text-center border border-emerald-500/20">
+                            <span class="text-lg">&#9881;&#65039;</span>
+                            <p class="text-emerald-400 text-sm font-bold mt-1">Preferences</p>
+                            <p class="text-neutral-400 text-xs mt-1">Notifica&ccedil;&otilde;es, tema, idioma</p>
+                        </div>
+                        <div class="bg-dark-700 rounded-lg p-3 text-center border border-emerald-500/20">
+                            <span class="text-lg">&#128179;</span>
+                            <p class="text-emerald-400 text-sm font-bold mt-1">Billing Service</p>
+                            <p class="text-neutral-400 text-xs mt-1">Planos, cobran&ccedil;a, faturas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Box Alerta -->
+            <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-6 mb-6">
+                <h4 class="font-bold text-yellow-400 mb-2">&#9888;&#65039; Alerta: Mini-Monolitos Distribu&iacute;dos</h4>
+                <p class="text-neutral-300 text-sm">O erro mais comum em microsservi&ccedil;os: decompor por entidade t&eacute;cnica em vez de por dom&iacute;nio de neg&oacute;cio. Resultado: 20 servi&ccedil;os que precisam ser deployados juntos, que compartilham banco de dados e que falham em cascata. Voc&ecirc; n&atilde;o tem microsservi&ccedil;os &mdash; voc&ecirc; tem um monolito distribu&iacute;do, que &eacute; o <strong>pior dos dois mundos</strong>: complexidade de distribu&iacute;do sem os benef&iacute;cios da independ&ecirc;ncia.</p>
+            </div>
+
+            <!-- Grid Fazer/Evitar -->
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10060; Evitar</h4>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Servi&ccedil;os que precisam ser deployados em ordem espec&iacute;fica</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Servi&ccedil;os que compartilham o mesmo banco de dados</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Um &ldquo;servi&ccedil;o&rdquo; com 15+ endpoints que faz de tudo</span></li>
+                        <li class="flex items-start gap-2"><span class="text-red-400 mt-0.5">&#9679;</span><span>Decomposi&ccedil;&atilde;o por camada t&eacute;cnica (DatabaseService, CacheService)</span></li>
+                    </ul>
+                </div>
+                <div class="bg-dark-800 rounded-xl border border-dark-600 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#9989; Fazer</h4>
+                    <ul class="space-y-3 text-sm text-neutral-300">
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Decompor por dom&iacute;nio de neg&oacute;cio (Pagamentos, Entregas, Cat&aacute;logo)</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Cada servi&ccedil;o &eacute; dono do seu banco de dados</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Deploy independente: mudar billing n&atilde;o exige redeploy de auth</span></li>
+                        <li class="flex items-start gap-2"><span class="text-emerald-400 mt-0.5">&#9679;</span><span>Comunica&ccedil;&atilde;o via contratos (APIs, eventos) n&atilde;o via banco compartilhado</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- TOPIC 7: Inversao de Dependencia -->
+        <!-- ============================================================ -->
+        <section id="topico-7">
+            <div class="flex items-center gap-3 mb-8">
+                <span class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 text-lg font-bold flex items-center justify-center flex-shrink-0">7</span>
+                <h2 class="text-3xl font-extrabold">&#128260; Invers&atilde;o de Depend&ecirc;ncia</h2>
+            </div>
+
+            <!-- Box Conceito -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+                <h3 class="text-lg font-bold text-emerald-400 mb-4">&#128218; Dependency Injection na Pr&aacute;tica</h3>
+                <p class="text-neutral-300 text-sm mb-4">O Dependency Inversion Principle (DIP) diz: dependa de abstra&ccedil;&otilde;es, n&atilde;o de detalhes. Dependency Injection (DI) &eacute; a <strong>t&eacute;cnica</strong> para aplicar o DIP &mdash; em vez de criar depend&ecirc;ncias internamente, voc&ecirc; as recebe de fora.</p>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-red-500/50">
+                        <h4 class="font-bold text-red-400 text-sm mb-2">&#10060; Sem DIP &mdash; Acoplamento direto</h4>
+                        <div class="bg-dark-700 rounded p-3 text-xs text-neutral-400 font-mono">
+                            <span class="text-red-400">class</span> OrderService {<br>
+                            &nbsp;&nbsp;<span class="text-red-400">private</span> db = <span class="text-yellow-400">new</span> PostgresDB();<br>
+                            &nbsp;&nbsp;<span class="text-red-400">private</span> mailer = <span class="text-yellow-400">new</span> SendGrid();<br>
+                            <br>
+                            &nbsp;&nbsp;<span class="text-neutral-500">// L&oacute;gica presa ao Postgres e SendGrid</span><br>
+                            &nbsp;&nbsp;<span class="text-neutral-500">// Imposs&iacute;vel testar sem infra real</span><br>
+                            }
+                        </div>
+                    </div>
+                    <div class="bg-dark-700/50 rounded-lg p-4 border-l-4 border-emerald-500/50">
+                        <h4 class="font-bold text-emerald-400 text-sm mb-2">&#9989; Com DIP &mdash; Depend&ecirc;ncia invertida</h4>
+                        <div class="bg-dark-700 rounded p-3 text-xs text-neutral-400 font-mono">
+                            <span class="text-emerald-400">class</span> OrderService {<br>
+                            &nbsp;&nbsp;<span class="text-emerald-400">constructor</span>(<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-emerald-400">private</span> db: <span class="text-yellow-400">IDatabase</span>,<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-emerald-400">private</span> mailer: <span class="text-yellow-400">IMailer</span><br>
+                            &nbsp;&nbsp;) {}<br>
+                            &nbsp;&nbsp;<span class="text-neutral-500">// Funciona com qualquer implementa&ccedil;&atilde;o</span><br>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline: refactoring para DIP -->
+            <div class="bg-dark-800 rounded-xl border border-dark-600 p-6 mb-6">
+                <h3 class="text-lg font-bold text-emerald-400 mb-4">&#128337; Refactoring para DIP &mdash; Passo a Passo</h3>
+                <div class="space-y-6 relative before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-0.5 before:bg-emerald-500/30">
+                    <div class="flex gap-4 items-start relative">
+                        <span class="w-10 h-10 rounded-full bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center flex-shrink-0 z-10 text-sm font-bold text-emerald-400">1</span>
+                        <div>
+                            <span class="font-bold text-neutral-100">Identifique depend&ecirc;ncias concretas</span>
+                            <p class="text-neutral-300 text-sm mt-1">Procure por <code class="bg-dark-700 px-1 py-0.5 rounded text-emerald-400 text-xs">new ConcreteClass()</code> dentro de l&oacute;gica de neg&oacute;cio. Cada <code class="bg-dark-700 px-1 py-0.5 rounded text-emerald-400 text-xs">new</code> &eacute; um ponto de acoplamento.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start relative">
+                        <span class="w-10 h-10 rounded-full bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center flex-shrink-0 z-10 text-sm font-bold text-emerald-400">2</span>
+                        <div>
+                            <span class="font-bold text-neutral-100">Extraia interfaces</span>
+                            <p class="text-neutral-300 text-sm mt-1">Crie <code class="bg-dark-700 px-1 py-0.5 rounded text-emerald-400 text-xs">IDatabase</code>, <code class="bg-dark-700 px-1 py-0.5 rounded text-emerald-400 text-xs">IMailer</code>, <code class="bg-dark-700 px-1 py-0.5 rounded text-emerald-400 text-xs">IPaymentGateway</code> &mdash; contratos que definem o que voc&ecirc; precisa, n&atilde;o como &eacute; feito.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start relative">
+                        <span class="w-10 h-10 rounded-full bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center flex-shrink-0 z-10 text-sm font-bold text-emerald-400">3</span>
+                        <div>
+                            <span class="font-bold text-neutral-100">Injete via construtor</span>
+                            <p class="text-neutral-300 text-sm mt-1">Mude a classe para receber depend&ecirc;ncias como par&acirc;metros do construtor em vez de cri&aacute;-las internamente.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 items-start relative">
+                        <span class="w-10 h-10 rounded-full bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center flex-shrink-0 z-10 text-sm font-bold text-emerald-400">4</span>
+                        <div>
+                            <span class="font-bold text-neutral-100">Configure o container DI</span>
+                            <p class="text-neutral-300 text-sm mt-1">Na composi&ccedil;&atilde;o root (main/bootstrap), registre as implementa&ccedil;&otilde;es concretas. Apenas este ponto conhece os detalhes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Box Dica Pratica -->
+            <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6">
+                <h4 class="font-bold text-emerald-400 mb-2">&#128161; Testabilidade como Benef&iacute;cio</h4>
+                <p class="text-neutral-300 text-sm">O maior benef&iacute;cio pr&aacute;tico da invers&atilde;o de depend&ecirc;ncia &eacute; a <strong>testabilidade</strong>. Sua l&oacute;gica de &ldquo;aprovar pedido&rdquo; n&atilde;o deve importar se usa PostgreSQL ou MongoDB &mdash; injete a interface, n&atilde;o a implementa&ccedil;&atilde;o. Nos testes, injete um <code class="bg-dark-700 px-1.5 py-0.5 rounded text-emerald-400 text-xs">InMemoryDatabase</code> e um <code class="bg-dark-700 px-1.5 py-0.5 rounded text-emerald-400 text-xs">FakeMailer</code>. Testes rodam em milissegundos, sem Docker, sem rede, sem side effects. Se testar &eacute; dif&iacute;cil, &eacute; sinal de que suas depend&ecirc;ncias est&atilde;o invertidas errado.</p>
+            </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <!-- SUMMARY & CHECKLIST -->
+        <!-- ============================================================ -->
+        <section id="resumo" class="bg-dark-800 rounded-xl border border-dark-600 p-8">
+            <h2 class="text-2xl font-extrabold mb-6">&#128203; Checklist do M&oacute;dulo 1.3</h2>
+            <p class="text-neutral-300 text-sm mb-6">Antes de avan&ccedil;ar para o pr&oacute;ximo m&oacute;dulo, verifique se voc&ecirc; consegue responder:</p>
+            <div class="grid md:grid-cols-2 gap-4 mb-8">
+                <ul class="space-y-3 text-sm text-neutral-300">
+                    <li class="flex items-start gap-2"><span class="text-emerald-400">&#9744;</span> Consigo explicar cada letra do SOLID com um exemplo pr&aacute;tico</li>
+                    <li class="flex items-start gap-2"><span class="text-emerald-400">&#9744;</span> Sei a diferen&ccedil;a entre DRY (conhecimento) e elimina&ccedil;&atilde;o ing&ecirc;nua de duplica&ccedil;&atilde;o</li>
+                    <li class="flex items-start gap-2"><span class="text-emerald-400">&#9744;</span> Reconhe&ccedil;o quando YAGNI se aplica vs. quando antecipar faz sentido</li>
+                    <li class="flex items-start gap-2"><span class="text-emerald-400">&#9744;</span> Identifico Factory, Strategy e Observer em frameworks que j&aacute; uso</li>
+                </ul>
+                <ul class="space-y-3 text-sm text-neutral-300">
+                    <li class="flex items-start gap-2"><span class="text-emerald-400">&#9744;</span> Sei medir acoplamento (Ce, Ca) e entendo os tipos de acoplamento</li>
+                    <li class="flex items-start gap-2"><span class="text-emerald-400">&#9744;</span> Consigo explicar vertical vs. horizontal slicing e quando usar cada um</li>
+                    <li class="flex items-start gap-2"><span class="text-emerald-400">&#9744;</span> Reconhe&ccedil;o mini-monolitos distribu&iacute;dos e sei como evit&aacute;-los</li>
+                    <li class="flex items-start gap-2"><span class="text-emerald-400">&#9744;</span> Consigo refatorar c&oacute;digo para usar DIP e Dependency Injection</li>
+                </ul>
+            </div>
+
+            <!-- Next Module -->
+            <div class="bg-dark-700/50 rounded-xl p-6 border border-dark-600">
+                <h3 class="text-lg font-bold text-emerald-400 mb-2">Pr&oacute;ximo M&oacute;dulo</h3>
+                <p class="text-neutral-300 text-sm mb-4">No <strong>M&oacute;dulo 1.4 &mdash; &#128274; Qualidade e Atributos de Qualidade</strong>, vamos explorar os &ldquo;-ilities&rdquo; que definem o sucesso de um sistema: performance, seguran&ccedil;a, disponibilidade, escalabilidade, manutenibilidade, observabilidade e testabilidade.</p>
+            </div>
+        </section>
+
+        <!-- Navigation Buttons -->
+        <div class="flex items-center justify-between pt-8 border-t border-dark-600">
+            <a href="modulo-1-2.html" class="flex items-center gap-2 px-5 py-3 bg-dark-800 border border-dark-600 rounded-xl text-neutral-300 hover:bg-dark-700 transition-colors font-medium text-sm">
+                &larr; M&oacute;dulo 1.2
+            </a>
+            <a href="index.html" class="flex items-center gap-2 px-5 py-3 bg-dark-800 border border-dark-600 rounded-xl text-neutral-300 hover:bg-dark-700 transition-colors font-medium text-sm">
+                Trilha 1
+            </a>
+            <a href="modulo-1-4.html" class="flex items-center gap-2 px-5 py-3 bg-emerald-500/20 border border-emerald-500/30 rounded-xl text-emerald-400 hover:bg-emerald-500/30 transition-colors font-medium text-sm">
+                M&oacute;dulo 1.4 &rarr;
+            </a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 mt-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-neutral-500 text-sm">
+            Arquitetura DEV 2030 &mdash; 2026
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'light') { themeToggleDarkIcon.classList.remove('hidden'); html.classList.remove('dark'); } else { themeToggleLightIcon.classList.remove('hidden'); }
+        themeToggle.addEventListener('click', () => {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+    </script>
+</body>
+</html>

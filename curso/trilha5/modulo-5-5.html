@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 5.5 - Incident Response e SRE | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-teal-400 { color: #0d9488; }
+        html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+        html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+        html:not(.dark) .hover\:bg-teal-500\/30:hover { background-color: rgba(13, 148, 136, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.06); }
+        html:not(.dark) .bg-teal-900\/30 { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .bg-teal-900\/40 { background-color: rgba(13, 148, 136, 0.1); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-teal-400 bg-teal-500/10">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-teal-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-teal-400 transition-colors">Trilha 5</a>
+            <span>/</span>
+            <span class="text-teal-400 font-medium">M&oacute;dulo 5.5</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-teal-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-teal-500/20 text-teal-400 border border-teal-500/30">
+                    M&Oacute;DULO 5.5
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128293; Incident Response e SRE
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Quando o sistema cai &mdash; e ele VAI cair. Neste m&oacute;dulo, voc&ecirc; vai aprender a responder a incidentes com processo (n&atilde;o p&acirc;nico), conduzir post-mortems blameless, criar runbooks que salvam madrugadas, e aplicar os princ&iacute;pios de SRE para construir sistemas que se auto-curam.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">30 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">Avan&ccedil;ado</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">Execu&ccedil;&atilde;o</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TOPICO 1: Incident Response ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#128680; Incident Response</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">O que fazer nos primeiros 5 minutos define o impacto do incidente.</strong> Incident Response &eacute; o processo estruturado para detectar, comunicar, diagnosticar, mitigar e resolver incidentes. P&acirc;nico piora tudo. Processo claro reduz o MTTR (Mean Time To Recovery).
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> O Fluxo de Incident Response</h3>
+                <p class="text-neutral-300 mb-4">Cada incidente segue este fluxo, independente da severidade:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Detec&ccedil;&atilde;o</strong> &mdash; Alerta autom&aacute;tico (m&eacute;tricas, logs) ou report de usu&aacute;rio. Quanto mais r&aacute;pido, menor o impacto</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Triagem e Severidade</strong> &mdash; SEV1 (sistema fora do ar) a SEV4 (cosm&eacute;tico). Define quem &eacute; acionado</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Incident Commander</strong> &mdash; Uma pessoa coordena. Delega diagn&oacute;stico, comunica&ccedil;&atilde;o e mitiga&ccedil;&atilde;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Comunica&ccedil;&atilde;o</strong> &mdash; Status page atualizada. Stakeholders informados. Canal dedicado (war room)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Mitiga&ccedil;&atilde;o &rarr; Resolu&ccedil;&atilde;o</strong> &mdash; Primeiro para o sangramento (rollback, feature flag off), depois corrige a root cause</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: PagerDuty Incident Response</h3>
+                <p class="text-neutral-300 mb-4">O PagerDuty publicou seu playbook de incident response como open source:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Regra #1:</strong> O Incident Commander n&atilde;o debugga &mdash; coordena. Pessoas diferentes para diagn&oacute;stico e comunica&ccedil;&atilde;o</li>
+                    <li><strong class="text-white">Regra #2:</strong> Comunica&ccedil;&atilde;o a cada 15 minutos, mesmo que n&atilde;o tenha novidade. Sil&ecirc;ncio gera p&acirc;nico</li>
+                    <li><strong class="text-white">Regra #3:</strong> Mitigue antes de investigar. Rollback &eacute; sempre a primeira op&ccedil;&atilde;o, mesmo se n&atilde;o sabe a causa</li>
+                    <li><strong class="text-white">Resultado:</strong> MTTR m&eacute;dio de 25 minutos para SEV1, comparado com 2+ horas sem processo</li>
+                </ul>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Defina <strong class="text-white">antes</strong> do incidente: quem &eacute; o Incident Commander, qual o canal de comunica&ccedil;&atilde;o (Slack #incidents), como atualizar a status page, e qual o crit&eacute;rio para cada n&iacute;vel de severidade. Quando o sistema cai &agrave;s 3h da manh&atilde;, ningu&eacute;m quer decidir processo &mdash; quer seguir processo.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 2: Post-Mortem ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#128221; Post-Mortem</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">Sem post-mortem, o mesmo incidente acontece de novo.</strong> Post-mortem &eacute; o documento criado ap&oacute;s cada incidente significativo: timeline, root cause, impacto e a&ccedil;&otilde;es corretivas. O princ&iacute;pio fundamental &eacute; <strong class="text-teal-400">blameless</strong>: foca no sistema que permitiu o erro, n&atilde;o na pessoa que errou.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Estrutura de um Post-Mortem Blameless</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Timeline</strong> &mdash; Reconstitui&ccedil;&atilde;o minuto a minuto: quando detectou, quem respondeu, o que fez, quando resolveu</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">5 Whys</strong> &mdash; Pergunte &ldquo;por qu&ecirc;?&rdquo; 5 vezes para chegar na root cause real, n&atilde;o na superf&iacute;cie</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Impacto</strong> &mdash; Quantos usu&aacute;rios afetados, quanto tempo fora, impacto financeiro estimado</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Action Items</strong> &mdash; A&ccedil;&otilde;es concretas com owners e deadlines. &ldquo;Melhorar monitoramento&rdquo; n&atilde;o vale &mdash; &ldquo;Adicionar alerta de latency p99 > 500ms at&eacute; sexta, owner: Jo&atilde;o&rdquo; vale</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Google SRE Post-Mortems</h3>
+                <p class="text-neutral-300 mb-4">O Google publica post-mortems internos para que todos os times aprendam:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Blameless por design:</strong> Nunca &ldquo;fulano errou&rdquo;, sempre &ldquo;o sistema permitiu que X acontecesse&rdquo;</li>
+                    <li><strong class="text-white">Template padronizado:</strong> &ldquo;O que aconteceu&rdquo; &rarr; &ldquo;Por que aconteceu&rdquo; &rarr; &ldquo;O que vamos mudar&rdquo; &rarr; &ldquo;Action items&rdquo;</li>
+                    <li><strong class="text-white">Follow-up obrigat&oacute;rio:</strong> Action items s&atilde;o trackados como bugs. Se n&atilde;o foram feitos em 30 dias, escalam</li>
+                    <li><strong class="text-white">Compartilhamento:</strong> Qualquer eng do Google pode ler qualquer post-mortem. Aprendizado transversal</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-teal-900/20 rounded-xl border border-teal-500/30 p-6">
+                    <h4 class="font-bold text-teal-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Conduzir post-mortem <strong class="text-white">em at&eacute; 48h</strong> ap&oacute;s o incidente</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Incluir <strong class="text-white">todos que participaram</strong> da resposta</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Trackear action items como <strong class="text-white">tickets com deadline</strong></span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Culpar <strong class="text-white">indiv&iacute;duos</strong> &mdash; culpe o sistema que permitiu o erro</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Escrever action items <strong class="text-white">vagos</strong> como &ldquo;melhorar testes&rdquo;</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Pular o post-mortem porque <strong class="text-white">&ldquo;j&aacute; resolveu&rdquo;</strong></span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 3: Runbooks ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128214; Runbooks</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">Em uma emerg&ecirc;ncia &agrave;s 3h da manh&atilde;, ningu&eacute;m lembra o procedimento.</strong> Runbooks s&atilde;o documenta&ccedil;&atilde;o passo-a-passo para cen&aacute;rios comuns: &ldquo;banco lento&rdquo;, &ldquo;servi&ccedil;o n&atilde;o responde&rdquo;, &ldquo;disco cheio&rdquo;, &ldquo;certificado expirado&rdquo;. O runbook &eacute; o GPS do on-call &mdash; siga sequencialmente em vez de improvisar.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Anatomia de um Bom Runbook</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Trigger</strong> &mdash; Que alerta/situa&ccedil;&atilde;o ativa este runbook</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Decision tree</strong> &mdash; Diagn&oacute;stico estruturado: &ldquo;Se X, v&aacute; para passo 3. Se Y, v&aacute; para passo 5&rdquo;</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Comandos copy-paste</strong> &mdash; Comandos exatos para executar, n&atilde;o descri&ccedil;&otilde;es gen&eacute;ricas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Escalation</strong> &mdash; Quando e para quem escalar se os passos n&atilde;o resolvem</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Living doc</strong> &mdash; Atualizado a cada uso. Se um passo n&atilde;o funcionou, corrija o runbook</span></li>
+                </ul>
+            </div>
+
+            <!-- Exemplo de Runbook -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128214; Exemplo: Runbook &ldquo;Database Lento&rdquo;</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Check queries ativas</h4>
+                        <p class="text-neutral-300 text-sm"><code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">SELECT pid, query, state, age(clock_timestamp(), query_start) FROM pg_stat_activity WHERE state != 'idle' ORDER BY query_start;</code></p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Kill queries &gt; 30s</h4>
+                        <p class="text-neutral-300 text-sm"><code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state != 'idle' AND query_start &lt; now() - interval '30 seconds';</code></p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Check locks e disk space</h4>
+                        <p class="text-neutral-300 text-sm">Verificar locks bloqueantes e espa&ccedil;o em disco. Se disco &gt; 90%, escalar para DBA.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">4</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Se n&atilde;o resolveu: Escalar</h4>
+                        <p class="text-neutral-300 text-sm">Contactar DBA de plant&atilde;o via PagerDuty. Incluir output dos passos anteriores na mensagem.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Crie um runbook para <strong class="text-white">cada alerta que existe</strong>. Se um alerta dispara e n&atilde;o tem runbook, ou o alerta &eacute; in&uacute;til (delete) ou falta documenta&ccedil;&atilde;o (crie). O objetivo: qualquer pessoa do time deve conseguir seguir o runbook sem ajuda, mesmo &agrave;s 3h da manh&atilde;.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 4: Chaos Engineering ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128260; Chaos Engineering</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">Quebre em controlled para n&atilde;o quebrar no real.</strong> Chaos Engineering &eacute; a pr&aacute;tica de introduzir falhas deliberadas em produ&ccedil;&atilde;o para testar a resili&ecirc;ncia do sistema: matar inst&acirc;ncias, injetar lat&ecirc;ncia, simular network partition. Voc&ecirc; descobre fraquezas antes dos usu&aacute;rios.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Princ&iacute;pios do Chaos Engineering</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Steady State Hypothesis</strong> &mdash; Defina o comportamento normal antes de injetar falha. &ldquo;Lat&ecirc;ncia p99 &lt; 200ms&rdquo;</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Blast Radius Control</strong> &mdash; Limite o impacto. Come&ccedil;e com 1% do tr&aacute;fego, n&atilde;o 100%</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Game Days</strong> &mdash; Exerc&iacute;cios agendados onde o time simula incidentes e pratica resposta</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Automação</strong> &mdash; Chaos Monkey (Netflix), Gremlin, Litmus (Kubernetes) automatizam inje&ccedil;&atilde;o de falhas</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Netflix Chaos Monkey</h3>
+                <p class="text-neutral-300 mb-4">A Netflix inventou Chaos Engineering e roda em produ&ccedil;&atilde;o desde 2011:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Chaos Monkey:</strong> Mata inst&acirc;ncias EC2 aleat&oacute;rias em produ&ccedil;&atilde;o durante hor&aacute;rio comercial</li>
+                    <li><strong class="text-white">Chaos Kong:</strong> Simula a queda de uma regi&atilde;o inteira da AWS (US-East-1)</li>
+                    <li><strong class="text-white">Resultado:</strong> Quando a AWS US-East-1 realmente caiu em 2017, Netflix continuou funcionando enquanto metade da internet caiu</li>
+                    <li><strong class="text-white">Filosofia:</strong> &ldquo;Se n&atilde;o testamos em produ&ccedil;&atilde;o, n&atilde;o sabemos se funciona em produ&ccedil;&atilde;o&rdquo;</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-teal-900/20 rounded-xl border border-teal-500/30 p-6">
+                    <h4 class="font-bold text-teal-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Come&ccedil;ar com <strong class="text-white">Game Days</strong> antes de automatizar</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Ter <strong class="text-white">rollback instant&acirc;neo</strong> para cada experimento</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Rodar chaos em <strong class="text-white">hor&aacute;rio comercial</strong> (quando o time est&aacute; presente)</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Rodar chaos em produ&ccedil;&atilde;o <strong class="text-white">sem observabilidade</strong> adequada</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Come&ccedil;ar com <strong class="text-white">100% do tr&aacute;fego</strong> no primeiro teste</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Fazer chaos <strong class="text-white">sem avisar o time</strong> (isso &eacute; sabotagem, n&atilde;o engenharia)</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 5: SRE ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#128202; SRE &mdash; Site Reliability Engineering</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">Quando ops vira engenharia.</strong> SRE &eacute; a disciplina criada pelo Google que aplica engenharia de software a problemas de opera&ccedil;&otilde;es. O foco &eacute; automa&ccedil;&atilde;o, SLOs, error budgets e redu&ccedil;&atilde;o de toil. Em vez de escalar o time linearly com a infra, SRE escala com automa&ccedil;&atilde;o.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Os Pilares do SRE</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">SLOs (Service Level Objectives)</strong> &mdash; Meta interna de confiabilidade. Ex: 99.9% de uptime, p99 &lt; 200ms</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Error Budgets</strong> &mdash; O inverso do SLO. Se SLO &eacute; 99.9%, voc&ecirc; tem 0.1% de &ldquo;budget&rdquo; para errar. Enquanto tem budget: ship features. Budget esgotou: pare e melhore confiabilidade</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Toil</strong> &mdash; Trabalho manual, repetitivo, automatiz&aacute;vel. SRE busca manter toil &lt; 50% do tempo. O resto &eacute; engenharia</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Automa&ccedil;&atilde;o sobre processo</strong> &mdash; Se voc&ecirc; precisa de um checklist, precisa de um script. Se precisa de um script, precisa de um servi&ccedil;o</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Como o Error Budget Funciona na Pr&aacute;tica</h3>
+                <p class="text-neutral-300 mb-4">O Google definiu a regra que alinha product e SRE automaticamente:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">SLO: 99.9%</strong> &rarr; Error budget: 43 minutos de downtime por m&ecirc;s</li>
+                    <li><strong class="text-white">Budget OK:</strong> Time de produto prioriza features. Deploy quando quiser</li>
+                    <li><strong class="text-white">Budget baixo:</strong> Congela features. Prioriza confiabilidade, testes, rollback autom&aacute;tico</li>
+                    <li><strong class="text-white">Budget estourado:</strong> Freeze total. S&oacute; fixes de confiabilidade at&eacute; o budget regenerar</li>
+                    <li><strong class="text-white">Resultado:</strong> N&atilde;o precisa de discuss&atilde;o pol&iacute;tica &mdash; o n&uacute;mero decide</li>
+                </ul>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Comece definindo <strong class="text-white">SLOs para seus 3 endpoints mais cr&iacute;ticos</strong>. N&atilde;o precisa de um time de SRE dedicado &mdash; a mentalidade SRE pode ser adotada por qualquer dev. Defina: &ldquo;Login deve ter p99 &lt; 300ms e 99.95% de success rate&rdquo;. Monitore. Quando o error budget ficar baixo, priorize estabilidade.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 6: On-Call ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128260; On-Call</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">Plant&atilde;o que n&atilde;o destr&oacute;i sua vida.</strong> On-call &eacute; a rota&ccedil;&atilde;o de pessoas respons&aacute;veis por responder a incidentes fora do hor&aacute;rio. Mal feito, causa burnout e turnover. Bem feito, &eacute; sustent&aacute;vel e at&eacute; recompensador. A diferen&ccedil;a est&aacute; em: rota&ccedil;&atilde;o justa, qualidade de alertas, compensa&ccedil;&atilde;o e ferramentas adequadas.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Boas Pr&aacute;ticas de On-Call</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Rota&ccedil;&atilde;o semanal</strong> &mdash; M&iacute;nimo de 4-5 pessoas na rota&ccedil;&atilde;o para ser sustent&aacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">M&aacute;ximo 1-2 incidentes por noite</strong> &mdash; Se mais, os alertas est&atilde;o errados, n&atilde;o a pessoa</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Compensa&ccedil;&atilde;o</strong> &mdash; Folga compensat&oacute;ria ou adicional financeiro. On-call n&atilde;o &eacute; volunt&aacute;rio</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Secondary on-call</strong> &mdash; Backup que &eacute; acionado se o prim&aacute;rio n&atilde;o responde em 5 minutos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Runbook para cada alerta</strong> &mdash; Sem runbook = alerta que n&atilde;o deveria existir</span></li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Sinais de On-Call T&oacute;xico</h3>
+                <p class="text-neutral-300 mb-4">Se voc&ecirc; reconhece esses padr&otilde;es, o problema &eacute; a engenharia, n&atilde;o as pessoas:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>On-call &eacute; acordado <strong class="text-white">toda noite</strong> &mdash; alertas est&atilde;o errados ou o sistema &eacute; fr&aacute;gil demais</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>As mesmas pessoas ficam <strong class="text-white">sempre de plant&atilde;o</strong> porque &ldquo;s&oacute; elas sabem&rdquo;</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>Alertas disparam e o on-call <strong class="text-white">n&atilde;o tem a&ccedil;&atilde;o clara</strong> a tomar</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>N&atilde;o existe <strong class="text-white">compensa&ccedil;&atilde;o</strong> por ficar de plant&atilde;o</span></li>
+                </ul>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Fa&ccedil;a um <strong class="text-white">&ldquo;alert review&rdquo; mensal</strong>: liste todos os alertas que dispararam, classifique como &ldquo;actionable&rdquo; ou &ldquo;noise&rdquo;. Delete os noise. Para cada actionable, garanta que existe runbook. Meta: <strong class="text-white">cada alerta que acorda algu&eacute;m deve ter a&ccedil;&atilde;o imediata necess&aacute;ria.</strong> Se n&atilde;o tem, &eacute; noise.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 7: Reliability Patterns ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#128200; Reliability Patterns</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">Sem esses padr&otilde;es, uma falha cascateia pelo sistema inteiro.</strong> Circuit breaker, retry com backoff, bulkhead e timeout s&atilde;o os 4 padr&otilde;es fundamentais de resili&ecirc;ncia. Eles transformam falhas catastr&oacute;ficas em degrada&ccedil;&otilde;es controladas.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Os 4 Padr&otilde;es de Resili&ecirc;ncia</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Circuit Breaker</strong> &mdash; Para de chamar servi&ccedil;o que est&aacute; falhando. 3 estados: closed (normal), open (bloqueado), half-open (testando). Evita cascading failure</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Retry com Exponential Backoff</strong> &mdash; Tenta de novo, mas esperando mais a cada tentativa: 100ms, 200ms, 400ms + jitter. Sem jitter, milhares de clients retentam juntos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Bulkhead</strong> &mdash; Isola recursos por dom&iacute;nio. Pool de conex&otilde;es separado por servi&ccedil;o. Se um esgota, os outros continuam</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Timeout</strong> &mdash; Nunca espere para sempre. Defina timeout para toda chamada externa. Budget de timeout: se total &eacute; 2s, cada hop tem no m&aacute;ximo 500ms</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real: Cascading Failure -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Sem Reliability Patterns: Cascading Failure</h3>
+                <p class="text-neutral-300 mb-4">Anatomia de uma falha em cascata sem circuit breaker:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">1.</strong> Servi&ccedil;o de pagamento fica lento (banco sobrecarregado)</li>
+                    <li><strong class="text-white">2.</strong> Servi&ccedil;o de pedido espera resposta &rarr; timeout &rarr; pool de conex&otilde;es esgota</li>
+                    <li><strong class="text-white">3.</strong> Servi&ccedil;o de pedido para de responder &rarr; servi&ccedil;o de cat&aacute;logo tamb&eacute;m espera</li>
+                    <li><strong class="text-white">4.</strong> Cat&aacute;logo cai &rarr; frontend sem dados &rarr; <strong class="text-red-400">TUDO fora do ar</strong></li>
+                    <li><strong class="text-white">Com circuit breaker:</strong> Pagamento cai &rarr; circuit abre &rarr; pedido retorna &ldquo;tente mais tarde&rdquo; &rarr; cat&aacute;logo e frontend continuam funcionando normalmente</li>
+                </ul>
+            </div>
+
+            <!-- Dica Pratica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Implemente <strong class="text-white">timeout + circuit breaker em toda chamada HTTP entre servi&ccedil;os</strong>. Em Node.js, use <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">opossum</code> para circuit breaker. Em Java, <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">Resilience4j</code>. Em Go, <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">sony/gobreaker</code>. Nunca deixe uma chamada externa sem timeout &mdash; o default &ldquo;infinito&rdquo; &eacute; a maior armadilha de sistemas distribu&iacute;dos.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MODULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-teal-900/40 via-dark-800 to-dark-800 rounded-xl border border-teal-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Incident Response &eacute; processo, n&atilde;o improv</strong><span class="text-neutral-400"> &mdash; Incident Commander, war room, comunica&ccedil;&atilde;o a cada 15 min, mitigue antes de investigar</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Post-mortems blameless previnem repeti&ccedil;&atilde;o</strong><span class="text-neutral-400"> &mdash; 5 Whys, timeline, action items com owners e deadlines</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Runbooks s&atilde;o o GPS do on-call</strong><span class="text-neutral-400"> &mdash; Comandos copy-paste, decision trees, escalation. Se n&atilde;o tem runbook, delete o alerta</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Chaos Engineering antecipa falhas</strong><span class="text-neutral-400"> &mdash; Game Days, blast radius control, Chaos Monkey. Quebre controlled para n&atilde;o quebrar no real</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">SRE: error budgets alinham prioridades</strong><span class="text-neutral-400"> &mdash; Budget OK = ship features. Budget baixo = foque em confiabilidade. O n&uacute;mero decide</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">On-call sustent&aacute;vel &eacute; poss&iacute;vel</strong><span class="text-neutral-400"> &mdash; Rota&ccedil;&atilde;o justa, alertas actionable, compensa&ccedil;&atilde;o, review mensal de alertas</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Reliability Patterns evitam cascading failure</strong><span class="text-neutral-400"> &mdash; Circuit breaker, retry com backoff, bulkhead, timeout em toda chamada externa</span></div>
+                    </div>
+                </div>
+
+                <!-- Congratulatory message for T5 completion -->
+                <div class="bg-teal-900/30 rounded-lg p-6 mb-8 border border-teal-500/30">
+                    <h3 class="font-bold text-teal-400 mb-3 text-lg flex items-center"><span class="mr-2">&#127942;</span> Parab&eacute;ns! Voc&ecirc; completou a Trilha 5: DevOps e Opera&ccedil;&otilde;es!</h3>
+                    <p class="text-neutral-300 mb-3">Voc&ecirc; agora entende o ciclo completo de opera&ccedil;&otilde;es: de CI/CD e containers at&eacute; observabilidade, seguran&ccedil;a e incident response. Voc&ecirc; sabe construir, deployar, monitorar, proteger e responder quando as coisas d&atilde;o errado.</p>
+                    <p class="text-neutral-300">Na pr&oacute;xima trilha, vamos escalar: performance, caching, bancos distribu&iacute;dos e arquitetura para milh&otilde;es de usu&aacute;rios.</p>
+                </div>
+
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-teal-400 mb-2">Pr&oacute;xima Trilha:</h3>
+                    <p class="text-neutral-300">Trilha 6 - &#128200; Escalando e Evoluindo &mdash; Performance, caching, bancos distribu&iacute;dos e arquitetura em escala</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha</a>
+                    <a href="../trilha6/index.html" class="flex-1 text-center px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-500 transition-colors">Trilha 6: Escalando &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; Trilha 5: DevOps e Opera&ccedil;&otilde;es</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Set initial icon
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

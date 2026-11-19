@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playbook de Arquitetura — INEMA.TDS</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --bg2: #13161e;
+    --bg3: #1a1e2a;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.14);
+    --text: #e8eaf0;
+    --muted: #8a8fa8;
+    --accent: #4f8ef7;
+    --accent2: #a78bfa;
+    --accent3: #34d399;
+    --accent4: #fb923c;
+    --accent5: #f472b6;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'Manrope', sans-serif;
+    --mono: 'DM Mono', monospace;
+    --r: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 80px 60px 60px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -120px; left: -60px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(79,142,247,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: 80px;
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(167,139,250,0.10) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 20px;
+  }
+  .header h1 {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 400;
+    line-height: 1.12;
+    color: #fff;
+    max-width: 720px;
+    margin-bottom: 20px;
+  }
+  .header h1 em {
+    font-style: italic;
+    color: var(--accent2);
+  }
+  .header p {
+    color: var(--muted);
+    max-width: 580px;
+    font-size: 15px;
+    line-height: 1.75;
+    margin-bottom: 36px;
+  }
+  .tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+  }
+  .tag.blue { border-color: rgba(79,142,247,0.3); color: var(--accent); background: rgba(79,142,247,0.06); }
+  .tag.purple { border-color: rgba(167,139,250,0.3); color: var(--accent2); background: rgba(167,139,250,0.06); }
+  .tag.green { border-color: rgba(52,211,153,0.3); color: var(--accent3); background: rgba(52,211,153,0.06); }
+
+  /* NAV */
+  .nav {
+    padding: 20px 60px;
+    border-bottom: 1px solid var(--border);
+    display: flex; flex-wrap: wrap; gap: 8px;
+    background: var(--bg2);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .nav a {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    transition: all 0.15s;
+    font-family: var(--mono);
+  }
+  .nav a:hover { background: var(--bg3); color: var(--text); }
+
+  /* MAIN */
+  .main { max-width: 1100px; margin: 0 auto; padding: 0 60px 100px; }
+
+  /* SECTION */
+  .section { padding: 70px 0 0; }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+    max-width: 200px;
+  }
+  .section h2 {
+    font-family: var(--serif);
+    font-size: clamp(24px, 3vw, 34px);
+    font-weight: 400;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .section > p {
+    color: var(--muted);
+    max-width: 680px;
+    margin-bottom: 36px;
+  }
+
+  /* DECISION MATRIX */
+  .matrix {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .matrix-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px;
+    position: relative;
+  }
+  .matrix-card .risk-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .matrix-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .matrix-card p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .matrix-card .arch {
+    margin-top: 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    display: inline-block;
+  }
+
+  /* SCENARIOS */
+  .scenarios { display: flex; flex-direction: column; gap: 32px; }
+  .scenario {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .scenario-header {
+    display: flex; align-items: flex-start;
+    gap: 20px;
+    padding: 28px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .scenario-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+  .scenario-header div h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .scenario-header div p {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .scenario-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+  .scenario-col {
+    padding: 24px 32px;
+  }
+  .scenario-col:first-child {
+    border-right: 1px solid var(--border);
+  }
+  .scenario-col h4 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .scenario-col ul {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .scenario-col ul li {
+    font-size: 13px;
+    color: var(--text);
+    display: flex; align-items: flex-start; gap: 8px;
+    line-height: 1.5;
+  }
+  .scenario-col ul li::before {
+    content: '→';
+    color: var(--muted);
+    flex-shrink: 0;
+    margin-top: 1px;
+    font-size: 12px;
+  }
+  .scenario-footer {
+    padding: 16px 32px;
+    border-top: 1px solid var(--border);
+    display: flex; flex-wrap: wrap; gap: 8px;
+    background: rgba(255,255,255,0.02);
+  }
+  .pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    border: 1px solid var(--border2);
+    color: var(--muted);
+  }
+
+  /* STACK TABLE */
+  .stack-table { width: 100%; border-collapse: collapse; margin-bottom: 8px; }
+  .stack-table thead tr {
+    border-bottom: 1px solid var(--border2);
+  }
+  .stack-table th {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+  }
+  .stack-table td {
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .stack-table tr:last-child td { border-bottom: none; }
+  .stack-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .stack-table td:first-child {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent2);
+    white-space: nowrap;
+  }
+  .stack-table td:nth-child(2) {
+    color: var(--text);
+    font-weight: 500;
+  }
+  .stack-table td:last-child {
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .stack-wrap {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    overflow: hidden;
+  }
+
+  /* PHASES */
+  .phases { display: flex; flex-direction: column; gap: 0; }
+  .phase {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase:last-child { border-bottom: none; }
+  .phase-label {
+    padding: 28px 24px;
+    border-right: 1px solid var(--border);
+    background: rgba(255,255,255,0.015);
+  }
+  .phase-label .num {
+    font-family: var(--mono);
+    font-size: 28px;
+    font-weight: 500;
+    opacity: 0.15;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .phase-label h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .phase-label p {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .phase-content {
+    padding: 28px 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+  .phase-col h4 {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .phase-col ul {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .phase-col ul li {
+    font-size: 12px;
+    color: var(--text);
+    display: flex; align-items: flex-start; gap: 6px;
+    line-height: 1.5;
+  }
+  .phase-col ul li .dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+
+  /* CHECKLIST */
+  .checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .check-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 20px;
+  }
+  .check-card h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .check-card h4 .icon {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+  }
+  .check-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .check-list li {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .check-list li .cb {
+    width: 14px; height: 14px;
+    border: 1px solid var(--border2);
+    border-radius: 3px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .check-list li .cb:hover { border-color: var(--accent); }
+  .check-list li.done .cb {
+    background: var(--accent3);
+    border-color: var(--accent3);
+    color: #000;
+    font-size: 9px;
+  }
+  .check-list li.done span { color: var(--muted); text-decoration: line-through; }
+
+  /* PRINCIPLES */
+  .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .principle {
+    padding: 24px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    position: relative;
+  }
+  .principle .num {
+    font-family: var(--serif);
+    font-size: 42px;
+    font-style: italic;
+    opacity: 0.07;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .principle h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .principle p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* CALLOUT */
+  .callout {
+    margin: 28px 0;
+    padding: 20px 24px;
+    border-left: 3px solid var(--accent);
+    background: rgba(79,142,247,0.06);
+    border-radius: 0 var(--r) var(--r) 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .callout strong { color: #fff; font-weight: 600; }
+
+  .callout.warn {
+    border-left-color: var(--accent4);
+    background: rgba(251,146,60,0.06);
+  }
+  .callout.success {
+    border-left-color: var(--accent3);
+    background: rgba(52,211,153,0.06);
+  }
+
+  /* DIVIDER */
+  hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+  /* FOOTER */
+  .footer {
+    padding: 40px 60px;
+    border-top: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 16px;
+  }
+  .footer p { font-size: 12px; color: var(--muted); }
+  .footer .brand { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .header, .main, .nav, .footer { padding-left: 20px; padding-right: 20px; }
+    .scenario-body { grid-template-columns: 1fr; }
+    .scenario-col:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    .phase { grid-template-columns: 1fr; }
+    .phase-label { border-right: none; border-bottom: 1px solid var(--border); }
+    .phase-content { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="eyebrow">▸ INEMA.TDS · Transformação Digital Sustentável</div>
+  <h1>Playbook de <em>Arquitetura</em><br>de Software</h1>
+  <p>Framework prático para decisões arquiteturais — do script de automação ao produto educacional com IA. Calibrado para o contexto INEMA: n8n, Claude Code, conteúdo escalável e comunidade paga.</p>
+  <div class="tags">
+    <span class="tag blue">Março 2026</span>
+    <span class="tag purple">n8n · Claude Code</span>
+    <span class="tag green">INEMA.VIP · INEMA.CLUB</span>
+    <span class="tag">Automação</span>
+    <span class="tag">IA embutida</span>
+    <span class="tag">Open source</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#framework">Framework</a>
+  <a href="#cenarios">5 Cenários</a>
+  <a href="#stack">Stack</a>
+  <a href="#fases">Fases</a>
+  <a href="#checklist">Checklist</a>
+  <a href="#principios">Princípios</a>
+</nav>
+
+<div class="main">
+
+  <!-- SEÇÃO 1: FRAMEWORK -->
+  <div class="section" id="framework">
+    <div class="section-label">01 · Framework de Decisão</div>
+    <h2>A pergunta certa antes<br>de qualquer tecnologia</h2>
+    <p>Não é "qual stack usar". É "qual o custo dominante aqui — velocidade, escala, risco ou organização?"</p>
+
+    <div class="matrix">
+      <div class="matrix-card" style="border-top: 2px solid var(--accent3);">
+        <div class="risk-label" style="color: var(--accent3);">Risco dominante: Velocidade</div>
+        <h3>Aprenda rápido</h3>
+        <p>Produto não validado, MVP, automação nova, feature interna</p>
+        <span class="arch" style="background: rgba(52,211,153,0.1); color: var(--accent3); border: 1px solid rgba(52,211,153,0.2);">→ Script / Monolito</span>
+      </div>
+      <div class="matrix-card" style="border-top: 2px solid var(--accent);">
+        <div class="risk-label" style="color: var(--accent);">Risco dominante: Crescimento</div>
+        <h3>Preserve opções</h3>
+        <p>Produto com tração, time crescendo, domínios se diferenciando</p>
+        <span class="arch" style="background: rgba(79,142,247,0.1); color: var(--accent); border: 1px solid rgba(79,142,247,0.2);">→ Monolito Modular</span>
+      </div>
+      <div class="matrix-card" style="border-top: 2px solid var(--accent2);">
+        <div class="risk-label" style="color: var(--accent2);">Risco dominante: Organização</div>
+        <h3>Autonomia de times</h3>
+        <p>Múltiplos times independentes, deploys desacoplados necessários</p>
+        <span class="arch" style="background: rgba(167,139,250,0.1); color: var(--accent2); border: 1px solid rgba(167,139,250,0.2);">→ Microserviços</span>
+      </div>
+      <div class="matrix-card" style="border-top: 2px solid var(--accent4);">
+        <div class="risk-label" style="color: var(--accent4);">Risco dominante: Imprevisibilidade</div>
+        <h3>Escale o evento</h3>
+        <p>Picos de acesso, pipelines de dados, integrações via webhook</p>
+        <span class="arch" style="background: rgba(251,146,60,0.1); color: var(--accent4); border: 1px solid rgba(251,146,60,0.2);">→ Serverless / EDA</span>
+      </div>
+      <div class="matrix-card" style="border-top: 2px solid var(--accent5);">
+        <div class="risk-label" style="color: var(--accent5);">Risco dominante: Não-determinismo</div>
+        <h3>Controle a IA</h3>
+        <p>LLMs no fluxo, geração de conteúdo, decisões assistidas</p>
+        <span class="arch" style="background: rgba(244,114,182,0.1); color: var(--accent5); border: 1px solid rgba(244,114,182,0.2);">→ IA-First / Agentic</span>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>Regra de ouro:</strong> Microserviços não são arquitetura de produto — são arquitetura de organização. Você não precisa deles até que seu time precise de deploys independentes sem coordenação. Para o contexto INEMA hoje, o monolito modular + automações via n8n cobre 90% dos cenários com muito menos complexidade operacional.
+    </div>
+  </div>
+
+  <!-- SEÇÃO 2: CENÁRIOS -->
+  <div class="section" id="cenarios">
+    <div class="section-label">02 · Cenários INEMA</div>
+    <h2>5 situações reais,<br>5 arquiteturas distintas</h2>
+    <p>Cada cenário tem contexto específico, arquitetura recomendada e as armadilhas mais comuns.</p>
+
+    <div class="scenarios">
+
+      <!-- CENÁRIO 1 -->
+      <div class="scenario">
+        <div class="scenario-header">
+          <div class="scenario-num" style="background: rgba(52,211,153,0.1); color: var(--accent3);">01</div>
+          <div>
+            <h3>Automação interna — fluxos n8n, scripts, integrações</h3>
+            <p>Notificações, sync de dados, webhooks, pipelines de conteúdo, tarefas repetitivas do INEMA</p>
+          </div>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-col">
+            <h4>Arquitetura recomendada</h4>
+            <ul>
+              <li>Script isolado ou workflow n8n autocontido por responsabilidade</li>
+              <li>Nenhum serviço compartilhado até ter 3+ workflows dependentes</li>
+              <li>Estado em variáveis n8n ou tabela Postgres simples</li>
+              <li>Logs em arquivo ou Supabase — sem Kafka, sem fila complexa</li>
+              <li>Cada workflow com um único trigger bem definido</li>
+              <li>Credenciais em variáveis de ambiente — nunca no código</li>
+            </ul>
+          </div>
+          <div class="scenario-col">
+            <h4>Armadilhas a evitar</h4>
+            <ul>
+              <li>Workflows gigantes com 40+ nós — quebrar em sub-fluxos</li>
+              <li>Dependência circular entre workflows (A chama B que chama A)</li>
+              <li>Sem retry/error handling — automatizar sem observar é bomba-relógio</li>
+              <li>Estado em memória — n8n reinicia e perde contexto</li>
+              <li>Nenhuma documentação de propósito do workflow</li>
+            </ul>
+          </div>
+        </div>
+        <div class="scenario-footer">
+          <span class="pill">n8n self-hosted</span>
+          <span class="pill">Supabase</span>
+          <span class="pill">Railway / Render</span>
+          <span class="pill">Postgres</span>
+          <span class="pill">Webhook.site (debug)</span>
+        </div>
+      </div>
+
+      <!-- CENÁRIO 2 -->
+      <div class="scenario">
+        <div class="scenario-header">
+          <div class="scenario-num" style="background: rgba(79,142,247,0.1); color: var(--accent);">02</div>
+          <div>
+            <h3>Produto educacional — INEMA.VIP, INEMA.CLUB, membros pagantes</h3>
+            <p>Comunidade paga, portal de conteúdo, gestão de assinantes, entrega de valor recorrente</p>
+          </div>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-col">
+            <h4>Arquitetura recomendada</h4>
+            <ul>
+              <li>Monolito modular: auth + billing + conteúdo + comunidade como módulos</li>
+              <li>Postgres como fonte única de verdade (membros, assinaturas, acessos)</li>
+              <li>Fronteiras de módulo via interfaces explícitas — nunca cruzar banco diretamente</li>
+              <li>BaaS (Supabase) reduz drasticamente código de infra no início</li>
+              <li>Fila assíncrona só para email/notificação — o resto síncrono</li>
+              <li>Feature flags para liberar acesso por plano sem redeploy</li>
+            </ul>
+          </div>
+          <div class="scenario-col">
+            <h4>Ferramentas de suporte</h4>
+            <ul>
+              <li>Auth: Supabase Auth ou Clerk — não construir do zero</li>
+              <li>Billing: Stripe com webhooks para sync de status</li>
+              <li>Conteúdo: Notion API ou CMS headless (Sanity, Payload)</li>
+              <li>Email: Resend ou Postmark para transacional</li>
+              <li>Comunidade: Circle, Disco ou Skool — não construir fórum do zero</li>
+              <li>Deploy: Vercel (front) + Railway/Render (API)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="scenario-footer">
+          <span class="pill">Next.js</span>
+          <span class="pill">Supabase</span>
+          <span class="pill">Stripe</span>
+          <span class="pill">Resend</span>
+          <span class="pill">Vercel</span>
+          <span class="pill">Railway</span>
+        </div>
+      </div>
+
+      <!-- CENÁRIO 3 -->
+      <div class="scenario">
+        <div class="scenario-header">
+          <div class="scenario-num" style="background: rgba(244,114,182,0.1); color: var(--accent5);">03</div>
+          <div>
+            <h3>Pipeline de conteúdo com IA — YouTube, Instagram, TikTok</h3>
+            <p>Geração, edição e distribuição de conteúdo assistido por IA para múltiplos canais</p>
+          </div>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-col">
+            <h4>Arquitetura recomendada</h4>
+            <ul>
+              <li>Event-driven: cada etapa do pipeline é um evento independente</li>
+              <li>n8n como orquestrador de pipeline — não como lógica de negócio</li>
+              <li>Fila para jobs longos (geração de vídeo, imagem, transcrição)</li>
+              <li>Armazenamento intermediário: S3 / Cloudflare R2 para assets</li>
+              <li>Humans-in-the-loop: aprovação antes de publicação automática</li>
+              <li>Rastreamento de qual versão do prompt gerou qual conteúdo</li>
+            </ul>
+          </div>
+          <div class="scenario-col">
+            <h4>Integrações-chave</h4>
+            <ul>
+              <li>LLMs: Claude API para texto, Gemini para contexto longo</li>
+              <li>Voz: ElevenLabs ou Play.ht para narração</li>
+              <li>Imagem: Replicate (Flux, SDXL) para thumbnails e capas</li>
+              <li>Vídeo: Remotion (código → vídeo) ou Creatomate</li>
+              <li>YouTube API para upload e metadata automáticos</li>
+              <li>Airtable ou Notion como banco de pautas e calendário</li>
+            </ul>
+          </div>
+        </div>
+        <div class="scenario-footer">
+          <span class="pill">n8n</span>
+          <span class="pill">Claude API</span>
+          <span class="pill">ElevenLabs</span>
+          <span class="pill">Replicate</span>
+          <span class="pill">Cloudflare R2</span>
+          <span class="pill">YouTube API</span>
+        </div>
+      </div>
+
+      <!-- CENÁRIO 4 -->
+      <div class="scenario">
+        <div class="scenario-header">
+          <div class="scenario-num" style="background: rgba(167,139,250,0.1); color: var(--accent2);">04</div>
+          <div>
+            <h3>Sistema com IA embutida — agentes, RAG, assistentes</h3>
+            <p>Produtos onde LLMs fazem parte da proposta de valor central — não só automação</p>
+          </div>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-col">
+            <h4>Arquitetura em 4 camadas</h4>
+            <ul>
+              <li><strong style="color:#fff">Produto:</strong> onde a IA entra, o que é assistido vs automático</li>
+              <li><strong style="color:#fff">Orquestração:</strong> prompts, ferramentas, memória, roteamento de modelo</li>
+              <li><strong style="color:#fff">Dados:</strong> fontes, chunking, indexação vetorial, versionamento</li>
+              <li><strong style="color:#fff">Avaliação:</strong> qualidade, custo, latência, segurança, regressão</li>
+              <li>Camada de IA isolada do core — nunca entrelaçada com CRUD</li>
+              <li>Fallback determinístico para toda operação crítica</li>
+            </ul>
+          </div>
+          <div class="scenario-col">
+            <h4>Regras de ouro para IA</h4>
+            <ul>
+              <li>Se o erro da IA gera prejuízo → human-in-the-loop obrigatório</li>
+              <li>Prompt versionado como código — nunca hardcoded</li>
+              <li>Custo de tokens é custo de infra — monitorar desde o dia 1</li>
+              <li>LLM não é banco de dados — não confiar só na memória do modelo</li>
+              <li>Testar regressão de prompt a cada update de modelo</li>
+              <li>PII/dados sensíveis: redaction antes de enviar ao modelo</li>
+            </ul>
+          </div>
+        </div>
+        <div class="scenario-footer">
+          <span class="pill">Claude API</span>
+          <span class="pill">Langfuse</span>
+          <span class="pill">Supabase pgvector</span>
+          <span class="pill">Upstash</span>
+          <span class="pill">MCP servers</span>
+          <span class="pill">Claude Code</span>
+        </div>
+      </div>
+
+      <!-- CENÁRIO 5 -->
+      <div class="scenario">
+        <div class="scenario-header">
+          <div class="scenario-num" style="background: rgba(251,146,60,0.1); color: var(--accent4);">05</div>
+          <div>
+            <h3>Open source / comunidade — templates, ferramentas públicas</h3>
+            <p>Projetos abertos para a comunidade INEMA: scripts de automação, MCP servers, templates n8n</p>
+          </div>
+        </div>
+        <div class="scenario-body">
+          <div class="scenario-col">
+            <h4>Princípios de design</h4>
+            <ul>
+              <li>Baixo atrito para rodar: uma linha no README deve funcionar</li>
+              <li>Zero dependências surpreendentes — package.json / requirements.txt limpos</li>
+              <li>Estrutura de pastas previsível e convencional</li>
+              <li>Exemplos executáveis — não só docs teóricas</li>
+              <li>Dev Container para onboarding em zero configuração</li>
+              <li>Versionamento semântico rigoroso se houver API pública</li>
+            </ul>
+          </div>
+          <div class="scenario-col">
+            <h4>Infraestrutura de contribuição</h4>
+            <ul>
+              <li>GitHub Issues + Discussions + PR templates bem definidos</li>
+              <li>Conventional commits para changelog automático</li>
+              <li>CI que rode em menos de 3 minutos — mais lento = menos PRs</li>
+              <li>CONTRIBUTING.md com setup passo a passo testado</li>
+              <li>ADR no repositório para decisões arquiteturais importantes</li>
+              <li>Releases automatizadas via GitHub Actions</li>
+            </ul>
+          </div>
+        </div>
+        <div class="scenario-footer">
+          <span class="pill">GitHub</span>
+          <span class="pill">GitHub Actions</span>
+          <span class="pill">Conventional Commits</span>
+          <span class="pill">Dev Containers</span>
+          <span class="pill">Release Please</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SEÇÃO 3: STACK -->
+  <div class="section" id="stack">
+    <div class="section-label">03 · Stack por Contexto</div>
+    <h2>Ferramentas recomendadas<br>em março de 2026</h2>
+    <p>Escolhidas por estabilidade, custo real e fit com o perfil INEMA — solo dev a time pequeno.</p>
+
+    <div class="stack-wrap">
+      <table class="stack-table">
+        <thead>
+          <tr>
+            <th>Camada</th>
+            <th>Recomendação principal</th>
+            <th>Alternativa / contexto específico</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Frontend</td><td>Next.js 15 (App Router)</td><td>Astro para sites de conteúdo estático</td></tr>
+          <tr><td>Backend API</td><td>Node.js + Hono ou Fastify</td><td>Python + FastAPI para projetos com IA pesada</td></tr>
+          <tr><td>Banco principal</td><td>Postgres via Supabase</td><td>PlanetScale (MySQL) se precisar sharding</td></tr>
+          <tr><td>Banco vetorial</td><td>Supabase pgvector</td><td>Pinecone se volume ultrapassar 1M vetores</td></tr>
+          <tr><td>Cache</td><td>Upstash Redis (serverless)</td><td>Redis próprio quando latência importa muito</td></tr>
+          <tr><td>Auth</td><td>Supabase Auth</td><td>Clerk para auth rica (orgs, MFA, SSO)</td></tr>
+          <tr><td>Billing</td><td>Stripe</td><td>Stripe + Lago para billing complexo</td></tr>
+          <tr><td>Email</td><td>Resend</td><td>Postmark para transacional crítico</td></tr>
+          <tr><td>Storage de arquivos</td><td>Cloudflare R2 (sem egress fee)</td><td>Supabase Storage para setup rápido</td></tr>
+          <tr><td>Orquestração de automação</td><td>n8n self-hosted (Railway)</td><td>Make.com para não-devs na equipe</td></tr>
+          <tr><td>LLM principal</td><td>Claude API (Anthropic)</td><td>OpenAI GPT-4o para casos com visão pesada</td></tr>
+          <tr><td>Observabilidade de LLM</td><td>Langfuse (open source)</td><td>LangSmith se já usa LangChain/LangGraph</td></tr>
+          <tr><td>Deploy front</td><td>Vercel</td><td>Cloudflare Pages para edge global</td></tr>
+          <tr><td>Deploy back/workers</td><td>Railway</td><td>Render, Fly.io para long-running processes</td></tr>
+          <tr><td>IaC</td><td>OpenTofu (fork do Terraform)</td><td>Pulumi se preferir TypeScript sobre HCL</td></tr>
+          <tr><td>CI/CD</td><td>GitHub Actions</td><td>Mesmo para projetos pequenos — evitar lock-in</td></tr>
+          <tr><td>Dev environment</td><td>Claude Code + Cursor IDE</td><td>Claude Code para agentivo, Cursor para edição</td></tr>
+          <tr><td>Observabilidade geral</td><td>OpenTelemetry + Axiom</td><td>Datadog para enterprise com budget</td></tr>
+          <tr><td>Feature flags</td><td>Unleash (open source)</td><td>Posthog Flags (vem junto com analytics)</td></tr>
+          <tr><td>Analytics de produto</td><td>Posthog (open source)</td><td>Mixpanel para funis avançados</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warn" style="margin-top: 24px;">
+      <strong>Sobre Kubernetes:</strong> só vale o investimento operacional quando você tem 10+ serviços com escalas independentes e um time dedicado a ops. Para o contexto INEMA hoje, Railway + Vercel cobre muito mais com muito menos dor de cabeça.
+    </div>
+  </div>
+
+  <!-- SEÇÃO 4: FASES -->
+  <div class="section" id="fases">
+    <div class="section-label">04 · Fases de Maturidade</div>
+    <h2>Do script ao produto<br>em escala — em etapas reais</h2>
+    <p>Cada fase tem gatilhos claros para avançar. Não pule — o custo de regredir é maior que o de esperar.</p>
+
+    <div class="stack-wrap">
+      <div class="phases">
+
+        <div class="phase">
+          <div class="phase-label">
+            <div class="num">01</div>
+            <h3>Validação</h3>
+            <p>Prova que o problema existe</p>
+          </div>
+          <div class="phase-content">
+            <div class="phase-col">
+              <h4>Arquitetura</h4>
+              <ul>
+                <li><span class="dot" style="background: var(--accent3)"></span>Monolito simples ou BaaS</li>
+                <li><span class="dot" style="background: var(--accent3)"></span>Postgres único</li>
+                <li><span class="dot" style="background: var(--accent3)"></span>Deploy manual aceitável</li>
+                <li><span class="dot" style="background: var(--accent3)"></span>Zero microsserviços</li>
+              </ul>
+            </div>
+            <div class="phase-col">
+              <h4>Qualidade mínima</h4>
+              <ul>
+                <li><span class="dot" style="background: var(--accent)"></span>CI com lint + 1 teste crítico</li>
+                <li><span class="dot" style="background: var(--accent)"></span>Env vars por ambiente</li>
+                <li><span class="dot" style="background: var(--accent)"></span>Logs básicos mas presentes</li>
+                <li><span class="dot" style="background: var(--accent)"></span>README executável</li>
+              </ul>
+            </div>
+            <div class="phase-col">
+              <h4>Gatilho para avançar</h4>
+              <ul>
+                <li><span class="dot" style="background: var(--accent4)"></span>Primeiro usuário pagante</li>
+                <li><span class="dot" style="background: var(--accent4)"></span>Ou 2º dev no projeto</li>
+                <li><span class="dot" style="background: var(--accent4)"></span>Ou deploy vira custo</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-label">
+            <div class="num">02</div>
+            <h3>Tração</h3>
+            <p>Produto com usuários reais e receita</p>
+          </div>
+          <div class="phase-content">
+            <div class="phase-col">
+              <h4>Arquitetura</h4>
+              <ul>
+                <li><span class="dot" style="background: var(--accent3)"></span>Monolito modular por domínio</li>
+                <li><span class="dot" style="background: var(--accent3)"></span>Fila para operações pesadas</li>
+                <li><span class="dot" style="background: var(--accent3)"></span>Cache onde há gargalo</li>
+                <li><span class="dot" style="background: var(--accent3)"></span>ADRs para decisões grandes</li>
+              </ul>
+            </div>
+            <div class="phase-col">
+              <h4>Qualidade essencial</h4>
+              <ul>
+                <li><span class="dot" style="background: var(--accent)"></span>CI/CD automatizado</li>
+                <li><span class="dot" style="background: var(--accent)"></span>Testes de integração</li>
+                <li><span class="dot" style="background: var(--accent)"></span>Observabilidade real</li>
+                <li><span class="dot" style="background: var(--accent)"></span>Feature flags</li>
+              </ul>
+            </div>
+            <div class="phase-col">
+              <h4>Gatilho para avançar</h4>
+              <ul>
+                <li><span class="dot" style="background: var(--accent4)"></span>Times independentes</li>
+                <li><span class="dot" style="background: var(--accent4)"></span>Deploy vira gargalo</li>
+                <li><span class="dot" style="background: var(--accent4)"></span>Módulo exige escala diferente</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-label">
+            <div class="num">03</div>
+            <h3>Escala</h3>
+            <p>Múltiplos times, volume real</p>
+          </div>
+          <div class="phase-content">
+            <div class="phase-col">
+              <h4>Arquitetura</h4>
+              <ul>
+                <li><span class="dot" style="background: var(--accent3)"></span>Serviços por bounded context</li>
+                <li><span class="dot" style="background: var(--accent3)"></span>Event bus para async</li>
+                <li><span class="dot" style="background: var(--accent3)"></span>API gateway</li>
+                <li><span class="dot" style="background: var(--accent3)"></span>Platform engineering</li>
+              </ul>
+            </div>
+            <div class="phase-col">
+              <h4>Qualidade exigida</h4>
+              <ul>
+                <li><span class="dot" style="background: var(--accent)"></span>Contract tests entre serviços</li>
+                <li><span class="dot" style="background: var(--accent)"></span>SLO/SLI definidos</li>
+                <li><span class="dot" style="background: var(--accent)"></span>DORA metrics monitoradas</li>
+                <li><span class="dot" style="background: var(--accent)"></span>Rollout progressivo</li>
+              </ul>
+            </div>
+            <div class="phase-col">
+              <h4>Contexto INEMA</h4>
+              <ul>
+                <li><span class="dot" style="background: var(--muted)"></span>Provavelmente além do horizonte</li>
+                <li><span class="dot" style="background: var(--muted)"></span>Focar em fases 1-2 com excelência</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-label">
+            <div class="num">04</div>
+            <h3>IA Avançada</h3>
+            <p>IA como proposta de valor central</p>
+          </div>
+          <div class="phase-content">
+            <div class="phase-col">
+              <h4>Arquitetura</h4>
+              <ul>
+                <li><span class="dot" style="background: var(--accent5)"></span>Camada de orquestração isolada</li>
+                <li><span class="dot" style="background: var(--accent5)"></span>Memória vetorial + SQL</li>
+                <li><span class="dot" style="background: var(--accent5)"></span>Guardrails explícitos</li>
+                <li><span class="dot" style="background: var(--accent5)"></span>Human-in-the-loop em críticos</li>
+              </ul>
+            </div>
+            <div class="phase-col">
+              <h4>Qualidade específica de IA</h4>
+              <ul>
+                <li><span class="dot" style="background: var(--accent)"></span>Prompt registry versionado</li>
+                <li><span class="dot" style="background: var(--accent)"></span>Evals automatizadas</li>
+                <li><span class="dot" style="background: var(--accent)"></span>Custo de tokens no dashboard</span></li>
+                <li><span class="dot" style="background: var(--accent)"></span>Testes de regressão por modelo</li>
+              </ul>
+            </div>
+            <div class="phase-col">
+              <h4>Contexto INEMA</h4>
+              <ul>
+                <li><span class="dot" style="background: var(--accent5)"></span>Conteúdo gerado com IA</li>
+                <li><span class="dot" style="background: var(--accent5)"></span>Agente de tutoria interativo</li>
+                <li><span class="dot" style="background: var(--accent5)"></span>RAG sobre base de cursos</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÃO 5: CHECKLIST -->
+  <div class="section" id="checklist">
+    <div class="section-label">05 · Checklist de Decisão</div>
+    <h2>Antes de qualquer<br>projeto, responda isso</h2>
+    <p>Clique para marcar conforme você avança no planejamento.</p>
+
+    <div class="checklist-grid">
+
+      <div class="check-card">
+        <h4><span class="icon" style="background: rgba(52,211,153,0.15); color: var(--accent3)">▸</span> Contexto do Problema</h4>
+        <ul class="check-list">
+          <li onclick="toggle(this)"><span class="cb"></span><span>Qual o risco dominante? (velocidade, escala, risco, organização)</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Quantos usuários no horizonte de 12 meses?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>O domínio está validado ou ainda é hipótese?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Qual o custo de um erro grave aqui?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Existe time ou é solo/duo?</span></li>
+        </ul>
+      </div>
+
+      <div class="check-card">
+        <h4><span class="icon" style="background: rgba(79,142,247,0.15); color: var(--accent)">▸</span> Arquitetura</h4>
+        <ul class="check-list">
+          <li onclick="toggle(this)"><span class="cb"></span><span>Monolito modular foi considerado e descartado com motivo claro?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Fronteiras de módulo/serviço definidas por domínio, não por tecnologia?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>ADR escrito para cada decisão estrutural?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Diagrama C4 (pelo menos Context + Container)?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Plano de evolução arquitetural documentado?</span></li>
+        </ul>
+      </div>
+
+      <div class="check-card">
+        <h4><span class="icon" style="background: rgba(167,139,250,0.15); color: var(--accent2)">▸</span> Qualidade Mínima</h4>
+        <ul class="check-list">
+          <li onclick="toggle(this)"><span class="cb"></span><span>CI rodando com lint e teste básico?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Variáveis de ambiente separadas por env (dev/prod)?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Logs com contexto suficiente para debugar?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Nenhuma credencial no código ou repositório?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>README executável em menos de 10 minutos?</span></li>
+        </ul>
+      </div>
+
+      <div class="check-card">
+        <h4><span class="icon" style="background: rgba(251,146,60,0.15); color: var(--accent4)">▸</span> Se tem IA no sistema</h4>
+        <ul class="check-list">
+          <li onclick="toggle(this)"><span class="cb"></span><span>Camada de IA isolada do core determinístico?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Prompts versionados como código?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Custo de tokens monitorado desde o dia 1?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Fallback definido para quando o LLM falhar?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Human-in-the-loop para ações irreversíveis?</span></li>
+        </ul>
+      </div>
+
+      <div class="check-card">
+        <h4><span class="icon" style="background: rgba(244,114,182,0.15); color: var(--accent5)">▸</span> Automações n8n</h4>
+        <ul class="check-list">
+          <li onclick="toggle(this)"><span class="cb"></span><span>Cada workflow tem uma responsabilidade única?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Error handler configurado em todos os workflows?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Estado persistido em banco, não em memória?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Retry configurado para integrações externas?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Workflow documentado com propósito e trigger?</span></li>
+        </ul>
+      </div>
+
+      <div class="check-card">
+        <h4><span class="icon" style="background: rgba(52,211,153,0.15); color: var(--accent3)">▸</span> Observabilidade</h4>
+        <ul class="check-list">
+          <li onclick="toggle(this)"><span class="cb"></span><span>Sabe quando algo quebra antes do usuário avisar?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Consegue rastrear uma requisição de ponta a ponta?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Dashboard mostra saúde do sistema em tempo real?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Alertas configurados para erros críticos?</span></li>
+          <li onclick="toggle(this)"><span class="cb"></span><span>Custo de infra monitorado com alertas de gasto?</span></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SEÇÃO 6: PRINCÍPIOS -->
+  <div class="section" id="principios">
+    <div class="section-label">06 · Princípios Finais</div>
+    <h2>O que não muda<br>independente da arquitetura</h2>
+    <p>Esses princípios vêm de sistemas que falharam — e dos que sobreviveram.</p>
+
+    <div class="principles">
+      <div class="principle">
+        <div class="num">01</div>
+        <h3>Comece menor do que você acha</h3>
+        <p>O maior desperdício em software é construir complexidade antes de precisar dela. Monolito modular funciona até escalas que surpreendem a maioria.</p>
+      </div>
+      <div class="principle">
+        <div class="num">02</div>
+        <h3>Evolua com evidência, não com medo</h3>
+        <p>Não migre para microserviços por ansiedade de escala. Migre quando um módulo específico tiver um bottleneck mensurável e documentado.</p>
+      </div>
+      <div class="principle">
+        <div class="num">03</div>
+        <h3>Documente as decisões, não só o código</h3>
+        <p>ADRs valem mais do que diagramas bonitos. "Por que fizemos assim" é a informação que desaparece primeiro e custa mais recuperar depois.</p>
+      </div>
+      <div class="principle">
+        <div class="num">04</div>
+        <h3>Observabilidade não é opcional</h3>
+        <p>Automatizar sem monitorar é só adiar a crise. Um sistema que você não consegue observar não está funcionando — está esperando quebrar.</p>
+      </div>
+      <div class="principle">
+        <div class="num">05</div>
+        <h3>IA acelera quem já sabe</h3>
+        <p>Claude Code e ferramentas agentic multiplicam a capacidade de um bom desenvolvedor. Não substituem julgamento arquitetural — amplificam ele.</p>
+      </div>
+      <div class="principle">
+        <div class="num">06</div>
+        <h3>A melhor arquitetura é a operável</h3>
+        <p>Não a mais sofisticada. A que o time consegue operar, o negócio consegue pagar, e o sistema consegue ter seus bugs rastreados às 2h da manhã.</p>
+      </div>
+    </div>
+
+    <div class="callout success" style="margin-top: 40px;">
+      <strong>Para o contexto INEMA especificamente:</strong> Você já tem os ingredientes certos — n8n para orquestração de automação, Claude Code para desenvolvimento acelerado, Supabase como BaaS flexível. O próximo nível não é mudar a stack — é colocar observabilidade real, versionar prompts como código e estabelecer o padrão de ADR para decisões importantes. Isso transforma um conjunto de ferramentas em uma plataforma.
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <div>
+    <p>Playbook gerado para uso interno INEMA · Março 2026</p>
+    <p style="margin-top: 4px;">Combina framework de decisão visual + referência técnica detalhada</p>
+  </div>
+  <div class="brand">INEMA.TDS · Transformação Digital Sustentável</div>
+</div>
+
+<script>
+function toggle(li) {
+  li.classList.toggle('done');
+  const cb = li.querySelector('.cb');
+  if (li.classList.contains('done')) {
+    cb.textContent = '✓';
+  } else {
+    cb.textContent = '';
+  }
+}
+</script>
+</body>
+</html>

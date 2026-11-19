@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 6.4 - Produto Educacional e Comunidade | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-rose-400 { color: #9f1239; }
+        html:not(.dark) .bg-rose-500\/20 { background-color: rgba(225, 29, 72, 0.12); }
+        html:not(.dark) .bg-rose-500\/10 { background-color: rgba(225, 29, 72, 0.08); }
+        html:not(.dark) .border-rose-500\/30 { border-color: rgba(225, 29, 72, 0.25); }
+        html:not(.dark) .hover\:bg-rose-500\/30:hover { background-color: rgba(225, 29, 72, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .bg-emerald-900\/30 { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .bg-emerald-900\/40 { background-color: rgba(5, 150, 105, 0.1); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-rose-400 bg-rose-500/10">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-rose-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-rose-400 transition-colors">Trilha 6</a>
+            <span>/</span>
+            <span class="text-rose-400 font-medium">M&oacute;dulo 6.4</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-rose-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-rose-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                    M&Oacute;DULO 6.4
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#127891; Produto Educacional e Comunidade
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Como arquitetar neg&oacute;cios de conhecimento escal&aacute;veis &mdash; de cursos online a comunidades de pr&aacute;tica. Aprenda a construir produtos educacionais com IA, m&eacute;tricas de aprendizado e estrat&eacute;gias de crescimento org&acirc;nico.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">Avan&ccedil;ado</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">Estrat&eacute;gia</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TÓPICO 1: Arquitetura de Produto Educacional ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#127891; Arquitetura de Produto Educacional</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Um produto educacional n&atilde;o &eacute; apenas &ldquo;conte&uacute;do em v&iacute;deo&rdquo;. &Eacute; um <strong class="text-rose-400">sistema completo</strong> que envolve entrega de conte&uacute;do, acompanhamento de progresso, avalia&ccedil;&atilde;o, certifica&ccedil;&atilde;o e engajamento. A arquitetura por tr&aacute;s de uma plataforma educacional escal&aacute;vel exige pensar em dom&iacute;nios como LMS, CMS, analytics e gamifica&ccedil;&atilde;o de forma integrada.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Conceito Principal</h3>
+                <p class="text-neutral-300 mb-4">Um produto educacional moderno &eacute; composto por camadas arquiteturais distintas:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Content Delivery</strong> &mdash; V&iacute;deos, textos, quizzes servidos via CDN com streaming adaptativo (HLS/DASH)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Learning Engine</strong> &mdash; Progresso do aluno, pr&eacute;-requisitos, trilhas personalizadas e spaced repetition</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Assessment System</strong> &mdash; Quizzes, projetos pr&aacute;ticos, peer review e certifica&ccedil;&atilde;o automatizada</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Engagement Layer</strong> &mdash; Gamifica&ccedil;&atilde;o, notifica&ccedil;&otilde;es, streaks e social learning</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Duolingo</h3>
+                <p class="text-neutral-300 mb-4">O Duolingo &eacute; a refer&ecirc;ncia em arquitetura de produto educacional escal&aacute;vel:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">80+ milh&otilde;es</strong> de usu&aacute;rios ativos mensais com personaliza&ccedil;&atilde;o por IA</li>
+                    <li><strong class="text-white">Spaced repetition</strong> algoritmicamente otimizado para reten&ccedil;&atilde;o de longo prazo</li>
+                    <li><strong class="text-white">A/B testing massivo</strong> &mdash; testam tudo, desde cor de bot&otilde;es at&eacute; sequ&ecirc;ncia de li&ccedil;&otilde;es</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o</strong> &mdash; O produto &eacute; o conte&uacute;do + a experi&ecirc;ncia de aprendizado, n&atilde;o apenas o conte&uacute;do</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Projetar <strong class="text-white">trilhas de aprendizado n&atilde;o-lineares</strong> com pr&eacute;-requisitos flex&iacute;veis</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Separar <strong class="text-white">conte&uacute;do de apresenta&ccedil;&atilde;o</strong> (headless CMS)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Implementar <strong class="text-white">tracking granular</strong> de progresso por t&oacute;pico</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Tratar o produto como <strong class="text-white">&ldquo;Netflix de cursos&rdquo;</strong> sem intera&ccedil;&atilde;o</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">mobile-first</strong> &mdash; 70%+ do consumo educacional &eacute; mobile</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Construir LMS do zero quando existem <strong class="text-white">solu&ccedil;&otilde;es open-source</strong> maduras</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Comece com uma stack simples: <strong class="text-white">headless CMS (Strapi/Sanity) + frontend Next.js + banco PostgreSQL</strong>. Adicione v&iacute;deo via Mux ou Cloudflare Stream. N&atilde;o construa um LMS completo no dia 1 &mdash; comece com conte&uacute;do est&aacute;tico e tracking b&aacute;sico, depois evolua para personaliza&ccedil;&atilde;o.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 2: Geração de Conteúdo com IA ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#129302; Gera&ccedil;&atilde;o de Conte&uacute;do com IA</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                IA generativa transformou a produ&ccedil;&atilde;o de conte&uacute;do educacional. De <strong class="text-rose-400">rascunhos de aulas a quizzes automatizados</strong>, passando por tradu&ccedil;&atilde;o e adapta&ccedil;&atilde;o de n&iacute;vel &mdash; o que levava semanas agora leva horas. Mas a arquitetura por tr&aacute;s dessa automa&ccedil;&atilde;o exige pipelines bem definidos, revis&atilde;o humana e controle de qualidade.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Pipeline de Conte&uacute;do com IA</h3>
+                <p class="text-neutral-300 mb-4">Um pipeline robusto de gera&ccedil;&atilde;o de conte&uacute;do educacional com IA:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Ideation</strong> &mdash; LLM gera outline do m&oacute;dulo baseado em objetivos de aprendizado e p&uacute;blico-alvo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Drafting</strong> &mdash; Gera&ccedil;&atilde;o de rascunho com RAG sobre fontes confi&aacute;veis (docs, papers, livros)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Review</strong> &mdash; Humano revisa precis&atilde;o t&eacute;cnica, tom e adequa&ccedil;&atilde;o pedag&oacute;gica</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Enhancement</strong> &mdash; IA gera quizzes, flashcards, resumos e exerc&iacute;cios a partir do conte&uacute;do revisado</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Localization</strong> &mdash; Tradu&ccedil;&atilde;o e adapta&ccedil;&atilde;o cultural automatizada com revis&atilde;o nativa</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Khan Academy + Khanmigo</h3>
+                <p class="text-neutral-300 mb-4">A Khan Academy integrou IA generativa como tutor pessoal:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Khanmigo</strong> &mdash; Tutor IA que n&atilde;o d&aacute; respostas, mas guia o aluno com perguntas socr&aacute;ticas</li>
+                    <li><strong class="text-white">Gera&ccedil;&atilde;o de exerc&iacute;cios</strong> &mdash; IA cria varia&ccedil;&otilde;es infinitas de problemas no n&iacute;vel do aluno</li>
+                    <li><strong class="text-white">Feedback instant&acirc;neo</strong> &mdash; Corre&ccedil;&atilde;o e explica&ccedil;&atilde;o em tempo real para exerc&iacute;cios escritos</li>
+                    <li><strong class="text-white">Guardrails</strong> &mdash; Prompts cuidadosamente projetados para manter o foco pedag&oacute;gico</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar IA como <strong class="text-white">acelerador de produ&ccedil;&atilde;o</strong>, n&atilde;o como substituto do especialista</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Implementar <strong class="text-white">RAG com fontes curadas</strong> para garantir precis&atilde;o t&eacute;cnica</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Manter <strong class="text-white">human-in-the-loop</strong> para revis&atilde;o final de todo conte&uacute;do</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Publicar conte&uacute;do gerado por IA <strong class="text-white">sem revis&atilde;o humana</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar IA para gerar <strong class="text-white">conte&uacute;do gen&eacute;rico</strong> sem diferencia&ccedil;&atilde;o</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">alucina&ccedil;&otilde;es</strong> em conte&uacute;do t&eacute;cnico &mdash; erros se propagam</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Monte um pipeline com <strong class="text-white">3 prompts encadeados</strong>: (1) gera outline estruturado, (2) expande cada se&ccedil;&atilde;o com exemplos pr&aacute;ticos, (3) gera quizzes e exerc&iacute;cios. Armazene os prompts versionados no reposit&oacute;rio junto ao conte&uacute;do. Prompt engineering &eacute; c&oacute;digo &mdash; trate como tal.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 3: Métricas de Aprendizado ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128202; M&eacute;tricas de Aprendizado</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-rose-400">&ldquo;O que n&atilde;o se mede, n&atilde;o se melhora.&rdquo;</strong> Em produtos educacionais, m&eacute;tricas de vaidade (n&uacute;mero de inscritos, views) n&atilde;o revelam se algu&eacute;m est&aacute; realmente aprendendo. M&eacute;tricas de aprendizado medem <strong class="text-rose-400">transforma&ccedil;&atilde;o</strong>: o aluno saiu diferente de como entrou?
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Framework de M&eacute;tricas Educacionais</h3>
+                <p class="text-neutral-300 mb-4">As m&eacute;tricas que realmente importam em um produto educacional:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Completion Rate</strong> &mdash; % de alunos que terminam cada m&oacute;dulo (m&eacute;dia do mercado: 5-15%)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Learning Velocity</strong> &mdash; Tempo m&eacute;dio para dominar cada conceito vs. tempo estimado</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Knowledge Retention</strong> &mdash; Performance em quizzes 7, 30 e 90 dias ap&oacute;s o m&oacute;dulo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Skill Application</strong> &mdash; % de alunos que aplicam o conhecimento em projetos reais</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Net Promoter Score</strong> &mdash; Satisfa&ccedil;&atilde;o e probabilidade de recomendar o curso</span></li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Armadilha: M&eacute;tricas de Vaidade</h3>
+                <p class="text-neutral-300 mb-4">Essas m&eacute;tricas parecem boas no relat&oacute;rio, mas n&atilde;o indicam aprendizado real:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">N&uacute;mero de inscritos</strong> &mdash; Inscrever-se n&atilde;o &eacute; aprender. 90% n&atilde;o passam do primeiro v&iacute;deo</li>
+                    <li><strong class="text-white">Tempo assistido</strong> &mdash; Assistir &ne; entender. V&iacute;deo rodando em background conta como &ldquo;assistido&rdquo;</li>
+                    <li><strong class="text-white">N&uacute;mero de certificados</strong> &mdash; Se o quiz &eacute; trivial, o certificado n&atilde;o valida conhecimento</li>
+                    <li><strong class="text-white">Avalia&ccedil;&atilde;o 5 estrelas</strong> &mdash; Cursos f&aacute;ceis recebem notas altas, mas n&atilde;o ensinam</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Implemente a <strong class="text-white">North Star Metric</strong> do seu produto educacional: <strong class="text-white">&ldquo;N&uacute;mero de alunos que completaram pelo menos 1 projeto pr&aacute;tico com sucesso&rdquo;</strong>. Essa &uacute;nica m&eacute;trica alinha conte&uacute;do, UX e suporte. Se ela sobe, o produto est&aacute; funcionando.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 4: Comunidade como Produto ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128101; Comunidade como Produto</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-rose-400">Comunidade n&atilde;o &eacute; um canal no Discord.</strong> &Eacute; um produto com arquitetura pr&oacute;pria que gera valor atrav&eacute;s de conex&otilde;es entre membros, troca de conhecimento e senso de pertencimento. Comunidades bem arquitetadas t&ecirc;m reten&ccedil;&atilde;o 3-5x maior que cursos tradicionais.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Arquitetura de Comunidade</h3>
+                <p class="text-neutral-300 mb-4">Os pilares de uma comunidade escal&aacute;vel:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Onboarding estruturado</strong> &mdash; Primeiros 7 dias definem se o membro fica ou sai. Automa&ccedil;&atilde;o essencial</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Rituais recorrentes</strong> &mdash; Eventos semanais, desafios mensais, retrospectivas. Previsibilidade gera h&aacute;bito</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Hierarquia de engajamento</strong> &mdash; Lurkers &rarr; participantes &rarr; contribuidores &rarr; l&iacute;deres. Cada n&iacute;vel com incentivos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Conte&uacute;do gerado por membros (UGC)</strong> &mdash; A comunidade produz mais conte&uacute;do que o criador. Curadoria &eacute; chave</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Comunidades T&eacute;cnicas de Sucesso</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Hashnode</strong> &mdash; Comunidade de devs com blogs individuais + feed coletivo. Cresceu de 0 a 2M+ devs com UGC</li>
+                    <li><strong class="text-white">Dev.to</strong> &mdash; 1M+ membros. Crescimento 100% org&acirc;nico via SEO do conte&uacute;do gerado pela comunidade</li>
+                    <li><strong class="text-white">Laracasts</strong> &mdash; Comunidade + cursos Laravel. Forum ativo resolve d&uacute;vidas antes do suporte oficial</li>
+                    <li><strong class="text-white">Padr&atilde;o</strong> &mdash; Todas combinam conte&uacute;do curado + UGC + reconhecimento de contribuidores</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">A regra do <strong class="text-white">1-9-90</strong>: 1% cria conte&uacute;do, 9% interage, 90% s&oacute; l&ecirc;. Projete para os 90% (bom conte&uacute;do passivo) e incentive os 9% a virarem 1%. Use <strong class="text-white">bots de boas-vindas, desafios semanais e reconhecimento p&uacute;blico</strong> para mover membros na hierarquia de engajamento.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 5: Monetização ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#128176; Monetiza&ccedil;&atilde;o</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-rose-400">Monetiza&ccedil;&atilde;o &eacute; arquitetura de neg&oacute;cio.</strong> O modelo de receita define a arquitetura t&eacute;cnica: subscription exige billing recorrente e churn analysis; lifetime access exige entrega perp&eacute;tua; freemium exige feature flags e paywalls inteligentes. Cada modelo tem trade-offs claros.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Modelos de Monetiza&ccedil;&atilde;o Educacional</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Subscription (MRR)</strong> &mdash; Acesso mensal. Previs&iacute;vel, mas exige conte&uacute;do novo constante. Ex: Pluralsight, Alura</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Cohort-based (CBC)</strong> &mdash; Turmas com datas fixas. Alto ticket, alta reten&ccedil;&atilde;o, mas n&atilde;o escala linearmente. Ex: Maven, On Deck</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Freemium + Premium</strong> &mdash; Conte&uacute;do gratuito como funil, premium para aprofundamento. Ex: freeCodeCamp + certifica&ccedil;&atilde;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Community + Conte&uacute;do</strong> &mdash; Acesso &agrave; comunidade &eacute; o produto, conte&uacute;do &eacute; b&ocirc;nus. Ex: Indie Hackers, INEMA.CLUB</span></li>
+                </ul>
+            </div>
+
+            <!-- Timeline: Evolução de receita -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128200; Evolu&ccedil;&atilde;o T&iacute;pica de Receita</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+                        <span class="text-rose-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Valida&ccedil;&atilde;o (0-100 alunos)</h4>
+                        <p class="text-neutral-300 text-sm">Venda direta, pre-sale, grupo de WhatsApp. Objetivo: validar que algu&eacute;m paga pelo conte&uacute;do. Zero infraestrutura.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+                        <span class="text-rose-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Traction (100-1.000 alunos)</h4>
+                        <p class="text-neutral-300 text-sm">Plataforma b&aacute;sica, payment gateway (Stripe/Hotmart), email marketing. Come&ccedil;a a investir em automa&ccedil;&atilde;o de onboarding.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+                        <span class="text-rose-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Scale (1.000-10.000 alunos)</h4>
+                        <p class="text-neutral-300 text-sm">LMS pr&oacute;prio ou white-label, analytics avan&ccedil;ado, m&uacute;ltiplos produtos, afiliados. Churn &eacute; o inimigo n&ordm;1.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+                        <span class="text-rose-400 font-bold">4</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Platform (10.000+ alunos)</h4>
+                        <p class="text-neutral-300 text-sm">B2B (empresas compram para times), marketplace de instrutores, API para integradores. Efeitos de rede dominam.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">A m&eacute;trica mais importante de monetiza&ccedil;&atilde;o n&atilde;o &eacute; receita total &mdash; &eacute; <strong class="text-white">LTV/CAC (Lifetime Value / Customer Acquisition Cost)</strong>. Se voc&ecirc; gasta R$100 para adquirir um aluno que gera R$300 ao longo da vida, seu neg&oacute;cio &eacute; sustent&aacute;vel. Abaixo de 3:1, repense a estrat&eacute;gia.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 6: Automação de Conteúdo ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#9881;&#65039; Automa&ccedil;&atilde;o de Conte&uacute;do</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-rose-400">Escalar conte&uacute;do sem escalar pessoas</strong> &eacute; o desafio central de todo produto educacional. Automa&ccedil;&atilde;o de conte&uacute;do n&atilde;o &eacute; &ldquo;substituir o professor por IA&rdquo; &mdash; &eacute; eliminar trabalho repetitivo (formata&ccedil;&atilde;o, publica&ccedil;&atilde;o, distribui&ccedil;&atilde;o) para que o especialista foque no que s&oacute; humanos fazem: ensinar com empatia e contexto.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Stack de Automa&ccedil;&atilde;o Educacional</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Content Pipeline</strong> &mdash; Markdown/MDX &rarr; build autom&aacute;tico &rarr; deploy. Conte&uacute;do como c&oacute;digo (Git-based)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Multi-format Output</strong> &mdash; Um source gera web, PDF, email, social media. Single source of truth</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Drip Campaigns</strong> &mdash; Sequ&ecirc;ncias automatizadas por email/push baseadas no progresso do aluno</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Social Automation</strong> &mdash; Recortes de conte&uacute;do para redes sociais gerados automaticamente</span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Tratar conte&uacute;do como c&oacute;digo: <strong class="text-white">versionado, revisado, testado</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Automatizar <strong class="text-white">distribui&ccedil;&atilde;o multi-canal</strong> (newsletter, social, push)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">templates reutiliz&aacute;veis</strong> para manter consist&ecirc;ncia visual</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Automatizar <strong class="text-white">antes de ter processo manual validado</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Criar automa&ccedil;&otilde;es <strong class="text-white">sem monitoring</strong> &mdash; falhas silenciosas matam</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Sacrificar <strong class="text-white">qualidade por volume</strong> &mdash; 1 post excelente > 10 mediocres</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use a regra <strong class="text-white">&ldquo;3x manual, depois automatiza&rdquo;</strong>. Se voc&ecirc; fez algo manualmente 3 vezes e o processo &eacute; previs&iacute;vel, automatize. Ferramentas: <strong class="text-white">n8n/Make para workflows, GitHub Actions para builds de conte&uacute;do, Resend/Mailgun para emails transacionais</strong>.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 7: Crescimento Orgânico ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#127793; Crescimento Org&acirc;nico</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-rose-400">Crescimento org&acirc;nico &eacute; o compound interest do conhecimento.</strong> Conte&uacute;do de qualidade atrai audi&ecirc;ncia via SEO, a audi&ecirc;ncia gera UGC, o UGC atrai mais audi&ecirc;ncia. &Eacute; o &uacute;nico modelo de crescimento que fica mais barato com o tempo, n&atilde;o mais caro.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> O Flywheel do Crescimento Org&acirc;nico</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">SEO Content</strong> &mdash; Conte&uacute;do que responde perguntas reais (long-tail keywords t&eacute;cnicas)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Social Proof</strong> &mdash; Depoimentos, projetos de alunos, cases de sucesso compartilhados</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Referral Loop</strong> &mdash; Alunos satisfeitos trazem colegas. Incentive com conte&uacute;do b&ocirc;nus, n&atilde;o descontos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Open Source Knowledge</strong> &mdash; Publique 80% do conte&uacute;do gratuitamente. Os 20% premium vendem sozinhos</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Build in Public</strong> &mdash; Compartilhe o processo de cria&ccedil;&atilde;o. Transpar&ecirc;ncia gera confian&ccedil;a e engajamento</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Dados de Crescimento Org&acirc;nico</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">freeCodeCamp</strong> &mdash; 0 a 40M+ visitantes/m&ecirc;s com 100% de conte&uacute;do gratuito. Receita via doa&ccedil;&otilde;es</li>
+                    <li><strong class="text-white">Fireship.io</strong> &mdash; Canal no YouTube com 2M+ inscritos &rarr; curso premium com convers&atilde;o de 5-8%</li>
+                    <li><strong class="text-white">Josh W. Comeau</strong> &mdash; Blog pessoal com artigos interativos &rarr; curso de CSS premium que faturou US$500k+ no lan&ccedil;amento</li>
+                    <li><strong class="text-white">Padr&atilde;o</strong> &mdash; Conte&uacute;do gratuito excepcional como funil org&acirc;nico para produto premium</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Aplique a estrat&eacute;gia <strong class="text-white">&ldquo;Pillar Content&rdquo;</strong>: crie 1 conte&uacute;do longo e profundo (guia completo de 5.000+ palavras) e fragmente em <strong class="text-white">20+ pe&ccedil;as menores</strong> para redes sociais, newsletter e YouTube. O pilar atrai SEO, os fragmentos atraem social. Ambos levam ao produto premium.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MÓDULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-rose-900/40 via-dark-800 to-dark-800 rounded-xl border border-rose-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Produto educacional &eacute; sistema completo</strong><span class="text-neutral-400"> &mdash; Content delivery, learning engine, assessment e engagement formam a arquitetura</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">IA acelera, humano valida</strong><span class="text-neutral-400"> &mdash; Pipelines de gera&ccedil;&atilde;o com RAG e human-in-the-loop garantem qualidade</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Me&ccedil;a transforma&ccedil;&atilde;o, n&atilde;o vaidade</strong><span class="text-neutral-400"> &mdash; Completion rate, knowledge retention e skill application s&atilde;o as m&eacute;tricas reais</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Comunidade &eacute; produto, n&atilde;o canal</strong><span class="text-neutral-400"> &mdash; Onboarding, rituais e hierarquia de engajamento definem reten&ccedil;&atilde;o</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Monetiza&ccedil;&atilde;o define arquitetura</strong><span class="text-neutral-400"> &mdash; Subscription, cohort, freemium &mdash; cada modelo exige infraestrutura diferente</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Automatize distribui&ccedil;&atilde;o, n&atilde;o cria&ccedil;&atilde;o</strong><span class="text-neutral-400"> &mdash; Conte&uacute;do como c&oacute;digo, multi-format output, drip campaigns</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Crescimento org&acirc;nico &eacute; compound interest</strong><span class="text-neutral-400"> &mdash; SEO + UGC + referral criam flywheel que fica mais barato com o tempo</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-rose-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">6.5 - &#128302; Futuro da Arquitetura &mdash; Tend&ecirc;ncias e para onde estamos indo</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha</a>
+                    <a href="modulo-6-5.html" class="flex-1 text-center px-6 py-3 bg-rose-600 text-white rounded-lg font-semibold hover:bg-rose-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; Trilha 6: Escalando e Evoluindo</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Set initial icon
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 5.1 - CI/CD e Deploy Automatizado | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-teal-400 { color: #0d9488; }
+        html:not(.dark) .bg-teal-500\/20 { background-color: rgba(13, 148, 136, 0.12); }
+        html:not(.dark) .bg-teal-500\/10 { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .border-teal-500\/30 { border-color: rgba(13, 148, 136, 0.25); }
+        html:not(.dark) .hover\:bg-teal-500\/30:hover { background-color: rgba(13, 148, 136, 0.18); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-teal-900\/20 { background-color: rgba(13, 148, 136, 0.06); }
+        html:not(.dark) .bg-teal-900\/30 { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .bg-teal-900\/40 { background-color: rgba(13, 148, 136, 0.1); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-teal-400 bg-teal-500/10">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-teal-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-teal-400 transition-colors">Trilha 5</a>
+            <span>/</span>
+            <span class="text-teal-400 font-medium">M&oacute;dulo 5.1</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-teal-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-teal-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-teal-500/20 text-teal-400 border border-teal-500/30">
+                    M&Oacute;DULO 5.1
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128674; CI/CD e Deploy Automatizado
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Do commit ao deploy em produ&ccedil;&atilde;o sem interven&ccedil;&atilde;o manual. Neste m&oacute;dulo, voc&ecirc; vai dominar pipelines de integra&ccedil;&atilde;o cont&iacute;nua, entrega cont&iacute;nua, containeriza&ccedil;&atilde;o e estrat&eacute;gias de deploy que minimizam riscos e maximizam velocidade.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">Avan&ccedil;ado</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-teal-400">Execu&ccedil;&atilde;o</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TÓPICO 1: O que é CI/CD ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#128260; O que &eacute; CI/CD</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                CI/CD &eacute; a espinha dorsal da engenharia moderna. <strong class="text-teal-400">Continuous Integration (CI)</strong> garante que cada altera&ccedil;&atilde;o de c&oacute;digo seja integrada, compilada e testada automaticamente. <strong class="text-teal-400">Continuous Delivery (CD)</strong> garante que o c&oacute;digo esteja sempre pronto para ir a produ&ccedil;&atilde;o. Continuous Deployment vai al&eacute;m: cada commit aprovado vai direto para produ&ccedil;&atilde;o, sem interven&ccedil;&atilde;o humana.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Os 3 Est&aacute;gios do CI/CD</h3>
+                <p class="text-neutral-300 mb-4">Cada est&aacute;gio aumenta a maturidade e a confian&ccedil;a no processo:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Continuous Integration</strong> &mdash; Merge frequente no branch principal, build autom&aacute;tico, testes unit&aacute;rios rodando a cada push</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Continuous Delivery</strong> &mdash; Artefato pronto para deploy a qualquer momento, mas algu&eacute;m aperta o bot&atilde;o manualmente</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Continuous Deployment</strong> &mdash; Cada commit que passa nos testes vai automaticamente para produ&ccedil;&atilde;o. Exige maturidade m&aacute;xima</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados / Pesquisa -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Dados: DORA State of DevOps</h3>
+                <p class="text-neutral-300 mb-4">O relat&oacute;rio DORA (Google) analisa milhares de times e comprova o impacto do CI/CD:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Elite performers</strong> &mdash; Deploy m&uacute;ltiplas vezes por dia, lead time &lt; 1 hora</li>
+                    <li><strong class="text-white">Low performers</strong> &mdash; Deploy mensal ou trimestral, lead time de 1-6 meses</li>
+                    <li><strong class="text-white">208x mais deploys</strong> e <strong class="text-white">106x menor lead time</strong> nos times elite vs. low performers</li>
+                    <li><strong class="text-white">7x menor taxa de falha</strong> em mudan&ccedil;as e <strong class="text-white">2.604x mais r&aacute;pido</strong> na recupera&ccedil;&atilde;o</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-teal-900/20 rounded-xl border border-teal-500/30 p-6">
+                    <h4 class="font-bold text-teal-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Fazer merge no branch principal <strong class="text-white">pelo menos 1x por dia</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Rodar testes automatizados <strong class="text-white">a cada push</strong>, sem exce&ccedil;&otilde;es</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Tratar o pipeline quebrado como <strong class="text-white">prioridade m&aacute;xima</strong></span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Manter branches de longa dura&ccedil;&atilde;o sem <strong class="text-white">merge por semanas</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ter testes que <strong class="text-white">falham intermitentemente</strong> (flaky tests) sem consertar</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Fazer deploy manual &ldquo;s&oacute; dessa vez&rdquo; porque <strong class="text-white">&eacute; urgente</strong></span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Comece com o m&iacute;nimo vi&aacute;vel: <strong class="text-white">lint + testes unit&aacute;rios + build</strong> rodando no push. Depois adicione testes de integra&ccedil;&atilde;o, security scanning e deploy automatizado. Um pipeline de 10 minutos que roda sempre &eacute; infinitamente melhor que um pipeline de 2 horas que ningu&eacute;m espera terminar.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 2: GitHub Actions ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#9881;&#65039; GitHub Actions</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                GitHub Actions &eacute; a plataforma de CI/CD mais popular do mundo, integrada diretamente ao reposit&oacute;rio. <strong class="text-teal-400">Workflows declarativos em YAML</strong> definem pipelines que respondem a eventos como push, pull request ou schedule. A integra&ccedil;&atilde;o nativa com o ecossistema GitHub e o marketplace de actions torna a configura&ccedil;&atilde;o r&aacute;pida e poderosa.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Anatomia de um Workflow</h3>
+                <p class="text-neutral-300 mb-4">Os componentes fundamentais de um pipeline GitHub Actions:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Trigger (on)</strong> &mdash; Evento que inicia o workflow: push, pull_request, schedule, workflow_dispatch</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Jobs</strong> &mdash; Unidades de trabalho que rodam em paralelo ou sequencialmente em runners</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Steps</strong> &mdash; Comandos individuais dentro de um job (run ou uses)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Actions</strong> &mdash; Componentes reutiliz&aacute;veis do marketplace (checkout, setup-node, cache)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Secrets</strong> &mdash; Vari&aacute;veis criptografadas para tokens, senhas e chaves de API</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Vercel</h3>
+                <p class="text-neutral-300 mb-4">A Vercel usa GitHub Actions como base de todo o pipeline open-source do Next.js:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">500+ PRs por semana</strong> &mdash; Cada uma passa por CI autom&aacute;tico com testes, lint e build</li>
+                    <li><strong class="text-white">Matrix builds</strong> &mdash; Testes rodam em m&uacute;ltiplas vers&otilde;es do Node.js e sistemas operacionais simultaneamente</li>
+                    <li><strong class="text-white">Canary releases</strong> &mdash; Vers&otilde;es de teste s&atilde;o publicadas automaticamente no npm a cada merge</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-teal-900/20 rounded-xl border border-teal-500/30 p-6">
+                    <h4 class="font-bold text-teal-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Usar <strong class="text-white">cache de depend&ecirc;ncias</strong> para acelerar o pipeline</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Versionar actions com <strong class="text-white">hash do commit</strong>, n&atilde;o tags mut&aacute;veis</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Separar jobs de <strong class="text-white">test, build e deploy</strong> para paralelismo</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Colocar <strong class="text-white">secrets hardcoded</strong> no YAML do workflow</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar <strong class="text-white">actions de terceiros</strong> sem auditar o c&oacute;digo-fonte</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Criar workflows com <strong class="text-white">+30 minutos</strong> de execu&ccedil;&atilde;o sem otimizar</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use <strong class="text-white"><code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">act</code></strong> para rodar GitHub Actions localmente antes de commitar. Isso evita o ciclo frustrante de push &rarr; esperar pipeline &rarr; falhou &rarr; corrigir &rarr; push de novo. Teste localmente, commite com confian&ccedil;a.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 3: Docker ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128230; Docker</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Docker revolucionou a forma como empacotamos e distribuímos software. <strong class="text-teal-400">Containers garantem que o ambiente de desenvolvimento seja id&ecirc;ntico ao de produ&ccedil;&atilde;o</strong>, eliminando o cl&aacute;ssico &ldquo;na minha m&aacute;quina funciona&rdquo;. Imagens imut&aacute;veis, leves e port&aacute;veis s&atilde;o a base de toda pipeline moderna de CI/CD.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Conceitos Essenciais do Docker</h3>
+                <p class="text-neutral-300 mb-4">Os blocos fundamentais para trabalhar com containers:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Dockerfile</strong> &mdash; Receita declarativa para construir uma imagem: FROM, COPY, RUN, CMD</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Image</strong> &mdash; Snapshot imut&aacute;vel com tudo que a aplica&ccedil;&atilde;o precisa para rodar</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Container</strong> &mdash; Inst&acirc;ncia em execu&ccedil;&atilde;o de uma imagem, isolada do host</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Registry</strong> &mdash; Reposit&oacute;rio de imagens (Docker Hub, GitHub Container Registry, ECR)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Multi-stage build</strong> &mdash; M&uacute;ltiplos est&aacute;gios no Dockerfile para imagens finais menores e mais seguras</span></li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Erros Comuns com Docker</h3>
+                <p class="text-neutral-300 mb-4">Erros que custam horas de debugging e comprometem seguran&ccedil;a:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Rodar como root</strong> &mdash; 58% das imagens Docker Hub rodam como root, criando vulnerabilidades cr&iacute;ticas</li>
+                    <li><strong class="text-white">Imagens gigantes</strong> &mdash; Usar ubuntu:latest (77MB) quando alpine (5MB) resolve. Imagens menores = deploys mais r&aacute;pidos</li>
+                    <li><strong class="text-white">Secrets no build</strong> &mdash; Colocar chaves de API no Dockerfile exp&otilde;e credenciais em cada layer da imagem</li>
+                    <li><strong class="text-white">Cache invalidado</strong> &mdash; Copiar todo o c&oacute;digo antes de instalar depend&ecirc;ncias invalida o cache desnecessariamente</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Sempre use <strong class="text-white">multi-stage builds</strong>. O primeiro est&aacute;gio compila e testa, o segundo copia apenas o artefato final. Resultado: imagens de produ&ccedil;&atilde;o 10x menores, sem compiladores, ferramentas de debug ou c&oacute;digo-fonte expostos.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 4: Deploy Strategies ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#127919; Deploy Strategies</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                A estrat&eacute;gia de deploy define <strong class="text-teal-400">como uma nova vers&atilde;o substitui a anterior</strong> em produ&ccedil;&atilde;o. N&atilde;o existe estrat&eacute;gia universalmente melhor &mdash; cada uma equilibra velocidade, risco e complexidade de maneiras diferentes. A escolha certa depende do seu SLA, da toler&acirc;ncia a downtime e da maturidade do pipeline.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> As 5 Estrat&eacute;gias Principais</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Rolling Update</strong> &mdash; Substitui inst&acirc;ncias gradualmente. Zero downtime, mas duas vers&otilde;es coexistem temporariamente</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Blue/Green</strong> &mdash; Dois ambientes id&ecirc;nticos. Troca de tr&aacute;fego instant&acirc;nea. Rollback em segundos, mas custo dobrado</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Canary</strong> &mdash; Nova vers&atilde;o para 1-5% do tr&aacute;fego primeiro. Validar m&eacute;tricas antes de expandir para 100%</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Feature Flags</strong> &mdash; Deploy do c&oacute;digo sem ativar a feature. Liga/desliga funcionalidades por usu&aacute;rio, regi&atilde;o ou percentual</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Recreate</strong> &mdash; Derruba tudo, sobe a nova vers&atilde;o. Simples mas com downtime. Aceit&aacute;vel apenas em ambientes internos</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Google e Canary Deploys</h3>
+                <p class="text-neutral-300 mb-4">O Google faz <strong class="text-white">centenas de deploys por dia</strong> usando canary releases em v&aacute;rios est&aacute;gios:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">0.1%</strong> &mdash; Tr&aacute;fego inicial para validar m&eacute;tricas b&aacute;sicas (erros, lat&ecirc;ncia)</li>
+                    <li><strong class="text-white">1%</strong> &mdash; Valida&ccedil;&atilde;o com mais volume por 30 minutos</li>
+                    <li><strong class="text-white">10%</strong> &mdash; Acompanhamento de m&eacute;tricas de neg&oacute;cio por 1 hora</li>
+                    <li><strong class="text-white">100%</strong> &mdash; Rollout completo apenas se todos os gates passaram</li>
+                </ul>
+                <p class="text-neutral-300 mt-3">Rollback autom&aacute;tico acontece se qualquer m&eacute;trica degradar al&eacute;m do threshold definido.</p>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Para a maioria das aplica&ccedil;&otilde;es, comece com <strong class="text-white">Rolling Update + Feature Flags</strong>. &Eacute; a combina&ccedil;&atilde;o mais vers&aacute;til: deploy cont&iacute;nuo sem downtime e controle granular sobre o que cada usu&aacute;rio v&ecirc;. Blue/Green e Canary ficam para quando voc&ecirc; precisar de garantias adicionais de seguran&ccedil;a.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 5: Ambientes ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#127760; Ambientes</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Ambientes s&atilde;o <strong class="text-teal-400">c&oacute;pias controladas do sistema em diferentes est&aacute;gios de maturidade</strong>. Cada ambiente serve um prop&oacute;sito espec&iacute;fico no ciclo de vida do software. A gest&atilde;o correta de ambientes &eacute; o que separa times que fazem deploy com confian&ccedil;a de times que rezam antes de cada release.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> A Escada de Ambientes</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Local (dev)</strong> &mdash; M&aacute;quina do desenvolvedor. Docker Compose para subir depend&ecirc;ncias</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">CI</strong> &mdash; Ambiente ef&ecirc;mero criado automaticamente pelo pipeline para rodar testes</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Staging</strong> &mdash; R&eacute;plica de produ&ccedil;&atilde;o para valida&ccedil;&atilde;o final. Mesma infra, dados anonimizados</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Production</strong> &mdash; O ambiente real. Usu&aacute;rios reais, dados reais, consequ&ecirc;ncias reais</span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-teal-900/20 rounded-xl border border-teal-500/30 p-6">
+                    <h4 class="font-bold text-teal-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Manter staging o mais <strong class="text-white">parecido poss&iacute;vel com produ&ccedil;&atilde;o</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Usar <strong class="text-white">vari&aacute;veis de ambiente</strong> para diferenciar configura&ccedil;&otilde;es</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-teal-400">&#10003;</span><span>Automatizar a <strong class="text-white">cria&ccedil;&atilde;o e destrui&ccedil;&atilde;o</strong> de ambientes ef&ecirc;meros</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Testar em produ&ccedil;&atilde;o sem <strong class="text-white">feature flags ou canary</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar <strong class="text-white">dados reais de produ&ccedil;&atilde;o</strong> em staging sem anonimizar</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Manter staging <strong class="text-white">permanentemente divergente</strong> de produ&ccedil;&atilde;o</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Considere <strong class="text-white">preview environments</strong> (Vercel, Netlify, Railway): cada PR cria automaticamente um ambiente tempor&aacute;rio com a vers&atilde;o do c&oacute;digo daquela branch. Isso permite QA visual, testes de integra&ccedil;&atilde;o e revis&atilde;o por stakeholders antes do merge.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 6: Rollback ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128259; Rollback</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">O deploy mais seguro &eacute; aquele que pode ser desfeito em segundos.</strong> Rollback &eacute; a capacidade de reverter para a vers&atilde;o anterior quando algo d&aacute; errado. Sem uma estrat&eacute;gia clara de rollback, cada deploy &eacute; uma aposta &mdash; e apostar em produ&ccedil;&atilde;o &eacute; a receita para incidentes.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Tipos de Rollback</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Rollback de imagem</strong> &mdash; Volta para a imagem Docker anterior. R&aacute;pido e confi&aacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Rollback de configura&ccedil;&atilde;o</strong> &mdash; Reverte vari&aacute;veis de ambiente ou feature flags</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Rollback de banco</strong> &mdash; O mais perigoso. Migra&ccedil;&otilde;es destrutivas s&atilde;o irrevers&iacute;veis. Use migra&ccedil;&otilde;es expand/contract</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Rollback de tr&aacute;fego</strong> &mdash; Redireciona tr&aacute;fego para a vers&atilde;o anterior (Blue/Green)</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: GitLab (2017)</h3>
+                <p class="text-neutral-300 mb-4">Em janeiro de 2017, o GitLab sofreu um dos incidentes mais famosos da hist&oacute;ria do DevOps:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Um engenheiro deletou acidentalmente</strong> o banco de dados de produ&ccedil;&atilde;o</li>
+                    <li><strong class="text-white">5 estrat&eacute;gias de backup</strong> &mdash; nenhuma funcionava. Backups nunca foram testados</li>
+                    <li><strong class="text-white">300GB de dados perdidos</strong> &mdash; recupera&ccedil;&atilde;o parcial levou 18 horas</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o definitiva:</strong> backup que n&atilde;o &eacute; testado regularmente n&atilde;o &eacute; backup</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Crie um <strong class="text-white">runbook de rollback</strong> para cada servi&ccedil;o: quem pode executar, qual o comando exato, quanto tempo leva, quais as depend&ecirc;ncias. E o mais importante: <strong class="text-white">pratique o rollback regularmente</strong> em staging. No meio de um incidente &agrave;s 3h da manh&atilde;, ningu&eacute;m deveria estar lendo documenta&ccedil;&atilde;o pela primeira vez.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 7: Deploy Metrics (DORA) ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#128202; Deploy Metrics (DORA)</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-teal-400">&ldquo;O que n&atilde;o se mede, n&atilde;o se melhora.&rdquo;</strong> As m&eacute;tricas DORA (DevOps Research and Assessment) s&atilde;o o padr&atilde;o da ind&uacute;stria para medir a performance de entrega de software. Validadas por 7 anos de pesquisa com milhares de organiza&ccedil;&otilde;es, correlacionam diretamente com sucesso organizacional.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-teal-900/30 to-dark-800 rounded-xl border border-teal-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-teal-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> As 4 M&eacute;tricas DORA</h3>
+                <p class="text-neutral-300 mb-4">Dois pares de m&eacute;tricas que equilibram velocidade e estabilidade:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Deployment Frequency</strong> &mdash; Com que frequ&ecirc;ncia voc&ecirc; faz deploy em produ&ccedil;&atilde;o (elite: m&uacute;ltiplas vezes/dia)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Lead Time for Changes</strong> &mdash; Do commit ao deploy em produ&ccedil;&atilde;o (elite: &lt; 1 hora)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Change Failure Rate</strong> &mdash; Percentual de deploys que causam incidentes (elite: 0-15%)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Mean Time to Recovery (MTTR)</strong> &mdash; Tempo para restaurar o servi&ccedil;o ap&oacute;s falha (elite: &lt; 1 hora)</span></li>
+                </ul>
+            </div>
+
+            <!-- Timeline: Como medir -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Como Implementar M&eacute;tricas DORA</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Instrumente o pipeline</h4>
+                        <p class="text-neutral-300 text-sm">Registre timestamps de cada deploy: quando o commit foi feito, quando passou pelo CI, quando chegou em produ&ccedil;&atilde;o.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Correlacione deploys com incidentes</h4>
+                        <p class="text-neutral-300 text-sm">Conecte seu sistema de alertas ao hist&oacute;rico de deploys. Qual deploy causou qual incidente? Quanto tempo levou para resolver?</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center">
+                        <span class="text-teal-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Visualize e revise</h4>
+                        <p class="text-neutral-300 text-sm">Dashboard com as 4 m&eacute;tricas, atualizado automaticamente. Revise semanalmente com o time. Defina metas de melhoria incrementais.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Dados: Impacto Organizacional</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Times elite t&ecirc;m 3x menos burnout</strong> &mdash; Deploys frequentes e automatizados reduzem estresse</li>
+                    <li><strong class="text-white">2x mais chances</strong> de atingir metas comerciais com boas m&eacute;tricas DORA</li>
+                    <li><strong class="text-white">50% menos tempo</strong> gasto em retrabalho e corre&ccedil;&atilde;o de bugs em produ&ccedil;&atilde;o</li>
+                    <li><strong class="text-white">Cultura de melhoria cont&iacute;nua</strong> &mdash; M&eacute;tricas criam feedback loops que aceleram o aprendizado</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">N&atilde;o tente melhorar as 4 m&eacute;tricas ao mesmo tempo. Comece com <strong class="text-white">Deployment Frequency</strong> &mdash; ela for&ccedil;a melhorias nas outras tr&ecirc;s. Para fazer deploy mais vezes, voc&ecirc; precisa de testes melhores (menos falhas), pipeline mais r&aacute;pido (menor lead time) e rollback confi&aacute;vel (menor MTTR).</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MÓDULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-teal-900/40 via-dark-800 to-dark-800 rounded-xl border border-teal-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">CI/CD &eacute; obrigat&oacute;rio</strong><span class="text-neutral-400"> &mdash; Times elite fazem 208x mais deploys com 7x menos falhas que low performers</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">GitHub Actions simplifica pipelines</strong><span class="text-neutral-400"> &mdash; Workflows declarativos em YAML com ecossistema rico de actions reutiliz&aacute;veis</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Docker garante consist&ecirc;ncia</strong><span class="text-neutral-400"> &mdash; Mesmo ambiente do dev ao prod. Multi-stage builds para imagens seguras e leves</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Estrat&eacute;gia de deploy define o risco</strong><span class="text-neutral-400"> &mdash; Rolling, Blue/Green, Canary e Feature Flags para cada contexto</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Ambientes devem espelhar produ&ccedil;&atilde;o</strong><span class="text-neutral-400"> &mdash; Preview environments e staging fiel evitam surpresas</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Rollback deve ser praticado</strong><span class="text-neutral-400"> &mdash; Backup n&atilde;o testado n&atilde;o &eacute; backup. Runbooks salvam vidas &agrave;s 3h da manh&atilde;</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-teal-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">M&eacute;tricas DORA guiam a melhoria</strong><span class="text-neutral-400"> &mdash; 4 m&eacute;tricas validadas por pesquisa que correlacionam com sucesso organizacional</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-teal-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">5.2 - &#127959;&#65039; Infraestrutura como C&oacute;digo &mdash; Terraform, Docker Compose, Kubernetes e gest&atilde;o moderna de infraestrutura</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha</a>
+                    <a href="modulo-5-2.html" class="flex-1 text-center px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold hover:bg-teal-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 mt-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
+            <p class="text-neutral-500 text-sm">Arquitetura DEV 2030 &mdash; 2026</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1307 @@
+<!DOCTYPE html><html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T3 - Arquitetura com IA e Automação | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+        .topic-explanation { display: none; }
+        .topic-explanation.active { display: block; }
+
+        /* Base */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+        /* Violet accent */
+        html:not(.dark) .text-violet-400 { color: #7c3aed; }
+        html:not(.dark) .bg-violet-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+        html:not(.dark) .bg-violet-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+        html:not(.dark) .border-violet-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+        html:not(.dark) .hover\:bg-violet-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+
+        /* Other trilha colors for nav */
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .text-blue-400 { color: #2563eb; }
+        html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+        html:not(.dark) .text-amber-400 { color: #92400e; }
+        html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(217, 119, 6, 0.08); }
+        html:not(.dark) .text-teal-400 { color: #0d9488; }
+        html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .text-rose-400 { color: #9f1239; }
+        html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(225, 29, 72, 0.08); }
+
+        /* Violet button */
+        html:not(.dark) .bg-violet-600 { background-color: #7c3aed; }
+        html:not(.dark) .hover\:bg-violet-500:hover { background-color: #6d28d9; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center gap-3">
+                    <a href="../../index.html" class="text-yellow-400 font-bold text-lg hover:text-yellow-300 transition-colors">🏗️ Arquitetura DEV 2030</a>
+                    <span class="text-neutral-500">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center gap-1">
+                    <a href="../trilha1/index.html" class="px-2 py-1 text-xs font-medium text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+                    <a href="../trilha2/index.html" class="px-2 py-1 text-xs font-medium text-blue-400 hover:bg-blue-500/10 rounded transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Decisão</span></a>
+                    <a href="index.html" class="px-2 py-1 text-xs font-medium text-violet-400 bg-violet-500/10 rounded transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span></a>
+                    <a href="../trilha4/index.html" class="px-2 py-1 text-xs font-medium text-amber-400 hover:bg-amber-500/10 rounded transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Prática</span></a>
+                    <a href="../trilha5/index.html" class="px-2 py-1 text-xs font-medium text-teal-400 hover:bg-teal-500/10 rounded transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span></a>
+                    <a href="../trilha6/index.html" class="px-2 py-1 text-xs font-medium text-rose-400 hover:bg-rose-500/10 rounded transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Escalando</span></a>
+                    <button id="theme-toggle" class="ml-3 p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors">
+                        <svg id="theme-toggle-dark-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <section class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-violet-900/30 via-dark-900 to-dark-900"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+            <div class="text-center">
+                <span class="inline-block bg-violet-500/20 text-violet-400 text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full border border-violet-500/30 mb-6">Trilha 3</span>
+                <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-neutral-100 mb-6">🤖 Arquitetura com IA e Automação</h1>
+                <p class="text-lg text-neutral-300 max-w-2xl mx-auto mb-10">Construindo sistemas inteligentes e autônomos — de LLMs em produção a agentes e automação com n8n</p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto">
+                    <div class="bg-dark-800 border border-violet-500/30 rounded-xl p-4">
+                        <div class="text-2xl font-bold text-violet-400">5</div>
+                        <div class="text-sm text-neutral-400">Módulos</div>
+                    </div>
+                    <div class="bg-dark-800 border border-violet-500/30 rounded-xl p-4">
+                        <div class="text-2xl font-bold text-violet-400">35</div>
+                        <div class="text-sm text-neutral-400">Tópicos</div>
+                    </div>
+                    <div class="bg-dark-800 border border-violet-500/30 rounded-xl p-4">
+                        <div class="text-2xl font-bold text-violet-400">~3h</div>
+                        <div class="text-sm text-neutral-400">de conteúdo</div>
+                    </div>
+                    <div class="bg-dark-800 border border-violet-500/30 rounded-xl p-4">
+                        <div class="text-2xl font-bold text-violet-400">Inter.</div>
+                        <div class="text-sm text-neutral-400">Intermediário</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Navegação Rápida -->
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
+        <h2 class="text-2xl font-bold text-neutral-100 mb-6">Navegação Rápida</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <button onclick="toggleModule('m31')" class="bg-dark-800 border border-violet-500/30 rounded-xl p-4 hover:bg-violet-500/10 transition-colors text-left">
+                <div class="text-2xl mb-2">🧠</div>
+                <div class="text-xs font-semibold text-violet-400 uppercase tracking-wider">Módulo 3.1</div>
+                <div class="text-sm font-bold text-neutral-100 mt-1">Arquitetura IA-First</div>
+            </button>
+            <button onclick="toggleModule('m32')" class="bg-dark-800 border border-violet-500/30 rounded-xl p-4 hover:bg-violet-500/10 transition-colors text-left">
+                <div class="text-2xl mb-2">🔗</div>
+                <div class="text-xs font-semibold text-violet-400 uppercase tracking-wider">Módulo 3.2</div>
+                <div class="text-sm font-bold text-neutral-100 mt-1">Padrões para LLMs em Produção</div>
+            </button>
+            <button onclick="toggleModule('m33')" class="bg-dark-800 border border-violet-500/30 rounded-xl p-4 hover:bg-violet-500/10 transition-colors text-left">
+                <div class="text-2xl mb-2">⚙️</div>
+                <div class="text-xs font-semibold text-violet-400 uppercase tracking-wider">Módulo 3.3</div>
+                <div class="text-sm font-bold text-neutral-100 mt-1">Automação Inteligente com n8n</div>
+            </button>
+            <button onclick="toggleModule('m34')" class="bg-dark-800 border border-violet-500/30 rounded-xl p-4 hover:bg-violet-500/10 transition-colors text-left">
+                <div class="text-2xl mb-2">🤖</div>
+                <div class="text-xs font-semibold text-violet-400 uppercase tracking-wider">Módulo 3.4</div>
+                <div class="text-sm font-bold text-neutral-100 mt-1">Agentes e Pipelines de IA</div>
+            </button>
+            <button onclick="toggleModule('m35')" class="bg-dark-800 border border-violet-500/30 rounded-xl p-4 hover:bg-violet-500/10 transition-colors text-left">
+                <div class="text-2xl mb-2">🔍</div>
+                <div class="text-xs font-semibold text-violet-400 uppercase tracking-wider">Módulo 3.5</div>
+                <div class="text-sm font-bold text-neutral-100 mt-1">Governança e Observabilidade de IA</div>
+            </button>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <hr class="border-dark-700">
+    </div>
+
+    <!-- Conteúdo Detalhado -->
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 space-y-8">
+        <h2 class="text-2xl font-bold text-neutral-100 mb-6">Conteúdo Detalhado</h2>
+
+        <!-- M3.1 -->
+        <div class="bg-dark-800 border border-violet-500/30 rounded-2xl overflow-hidden">
+            <button onclick="toggleModule('m31')" class="w-full flex items-center justify-start gap-4 p-6 hover:bg-violet-500/10 transition-colors">
+                <div class="w-12 h-12 bg-violet-500/20 rounded-xl flex items-center justify-center text-2xl shrink-0">🧠</div>
+                <div class="text-left flex-1">
+                    <div class="text-xs font-semibold text-violet-400 uppercase tracking-wider">Módulo 3.1 — ~35 min</div>
+                    <h3 class="text-2xl font-bold text-neutral-100">Arquitetura IA-First</h3>
+                    <p class="text-sm text-neutral-400 mt-1">Quando a IA é o core, não o feature</p>
+                </div>
+                <div id="m31-icon" class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0 transition-transform">7</div>
+            </button>
+            <div id="m31" class="hidden border-t border-violet-500/30">
+                <!-- Topic 1 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m31t1')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">1</div>
+                        <span class="text-left text-neutral-100 font-medium">🤖 O que é IA-First — "Sistemas projetados em torno de modelos, não com modelos adicionados depois"</span>
+                    </button>
+                    <div id="m31t1" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Arquitetura onde o modelo de IA é o componente central, não um add-on. O sistema é desenhado para lidar com outputs não-determinísticos, latências variáveis e custos por token.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Tratar IA como "mais uma API" é receita para desastre. Ex: O ChatGPT não é um chatbot com GPT — é uma arquitetura inteira de streaming, rate limiting, safety filters e fallbacks projetada para IA.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Non-deterministic outputs</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Token economics</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Latency budgets</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Safety layers</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Graceful degradation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 2 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m31t2')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">2</div>
+                        <span class="text-left text-neutral-100 font-medium">🏗️ Padrões de Integração com LLMs — "RAG, Chain-of-Thought, Agent loops"</span>
+                    </button>
+                    <div id="m31t2" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Padrões arquiteturais específicos para LLMs: RAG (Retrieval-Augmented Generation), CoT prompting, tool use, agent loops com re-planning.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Cada padrão resolve um problema diferente. RAG resolve hallucination com contexto. Agents resolvem tarefas multi-step. Ex: A Perplexity usa RAG para search — o LLM não "sabe" a resposta, busca em fontes reais e sintetiza. Resultado: respostas atualizadas com citações.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">RAG pipeline</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Vector databases</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Embedding models</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Agent frameworks</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Tool use/function calling</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 3 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m31t3')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">3</div>
+                        <span class="text-left text-neutral-100 font-medium">💰 Economia de Tokens — "Custo por request: o novo métrica que importa"</span>
+                    </button>
+                    <div id="m31t3" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">LLMs cobram por token (input + output). Prompts grandes custam mais. Caching de embeddings economiza. Modelos menores para tarefas simples.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Sem gestão de custos, a conta da API explode. Ex: Uma empresa usou GPT-4 para classificar emails (tarefa simples) a US$0.03/email. Com 100k emails/dia = US$3k/dia. Migraram para GPT-3.5 fine-tuned: US$0.001/email = US$100/dia. Mesma acurácia, 97% mais barato.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Token counting</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Prompt optimization</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Model tiering</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Caching strategies</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Cost per request monitoring</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 4 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m31t4')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">4</div>
+                        <span class="text-left text-neutral-100 font-medium">🛡️ Guardrails e Safety — "O que acontece quando o modelo alucina?"</span>
+                    </button>
+                    <div id="m31t4" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Camadas de proteção: input validation, output filtering, content classification, fallback to deterministic responses, human-in-the-loop.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">IA sem guardrails é liability jurídica. Ex: A Air Canada foi obrigada judicialmente a honrar um desconto que seu chatbot inventou. O bot alucionou uma política de reembolso que não existia — e o juiz decidiu que a empresa é responsável pelo que seu bot diz.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Input sanitization</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Output validation</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Content safety classifiers</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Hallucination detection</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Confidence scoring</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Human escalation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 5 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m31t5')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">5</div>
+                        <span class="text-left text-neutral-100 font-medium">⚡ Latência e Streaming — "Usuários não esperam 30 segundos"</span>
+                    </button>
+                    <div id="m31t5" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">LLMs são lentos (1-30s). Streaming (token by token) dá percepção de velocidade. Arquiteturas async com progress indicators.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Sem streaming, a UX é "cliquei e nada acontece por 10 segundos". Ex: O Claude usa Server-Sent Events (SSE) para streaming — o primeiro token aparece em &lt;1s, dando percepção de resposta instantânea enquanto o modelo processa.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">SSE (Server-Sent Events)</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">WebSocket streaming</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Token-by-token rendering</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Progress indicators</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Timeout strategies</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 6 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m31t6')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">6</div>
+                        <span class="text-left text-neutral-100 font-medium">🔄 Fallback e Resiliência — "Plano B quando a IA falha"</span>
+                    </button>
+                    <div id="m31t6" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Cascata de fallbacks: modelo principal → modelo secundário → resposta cached → resposta determinística → mensagem genérica.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">APIs de LLM caem, rate limits acontecem, modelos mudam comportamento. Ex: O Notion AI usa cascade: Claude → fallback para GPT → fallback para resposta cached → "Não consegui processar, tente novamente". Usuário nunca vê erro 500.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Fallback chain</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Circuit breaker for AI</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Rate limit handling</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Model versioning</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">A/B testing de modelos</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 7 -->
+                <div>
+                    <button onclick="toggleTopic('m31t7')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">7</div>
+                        <span class="text-left text-neutral-100 font-medium">📊 Observabilidade de IA — "Monitorar o que não é determinístico"</span>
+                    </button>
+                    <div id="m31t7" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Métricas específicas para IA: latência por modelo, custo por request, taxa de hallucination, user satisfaction, drift de qualidade.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Modelos degradam silenciosamente. Sem monitoramento, você só descobre quando o usuário reclama. Ex: O LangSmith (LangChain) e o Helicone monitoram cada chamada de LLM — latência, tokens, custo, e até qualidade do output via auto-eval. Dashboard de IA como o Grafana é para infra.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">LLM observability platforms</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Cost tracking</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Quality scoring</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Drift detection</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">A/B testing frameworks</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- M3.2 -->
+        <div class="bg-dark-800 border border-violet-500/30 rounded-2xl overflow-hidden">
+            <button onclick="toggleModule('m32')" class="w-full flex items-center justify-start gap-4 p-6 hover:bg-violet-500/10 transition-colors">
+                <div class="w-12 h-12 bg-violet-500/20 rounded-xl flex items-center justify-center text-2xl shrink-0">🔗</div>
+                <div class="text-left flex-1">
+                    <div class="text-xs font-semibold text-violet-400 uppercase tracking-wider">Módulo 3.2 — ~35 min</div>
+                    <h3 class="text-2xl font-bold text-neutral-100">Padrões para LLMs em Produção</h3>
+                    <p class="text-sm text-neutral-400 mt-1">Do notebook ao deploy — padrões que sobrevivem ao mundo real</p>
+                </div>
+                <div id="m32-icon" class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0 transition-transform">7</div>
+            </button>
+            <div id="m32" class="hidden border-t border-violet-500/30">
+                <!-- Topic 1 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m32t1')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">1</div>
+                        <span class="text-left text-neutral-100 font-medium">📚 RAG — Retrieval-Augmented Generation — "Dê contexto ao modelo em vez de confiar na memória"</span>
+                    </button>
+                    <div id="m32t1" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Pipeline que busca documentos relevantes em um vector store e injeta no prompt como contexto. O modelo responde baseado em dados reais, não em treinamento.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">RAG é a solução #1 para hallucination em domínios específicos. Ex: O Notion AI usa RAG para responder perguntas sobre seus docs — indexa todas as páginas do workspace em embeddings, busca as mais relevantes, e passa como contexto ao LLM.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Chunking strategies</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Embedding models</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Vector databases (Pinecone, Weaviate, pgvector)</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Retrieval scoring</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Context window management</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 2 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m32t2')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">2</div>
+                        <span class="text-left text-neutral-100 font-medium">🔧 Function Calling / Tool Use — "LLMs que executam ações no mundo real"</span>
+                    </button>
+                    <div id="m32t2" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">O modelo decide qual função chamar e com quais parâmetros. O sistema executa a função e retorna o resultado ao modelo.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Transforma o LLM de "gerador de texto" em "orquestrador de ações". Ex: O Claude pode chamar ferramentas como buscar no banco, enviar email, criar arquivo — o modelo planeja, o sistema executa.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Tool definitions (JSON Schema)</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Structured outputs</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Validação de parâmetros</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Error handling</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Permission boundaries</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 3 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m32t3')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">3</div>
+                        <span class="text-left text-neutral-100 font-medium">🔄 Agent Loops — "IA que planeja, executa e re-planeja"</span>
+                    </button>
+                    <div id="m32t3" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">O modelo recebe uma tarefa, cria um plano, executa steps (chamando tools), avalia resultado, e re-planeja se necessário. Loop até completar ou atingir limite.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Para tarefas complexas, uma chamada não basta. Ex: O Claude Code (Anthropic) é um agent que recebe "refatore esse módulo", lê codebase, planeja mudanças, edita arquivos, roda testes, corrige erros — tudo em loop autônomo.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Plan-execute-observe loop</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Max iterations</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Token budget</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Checkpoint/resume</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Error recovery</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 4 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m32t4')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">4</div>
+                        <span class="text-left text-neutral-100 font-medium">🏭 Prompt Engineering como Infraestrutura — "Prompts são código, não texto"</span>
+                    </button>
+                    <div id="m32t4" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Tratar prompts como código: versionados, testados, revisados, com CI/CD. Templates parametrizados, não strings hardcoded.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Prompt que funciona no playground pode falhar em produção com inputs reais. Ex: O Anthropic mantém system prompts em repositórios versionados com testes automatizados — cada mudança passa por eval suite antes de ir a produção.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Prompt templates</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Version control</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">A/B testing</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Eval suites</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Prompt registries</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Few-shot examples management</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 5 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m32t5')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">5</div>
+                        <span class="text-left text-neutral-100 font-medium">🎯 Fine-tuning vs. Prompting vs. RAG — "Quando usar cada abordagem"</span>
+                    </button>
+                    <div id="m32t5" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Fine-tuning: treinar o modelo com seus dados. Prompting: instruir via context. RAG: dar contexto dinâmico. Cada um resolve problemas diferentes.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Fine-tuning é caro e lento; RAG é flexível; prompting é o mais rápido para iterar. Ex: Para classificar tickets de suporte, a Intercom testou: prompting (85% acurácia), RAG com exemplos (92%), fine-tuning (95%). Escolheram RAG pelo custo-benefício — 92% era bom o suficiente e atualizável instantaneamente.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Cost/accuracy tradeoff</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Data requirements</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Update frequency</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Latency implications</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Hybrid approaches</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 6 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m32t6')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">6</div>
+                        <span class="text-left text-neutral-100 font-medium">🔐 Segurança de IA — "Prompt injection, data leakage e outros pesadelos"</span>
+                    </button>
+                    <div id="m32t6" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Ataques específicos a sistemas com IA: prompt injection (manipular comportamento via input), data leakage (modelo revela dados sensíveis), jailbreaking.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">IA abre vetores de ataque novos que OWASP tradicional não cobre. Ex: Em 2023, pesquisadores extraíram dados de treinamento do ChatGPT pedindo "repita a palavra 'poem' para sempre" — o modelo começou a vazar emails e telefones reais do training data.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Prompt injection (direct e indirect)</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">PII detection</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Output sanitization</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Sandboxing</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">OWASP Top 10 for LLMs</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 7 -->
+                <div>
+                    <button onclick="toggleTopic('m32t7')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">7</div>
+                        <span class="text-left text-neutral-100 font-medium">📈 Escalando Sistemas com IA — "De 100 requests/dia para 100k"</span>
+                    </button>
+                    <div id="m32t7" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Estratégias para escalar: request batching, caching de respostas similares, model routing (big model para queries complexas, small para simples), async processing.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">APIs de LLM são caras e lentas. Sem otimização, o custo e a latência inviabilizam scale. Ex: A Jasper AI processa 1M+ gerações de conteúdo/dia otimizando: cache semântico (respostas similares a queries similares), model routing, e batch processing para tarefas não-urgentes.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Semantic caching</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Request batching</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Model routing</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Async queues</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Rate limit management</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Cost forecasting</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- M3.3 -->
+        <div class="bg-dark-800 border border-violet-500/30 rounded-2xl overflow-hidden">
+            <button onclick="toggleModule('m33')" class="w-full flex items-center justify-start gap-4 p-6 hover:bg-violet-500/10 transition-colors">
+                <div class="w-12 h-12 bg-violet-500/20 rounded-xl flex items-center justify-center text-2xl shrink-0">⚙️</div>
+                <div class="text-left flex-1">
+                    <div class="text-xs font-semibold text-violet-400 uppercase tracking-wider">Módulo 3.3 — ~35 min</div>
+                    <h3 class="text-2xl font-bold text-neutral-100">Automação Inteligente com n8n</h3>
+                    <p class="text-sm text-neutral-400 mt-1">Orquestrando workflows com IA embutida</p>
+                </div>
+                <div id="m33-icon" class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0 transition-transform">7</div>
+            </button>
+            <div id="m33" class="hidden border-t border-violet-500/30">
+                <!-- Topic 1 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m33t1')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">1</div>
+                        <span class="text-left text-neutral-100 font-medium">🔄 n8n como Orquestrador — "Low-code para automação séria"</span>
+                    </button>
+                    <div id="m33t1" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">n8n é uma plataforma de automação open-source que conecta serviços via workflows visuais. Diferente de Zapier, é self-hosted, extensível e com lógica condicional avançada.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Automatizar tarefas repetitivas libera tempo para trabalho criativo. Ex: A INEMA usa n8n para: gerar conteúdo com Claude → formatar com templates → publicar no site → notificar no Slack — tudo automático, acionado por webhook.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Workflows visuais</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Triggers (webhook, schedule, event)</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Nodes</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Credentials</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Self-hosting vs. cloud</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 2 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m33t2')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">2</div>
+                        <span class="text-left text-neutral-100 font-medium">🤖 Integrando IA nos Workflows — "Claude, GPT e modelos locais como nodes"</span>
+                    </button>
+                    <div id="m33t2" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Usar LLMs como steps em workflows: gerar texto, classificar dados, extrair entidades, resumir documentos, tomar decisões.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">IA isolada é demo. IA em workflow é produto. Ex: Workflow de suporte: ticket chega → Claude classifica urgência → se alta, escalona para humano; se baixa, gera resposta automática → envia ao cliente → registra no CRM. 70% dos tickets resolvidos sem humano.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">AI nodes em n8n</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Prompt templates por tipo de tarefa</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Output parsing</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Error handling</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Human-in-the-loop</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 3 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m33t3')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">3</div>
+                        <span class="text-left text-neutral-100 font-medium">📊 ETL com IA — "Extrair, Transformar, Carregar com inteligência"</span>
+                    </button>
+                    <div id="m33t3" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Pipelines de dados que usam IA para transformação: OCR + LLM para extrair dados de PDFs, classificação automática, enriquecimento de dados.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Dados desestruturados são 80% dos dados do mundo. IA resolve o que regex não consegue. Ex: Processar notas fiscais: PDF → OCR → Claude extrai (fornecedor, valor, data, itens) → valida → insere no Supabase. 95% de acurácia vs. 60% com regex puro.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Document processing</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">OCR + LLM pipeline</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Data validation</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Structured output</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Batch processing</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 4 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m33t4')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">4</div>
+                        <span class="text-left text-neutral-100 font-medium">🔔 Event-Driven Automation — "Quando X acontece, faça Y automaticamente"</span>
+                    </button>
+                    <div id="m33t4" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Automações acionadas por eventos: novo cadastro → email de boas-vindas + setup de workspace. Pagamento → libera acesso + notifica + atualiza CRM.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Reduz trabalho manual repetitivo a zero. Ex: Na INEMA, quando alguém paga a assinatura: Stripe webhook → n8n → cria user no Supabase → envia email de boas-vindas com Claude → adiciona no grupo do Slack → agenda onboarding. Zero intervenção humana.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Webhook triggers</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Event chains</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Error handling e retry</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Idempotency</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Monitoring de workflows</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 5 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m33t5')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">5</div>
+                        <span class="text-left text-neutral-100 font-medium">🧪 Testando Automações — "Workflows são código — testem como código"</span>
+                    </button>
+                    <div id="m33t5" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Strategies para testar workflows: test data sets, mock de APIs externas, validation nodes, dry-run mode, monitoring de execuções.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Workflow quebrado em produção pode enviar email errado para milhares de pessoas. Ex: Um workflow de e-commerce com bug no cálculo de desconto aplicou 90% de desconto em 5000 pedidos antes de ser detectado. Prejuízo: R$200k. Teste teria custado R$0.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Test data fixtures</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Mock nodes</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Validation steps</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Error monitoring</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Rollback strategies</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Staging environment</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 6 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m33t6')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">6</div>
+                        <span class="text-left text-neutral-100 font-medium">🔐 Segurança em Automações — "Credentials, permissions e audit trail"</span>
+                    </button>
+                    <div id="m33t6" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Gestão segura de credenciais, princípio de menor privilégio, logging de todas as ações, encryption de dados sensíveis.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Workflows têm acesso a múltiplos sistemas — um vazamento compromete tudo. Ex: Um workflow com a API key do Stripe em plaintext no log expôs dados de pagamento. Solução: credentials vault do n8n + audit trail + redação de dados sensíveis nos logs.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Credentials vault</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">API key rotation</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Audit logging</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Data masking</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Rate limiting</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Network isolation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 7 -->
+                <div>
+                    <button onclick="toggleTopic('m33t7')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">7</div>
+                        <span class="text-left text-neutral-100 font-medium">📈 Escalando Automações — "De 10 workflows para 100"</span>
+                    </button>
+                    <div id="m33t7" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Organização de workflows, naming conventions, modularização (sub-workflows), monitoring centralizado, resource management.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Sem organização, 100 workflows viram um emaranhado ingerenciável. Ex: Naming convention: [TRIGGER]-[DOMAIN]-[ACTION] → "webhook-payments-process", "schedule-reports-generate", "event-users-onboard". Encontrar qualquer workflow em 5 segundos.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Naming conventions</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Sub-workflows</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Tags e folders</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Execution monitoring</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Resource limits</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Documentation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- M3.4 -->
+        <div class="bg-dark-800 border border-violet-500/30 rounded-2xl overflow-hidden">
+            <button onclick="toggleModule('m34')" class="w-full flex items-center justify-start gap-4 p-6 hover:bg-violet-500/10 transition-colors">
+                <div class="w-12 h-12 bg-violet-500/20 rounded-xl flex items-center justify-center text-2xl shrink-0">🤖</div>
+                <div class="text-left flex-1">
+                    <div class="text-xs font-semibold text-violet-400 uppercase tracking-wider">Módulo 3.4 — ~35 min</div>
+                    <h3 class="text-2xl font-bold text-neutral-100">Agentes e Pipelines de IA</h3>
+                    <p class="text-sm text-neutral-400 mt-1">Construindo IA que age autonomamente</p>
+                </div>
+                <div id="m34-icon" class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0 transition-transform">7</div>
+            </button>
+            <div id="m34" class="hidden border-t border-violet-500/30">
+                <!-- Topic 1 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m34t1')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">1</div>
+                        <span class="text-left text-neutral-100 font-medium">🧠 O que são Agentes de IA — "IA que planeja e executa, não só responde"</span>
+                    </button>
+                    <div id="m34t1" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Sistemas que recebem um objetivo e autonomamente planejam steps, executam ações (via tools), observam resultados e iteram até completar. Diferente de chatbots que só respondem.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Agentes são o próximo patamar de automação. Ex: O Devin (Cognition AI) é um agente de engenharia — recebe "implemente feature X", lê codebase, planeja, escreve código, roda testes, cria PR. Autônomo para tarefas bem definidas.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Plan-Act-Observe loop</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Tool use</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Memory (short-term e long-term)</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Autonomy levels</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Human oversight</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 2 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m34t2')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">2</div>
+                        <span class="text-left text-neutral-100 font-medium">🔧 Frameworks de Agentes — "LangChain, CrewAI, Anthropic Agent SDK"</span>
+                    </button>
+                    <div id="m34t2" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Frameworks que abstraem o loop de agentes: LangChain/LangGraph (flexível), CrewAI (multi-agent), Anthropic Agent SDK (tool use nativo).</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Construir do zero é possível mas demorado. Frameworks aceleram e padronizam. Ex: Com Anthropic Agent SDK, criar um agente que busca dados, processa e gera relatório leva 50 linhas de código. Do zero, seriam 500+.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">LangChain vs. LangGraph</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">CrewAI roles</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Anthropic tool use</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Framework vs. from-scratch</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Vendor lock-in considerations</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 3 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m34t3')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">3</div>
+                        <span class="text-left text-neutral-100 font-medium">👥 Multi-Agent Systems — "Times de IA colaborando"</span>
+                    </button>
+                    <div id="m34t3" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Múltiplos agentes especializados trabalhando juntos: um pesquisa, outro escreve, outro revisa, um coordena. Cada um com role e tools específicos.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Problemas complexos se beneficiam de decomposição em agentes especializados. Ex: Sistema de geração de conteúdo: Agente Pesquisador (busca dados) → Agente Escritor (gera texto) → Agente Revisor (checa fatos e qualidade) → Agente Editor (formata e publica). Qualidade superior a um único agente.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Role specialization</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Communication protocols</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Shared memory</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Coordination patterns</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Conflict resolution</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 4 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m34t4')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">4</div>
+                        <span class="text-left text-neutral-100 font-medium">🔄 Pipelines de Processamento — "Encadeando etapas de IA com determinismo"</span>
+                    </button>
+                    <div id="m34t4" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Sequência determinística de steps onde cada step pode ou não usar IA. Pipeline: input → validate → enrich (AI) → transform → validate (AI) → output. Combina determinismo com inteligência.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Pipelines são mais confiáveis que agentes para tarefas bem definidas. Ex: Pipeline de processamento de currículo: PDF → OCR → extrair dados (Claude) → validar formato → classificar senioridade (Claude) → score → inserir no DB. Cada step é testável independentemente.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Pipeline stages</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Error handling per stage</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Retry policies</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Dead letter queues</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Monitoring per stage</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Idempotency</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 5 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m34t5')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">5</div>
+                        <span class="text-left text-neutral-100 font-medium">💾 Memória para Agentes — "Curto prazo, longo prazo e episódica"</span>
+                    </button>
+                    <div id="m34t5" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Mecanismos para agentes lembrarem: context window (curto prazo), vector store (longo prazo), banco de dados (episódica/factual).</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Sem memória, agentes repetem erros e perdem contexto. Ex: O ChatGPT com Memory feature armazena preferências do usuário em vector store — "prefiro respostas curtas", "sou desenvolvedor Python" — e recupera automaticamente em conversas futuras.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Context window management</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Summarization for compression</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Vector store memory</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Episodic memory</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Memory retrieval strategies</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 6 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m34t6')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">6</div>
+                        <span class="text-left text-neutral-100 font-medium">🛡️ Controle e Safety de Agentes — "Autonomia com limites"</span>
+                    </button>
+                    <div id="m34t6" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Definir boundaries: quais ações o agente pode executar, limites de custo, número máximo de iterações, quando escalar para humano.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Agente sem limites pode executar ações destrutivas em loop. Ex: Um agente de código sem sandbox deletou arquivos de produção ao tentar "limpar" o projeto. Guardrails: sandbox obrigatório, whitelist de operações, confirmação humana para ações destrutivas.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Action whitelist</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Cost limits</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Iteration caps</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Sandbox environments</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Human-in-the-loop triggers</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Audit trail</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 7 -->
+                <div>
+                    <button onclick="toggleTopic('m34t7')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">7</div>
+                        <span class="text-left text-neutral-100 font-medium">📊 Avaliando Performance de Agentes — "Como medir se seu agente é bom?"</span>
+                    </button>
+                    <div id="m34t7" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Métricas: task completion rate, steps to completion, cost per task, error rate, user satisfaction. Benchmarks e eval suites.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">"Funciona às vezes" não é aceitável em produção. Ex: O SWE-bench avalia agentes de código: 1000 issues reais do GitHub, mede quantos o agente resolve corretamente. Claude Code resolve 72%+ — medido, não estimado.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Task completion rate</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Efficiency (steps/cost per task)</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Accuracy</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Eval datasets</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Regression testing</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Continuous evaluation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- M3.5 -->
+        <div class="bg-dark-800 border border-violet-500/30 rounded-2xl overflow-hidden">
+            <button onclick="toggleModule('m35')" class="w-full flex items-center justify-start gap-4 p-6 hover:bg-violet-500/10 transition-colors">
+                <div class="w-12 h-12 bg-violet-500/20 rounded-xl flex items-center justify-center text-2xl shrink-0">🔍</div>
+                <div class="text-left flex-1">
+                    <div class="text-xs font-semibold text-violet-400 uppercase tracking-wider">Módulo 3.5 — ~30 min</div>
+                    <h3 class="text-2xl font-bold text-neutral-100">Governança e Observabilidade de IA</h3>
+                    <p class="text-sm text-neutral-400 mt-1">Monitorar, auditar e governar sistemas inteligentes</p>
+                </div>
+                <div id="m35-icon" class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0 transition-transform">7</div>
+            </button>
+            <div id="m35" class="hidden border-t border-violet-500/30">
+                <!-- Topic 1 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m35t1')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">1</div>
+                        <span class="text-left text-neutral-100 font-medium">📊 Monitoramento de IA em Produção — "Dashboards que mostram saúde do modelo"</span>
+                    </button>
+                    <div id="m35t1" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Métricas contínuas: latência, tokens, custo, error rate, qualidade de output. Alertas automáticos quando métricas degradam.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Modelos degradam silenciosamente — sem monitoramento, você descobre pelo usuário. Ex: O Helicone monitora cada chamada de LLM como o Datadog monitora APIs. Dashboard mostrando: custo/hora, latência P95, taxa de erro, qualidade estimada.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">LLM-specific metrics</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Cost dashboards</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Quality tracking</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Alert thresholds</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Anomaly detection</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 2 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m35t2')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">2</div>
+                        <span class="text-left text-neutral-100 font-medium">🔍 Tracing de IA — "Seguir uma request do prompt ao output"</span>
+                    </button>
+                    <div id="m35t2" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Distributed tracing adaptado para IA: prompt → retrieval → model call → post-processing → response. Cada step com latência, tokens e custo.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Debugar "por que a resposta foi ruim" exige ver cada step. Ex: O LangSmith mostra: query do usuário → chunks recuperados do RAG → prompt montado → resposta do modelo → post-processing. Você vê exatamente onde o problema aconteceu.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">LangSmith</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Langfuse</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">OpenTelemetry for LLMs</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Span attribution</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Cost per trace</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 3 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m35t3')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">3</div>
+                        <span class="text-left text-neutral-100 font-medium">🏛️ Compliance e Regulação — "LGPD, AI Act e o que mais vem por aí"</span>
+                    </button>
+                    <div id="m35t3" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Regulações que afetam sistemas com IA: LGPD (dados pessoais), EU AI Act (classificação de risco), SOC2 (segurança). Requisitos de transparência e explicabilidade.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">IA não regulamentada é risco jurídico crescente. Ex: O EU AI Act classifica sistemas de IA por risco — "high risk" (saúde, emprego) exige explicabilidade, auditoria e dados de treino documentados. Multa: até 6% da receita global.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">LGPD e dados pessoais em prompts</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">EU AI Act risk levels</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">SOC2 compliance</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Data residency</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Right to explanation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 4 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m35t4')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">4</div>
+                        <span class="text-left text-neutral-100 font-medium">📝 Audit Trail — "Quem pediu o que, e o que a IA respondeu"</span>
+                    </button>
+                    <div id="m35t4" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Log completo e imutável de toda interação com IA: input, output, modelo usado, timestamp, user ID, custo. Para auditoria, debugging e compliance.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">"O que a IA disse para o cliente?" — sem log, não há como saber. Ex: Banco digital logando toda interação do chatbot: se o bot deu informação errada sobre taxas, o log prova (ou desmente) a reclamação do cliente.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Immutable logs</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Structured logging</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">PII handling in logs</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Retention policies</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Search and replay</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 5 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m35t5')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">5</div>
+                        <span class="text-left text-neutral-100 font-medium">🎯 Qualidade e Eval — "Medir qualidade de output continuamente"</span>
+                    </button>
+                    <div id="m35t5" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Eval suites automatizadas que testam qualidade do output contra golden datasets. Roda em CI/CD como testes de código.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Atualizar modelo ou prompt pode degradar qualidade silenciosamente. Ex: A Anthropic roda evals em cada release do Claude — milhares de perguntas com respostas esperadas. Se acurácia cai >2% em qualquer categoria, o release é bloqueado.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Golden datasets</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Automated evals</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">LLM-as-judge</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Regression testing</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Quality gates</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Continuous evaluation</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 6 -->
+                <div class="border-b border-dark-700">
+                    <button onclick="toggleTopic('m35t6')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">6</div>
+                        <span class="text-left text-neutral-100 font-medium">💰 FinOps para IA — "Controlar custos de API sem sacrificar qualidade"</span>
+                    </button>
+                    <div id="m35t6" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Gestão financeira de custos de IA: budgets por projeto, alerts de spending, otimização de prompts, model tiering, caching.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">Custo de LLM escala linearmente com uso. Sem controle, surpreende no fim do mês. Ex: Dashboard de FinOps: custo por feature, por modelo, por hora do dia. Descobrem que 30% do custo vem de um workflow mal otimizado que envia 10k tokens quando 500 bastam.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Budget alerts</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Cost allocation tags</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Prompt optimization ROI</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Model tiering strategy</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Reserved capacity</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Topic 7 -->
+                <div>
+                    <button onclick="toggleTopic('m35t7')" class="w-full flex items-center justify-start gap-4 p-5 hover:bg-violet-500/10 transition-colors">
+                        <div class="w-8 h-8 bg-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm shrink-0">7</div>
+                        <span class="text-left text-neutral-100 font-medium">🔮 Ética e Responsabilidade — "IA responsável não é opcional"</span>
+                    </button>
+                    <div id="m35t7" class="hidden px-5 pb-5 space-y-3">
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">O que é</h4>
+                            <p class="text-neutral-300 text-sm">Princípios de IA responsável: fairness (sem viés), transparency (explicável), accountability (responsável), privacy (proteção de dados).</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Por que aprender</h4>
+                            <p class="text-neutral-300 text-sm">IA com viés ou não-transparente erode confiança e gera processos. Ex: O Amazon abandonou um sistema de recrutamento com IA em 2018 porque o modelo penalizava currículos femininos — treinado em 10 anos de contratações predominantemente masculinas, reproduziu o viés.</p>
+                        </div>
+                        <div class="bg-violet-500/20 rounded-xl p-4">
+                            <h4 class="text-violet-400 font-semibold text-sm mb-2">Conceitos-chave</h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Bias detection</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Fairness metrics</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Explainability (SHAP, LIME)</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Responsible AI frameworks</span>
+                                <span class="bg-violet-500/20 text-violet-400 px-2 py-1 rounded-md text-xs font-medium">Ethics review board</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Navigation -->
+    <section class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div class="flex flex-col sm:flex-row gap-4 justify-between">
+            <a href="../trilha2/index.html" class="flex items-center gap-2 bg-dark-800 border border-violet-500/30 rounded-xl px-6 py-4 hover:bg-violet-500/10 transition-colors group">
+                <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                <span class="text-neutral-300 group-hover:text-violet-400 transition-colors">← Estratégias de Decisão</span>
+            </a>
+            <a href="../trilha4/index.html" class="flex items-center gap-2 bg-violet-600 hover:bg-violet-500 rounded-xl px-6 py-4 transition-colors group justify-end">
+                <span class="text-white font-medium">Próxima: Construindo na Prática →</span>
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-700 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <p class="text-center text-neutral-500 text-sm">Arquitetura DEV 2030 — 2026</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="relative w-full h-full max-w-5xl mx-auto p-4 sm:p-8 flex items-center justify-center">
+            <div class="bg-dark-800 rounded-2xl w-full h-[80vh] overflow-hidden border border-violet-500/30 relative">
+                <button onclick="closeModal()" class="absolute top-4 right-4 z-10 bg-dark-700 hover:bg-dark-600 rounded-lg p-2 transition-colors">
+                    <svg class="w-5 h-5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+                <iframe id="modal-iframe" class="w-full h-full" frameborder="0"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Theme toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const html = document.documentElement;
+        if (localStorage.getItem('theme') === 'light' || (!localStorage.getItem('theme') && !html.classList.contains('dark'))) {
+            themeToggleDarkIcon.classList.remove('hidden');
+            html.classList.remove('dark');
+        } else {
+            themeToggleLightIcon.classList.remove('hidden');
+        }
+        themeToggle.addEventListener('click', () => {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+            html.classList.toggle('dark');
+            localStorage.setItem('theme', html.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Module toggle
+        function toggleModule(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.toggle('hidden');
+            }
+        }
+
+        // Topic toggle
+        function toggleTopic(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.toggle('hidden');
+            }
+        }
+
+        // Modal
+        function openModal(url) {
+            const modal = document.getElementById('modal');
+            const iframe = document.getElementById('modal-iframe');
+            iframe.src = url;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            const iframe = document.getElementById('modal-iframe');
+            modal.classList.add('hidden');
+            iframe.src = '';
+            document.body.style.overflow = '';
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+    </script>
+
+</body>
+</html>

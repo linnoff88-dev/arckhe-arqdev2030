@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 2.2 - An&aacute;lise de Trade-offs | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Base overrides */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+        /* Blue accent */
+        html:not(.dark) .text-blue-400 { color: #2563eb; }
+        html:not(.dark) .bg-blue-500\/20 { background-color: rgba(37, 99, 235, 0.12); }
+        html:not(.dark) .bg-blue-500\/10 { background-color: rgba(37, 99, 235, 0.08); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(37, 99, 235, 0.25); }
+        html:not(.dark) .hover\:bg-blue-500\/30:hover { background-color: rgba(37, 99, 235, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .bg-emerald-500\/20 { background-color: rgba(5, 150, 105, 0.12); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .bg-blue-900\/30 { background-color: rgba(29, 78, 216, 0.08); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center gap-3">
+                    <a href="../../index.html" class="text-yellow-400 font-bold text-lg hover:text-yellow-300 transition-colors">&#127959;&#65039; Arquitetura DEV 2030</a>
+                    <span class="text-neutral-500">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center gap-1">
+                    <a href="../trilha1/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+                    <a href="index.html" class="px-2 py-1 text-xs font-medium text-blue-400 bg-blue-500/10 rounded transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span></a>
+                    <a href="../trilha3/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 rounded transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span></a>
+                    <a href="../trilha4/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span></a>
+                    <a href="../trilha5/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span></a>
+                    <a href="../trilha6/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Escalando</span></a>
+                    <button id="theme-toggle" class="ml-3 p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors">
+                        <svg id="theme-toggle-dark-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="w-4 h-4 text-neutral-400 hidden" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-blue-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-blue-400 transition-colors">Trilha 2</a>
+            <span>/</span>
+            <span class="text-blue-400 font-medium">M&oacute;dulo 2.2</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-blue-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                    M&Oacute;DULO 2.2
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128202; An&aacute;lise de Trade-offs
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Toda decis&atilde;o arquitetural &eacute; uma troca. N&atilde;o existe almo&ccedil;o gr&aacute;tis em engenharia de software. Aprenda a identificar, avaliar e documentar trade-offs para tomar decis&otilde;es com confian&ccedil;a.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">Interm.</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-blue-400">Estrat.</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TOPICO 1: O que sao Trade-offs ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#9878;&#65039; O que s&atilde;o Trade-offs</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Toda decis&atilde;o arquitetural favorece um atributo em detrimento de outro. <strong class="text-blue-400">N&atilde;o existe almo&ccedil;o gr&aacute;tis em arquitetura de software.</strong> Consist&ecirc;ncia vs. disponibilidade. Simplicidade vs. flexibilidade. Performance vs. manutenibilidade. Arquitetos juniores buscam a solu&ccedil;&atilde;o perfeita. Arquitetos s&ecirc;niores sabem que toda solu&ccedil;&atilde;o tem custo.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> O Princ&iacute;pio Fundamental</h3>
+                <p class="text-neutral-300 mb-4">Trade-offs existem porque recursos s&atilde;o finitos &mdash; tempo, dinheiro, aten&ccedil;&atilde;o, complexidade cognitiva:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">First-order trade-offs</strong> &mdash; Diretos e &oacute;bvios: mais cache = mais performance, mas tamb&eacute;m mais complexidade de invalida&ccedil;&atilde;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Second-order trade-offs</strong> &mdash; Indiretos e sutis: microsservi&ccedil;os d&atilde;o autonomia, mas aumentam latência de rede e dificuldade de debugging</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Hidden trade-offs</strong> &mdash; S&oacute; aparecem em produ&ccedil;&atilde;o: eventual consistency parece OK at&eacute; um usu&aacute;rio ver dados inconsistentes e perder confian&ccedil;a</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Google Spanner</h3>
+                <p class="text-neutral-300 mb-4">O Google Spanner prometeu &ldquo;o melhor dos dois mundos&rdquo; &mdash; consist&ecirc;ncia forte E disponibilidade global:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Custo:</strong> US$1B+ em R&amp;D, rel&oacute;gios at&ocirc;micos em cada datacenter, infraestrutura global propriet&aacute;ria</li>
+                    <li><strong class="text-white">Trade-off escondido:</strong> Lat&ecirc;ncia de escrita mais alta que bancos regionais (commits distribu&iacute;dos s&atilde;o lentos)</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> Voc&ecirc; pode &ldquo;comprar&rdquo; trade-offs com dinheiro suficiente, mas nunca elimin&aacute;-los completamente. E voc&ecirc; n&atilde;o tem o budget do Google</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Quando algu&eacute;m apresentar uma solu&ccedil;&atilde;o &ldquo;sem desvantagens&rdquo;, pergunte: <strong class="text-white">&ldquo;O que estamos sacrificando que ainda n&atilde;o percebemos?&rdquo;</strong> Todo sistema tem trade-offs. Se voc&ecirc; n&atilde;o os encontrou, &eacute; porque n&atilde;o procurou o suficiente.</p>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Documentar trade-offs <strong class="text-white">explicitamente</strong> em ADRs</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Buscar <strong class="text-white">&ldquo;good enough&rdquo;</strong> em vez de &ldquo;perfeito&rdquo;</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Revisitar trade-offs quando o <strong class="text-white">contexto muda</strong></span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Acreditar que existe <strong class="text-white">solu&ccedil;&atilde;o sem custo</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar trade-offs de <strong class="text-white">segunda ordem</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Decidir baseado em <strong class="text-white">opini&atilde;o do mais s&ecirc;nior</strong> sem an&aacute;lise</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 2: Custo vs Performance ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#128176; Custo vs. Performance</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Mais performance geralmente significa mais dinheiro &mdash; servidores maiores, CDNs, caching layers, engenheiros especializados. <strong class="text-blue-400">O ponto &oacute;timo &eacute; onde o custo marginal de performance excede o benef&iacute;cio marginal.</strong> Um e-commerce que responde em 100ms vs. 200ms pode n&atilde;o ter diferen&ccedil;a percept&iacute;vel. Mas de 200ms para 2s, perde 53% dos usu&aacute;rios mobile (Google).
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> A Curva de Custo-Benef&iacute;cio</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Zona 1 (Quick Wins):</strong> Caching simples, CDN, queries otimizadas. Custo baixo, impacto alto. US$50/m&ecirc;s de Redis pode reduzir lat&ecirc;ncia em 10x</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Zona 2 (Otimiza&ccedil;&atilde;o):</strong> Right-sizing de inst&acirc;ncias, reserved vs. spot, connection pooling. Custo moderado, impacto moderado</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Zona 3 (Diminishing Returns):</strong> Custom hardware, reescrita em linguagem de baixo n&iacute;vel, edge computing global. Custo alt&iacute;ssimo, impacto marginal</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Basecamp vs. Cloud</h3>
+                <p class="text-neutral-300 mb-4">Em 2023, a Basecamp (37signals) saiu da cloud e economizou US$7M/ano:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Antes:</strong> US$3.2M/ano em AWS para workloads previs&iacute;veis e est&aacute;veis</li>
+                    <li><strong class="text-white">Depois:</strong> US$600K em servidores pr&oacute;prios (Dell R7625, NVMe storage) para a mesma carga</li>
+                    <li><strong class="text-white">Trade-off aceito:</strong> Perdem elasticidade da cloud, mas n&atilde;o precisam dela &mdash; carga &eacute; previs&iacute;vel</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> Cloud n&atilde;o &eacute; sempre mais barata. Para workloads est&aacute;veis, servidores pr&oacute;prios podem custar 5-10x menos</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Calcule o <strong class="text-white">custo por request</strong> do seu sistema. Se cada request custa US$0.001 e voc&ecirc; tem 1M requests/dia, s&atilde;o US$1.000/dia. Agora pergunte: <strong class="text-white">&ldquo;Se eu reduzir a lat&ecirc;ncia em 50ms, isso gera mais receita que o custo da otimiza&ccedil;&atilde;o?&rdquo;</strong> Se n&atilde;o, pare de otimizar.</p>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Armadilha: Over-provisioning</h3>
+                <p class="text-neutral-300">Uma startup pagando <strong class="text-white">US$5.000/m&ecirc;s em AWS</strong> para servir 100 usu&aacute;rios est&aacute; queimando runway. Antes de escalar infraestrutura, pergunte: &ldquo;O gargalo &eacute; o servidor ou o c&oacute;digo?&rdquo; Na maioria das vezes, um &iacute;ndice no banco ou um cache de 10 linhas resolve o problema que 3 inst&acirc;ncias novas n&atilde;o resolvem.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 3: Velocidade vs Qualidade ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#127950;&#65039; Velocidade vs. Qualidade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Entregar r&aacute;pido acumula d&iacute;vida t&eacute;cnica. Refatorar tudo atrasa features. <strong class="text-blue-400">O equil&iacute;brio muda conforme o est&aacute;gio do produto</strong> &mdash; startups pr&eacute;-PMF devem priorizar velocidade; produtos maduros com milh&otilde;es de usu&aacute;rios devem priorizar estabilidade.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Quadrante de D&iacute;vida T&eacute;cnica (Martin Fowler)</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Deliberada + Prudente:</strong> &ldquo;Sabemos que n&atilde;o est&aacute; ideal, mas precisamos entregar agora. Vamos pagar a d&iacute;vida no pr&oacute;ximo sprint&rdquo; &mdash; Aceit&aacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Deliberada + Imprudente:</strong> &ldquo;N&atilde;o temos tempo para testes&rdquo; &mdash; Perigosa, acumula r&aacute;pido</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Acidental + Prudente:</strong> &ldquo;Agora que aprendemos mais, percebemos que podia ser melhor&rdquo; &mdash; Natural e inevit&aacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Acidental + Imprudente:</strong> &ldquo;O que &eacute; camadas?&rdquo; &mdash; Falta de conhecimento, precisa de mentoria</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Facebook</h3>
+                <p class="text-neutral-300 mb-4">O Facebook &eacute; o case mais famoso de mudan&ccedil;a de prioridade velocidade &rarr; qualidade:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">2004-2014:</strong> Lema: &ldquo;Move fast and break things.&rdquo; Velocidade acima de tudo. Deploys m&uacute;ltiplos por dia, bugs em produ&ccedil;&atilde;o corriqueiros</li>
+                    <li><strong class="text-white">2014:</strong> Com 1.3B usu&aacute;rios, cada bug afetava milh&otilde;es. Custo de &ldquo;quebrar coisas&rdquo; ficou inaceit&aacute;vel</li>
+                    <li><strong class="text-white">Novo lema:</strong> &ldquo;Move fast with stable infrastructure.&rdquo; Introduziram testes rigorosos, canary releases, feature flags</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> O trade-off velocidade vs. qualidade n&atilde;o &eacute; est&aacute;tico &mdash; muda conforme a base de usu&aacute;rios cresce</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Reservar <strong class="text-white">20% do sprint</strong> para pagar d&iacute;vida t&eacute;cnica</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Definir <strong class="text-white">quality gates</strong> m&iacute;nimos (testes em fluxos cr&iacute;ticos)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Aceitar d&iacute;vida t&eacute;cnica <strong class="text-white">deliberada e documentada</strong></span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Dizer <strong class="text-white">&ldquo;vamos refatorar depois&rdquo;</strong> sem data no calend&aacute;rio</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Exigir <strong class="text-white">100% de cobertura de testes</strong> em MVP</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar d&iacute;vida t&eacute;cnica at&eacute; que <strong class="text-white">o sistema pare</strong></span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 4: Seguranca vs Usabilidade ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128274; Seguran&ccedil;a vs. Usabilidade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Mais seguran&ccedil;a geralmente significa mais atrito para o usu&aacute;rio. MFA &eacute; mais seguro mas adiciona passos. Zero Trust &eacute; ideal mas complexo de implementar. <strong class="text-blue-400">Seguran&ccedil;a que ningu&eacute;m usa n&atilde;o protege ningu&eacute;m.</strong> A arte &eacute; encontrar o n&iacute;vel adequado de seguran&ccedil;a para o contexto.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Seguran&ccedil;a Progressiva</h3>
+                <p class="text-neutral-300 mb-4">Aplique seguran&ccedil;a proporcional ao risco da opera&ccedil;&atilde;o:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Risco baixo (ver cat&aacute;logo):</strong> Sem autentica&ccedil;&atilde;o necess&aacute;ria. M&aacute;xima usabilidade</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Risco m&eacute;dio (editar perfil):</strong> Sess&atilde;o autenticada com timeout razo&aacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Risco alto (transfer&ecirc;ncia banc&aacute;ria):</strong> MFA, confirma&ccedil;&atilde;o por SMS/email, limites di&aacute;rios</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Risco cr&iacute;tico (acesso admin):</strong> Hardware token, IP allowlist, audit logging completo</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: NIST e Senhas</h3>
+                <p class="text-neutral-300 mb-4">Em 2017, o NIST (National Institute of Standards and Technology) revolucionou suas guidelines de senha:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Antes:</strong> Senhas com mai&uacute;sculas, min&uacute;sculas, n&uacute;meros, s&iacute;mbolos, troca a cada 90 dias. Resultado: usu&aacute;rios anotavam em post-its</li>
+                    <li><strong class="text-white">Depois:</strong> Passphrases longas e simples (&ldquo;cavalo-bateria-grampeador-correto&rdquo;), sem troca obrigat&oacute;ria. Mais seguras E mais us&aacute;veis</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> A solu&ccedil;&atilde;o mais segura &ldquo;na teoria&rdquo; era menos segura na pr&aacute;tica porque os usu&aacute;rios a contornavam</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Implemente <strong class="text-white">risk-based authentication</strong>: se o usu&aacute;rio est&aacute; no mesmo dispositivo, IP e hor&aacute;rio habitual, pe&ccedil;a apenas a senha. Se algo mudou (novo pa&iacute;s, novo dispositivo), exija MFA. O Stripe e o GitHub fazem isso &mdash; seguran&ccedil;a forte sem atrito desnecess&aacute;rio.</p>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Alerta: Seguran&ccedil;a por Obscuridade</h3>
+                <p class="text-neutral-300">Nunca dependa de <strong class="text-white">&ldquo;ningu&eacute;m vai descobrir&rdquo;</strong> como estrat&eacute;gia de seguran&ccedil;a. API keys hardcoded, endpoints n&atilde;o documentados &ldquo;secretos&rdquo;, seguran&ccedil;a baseada em URLs longas &mdash; tudo isso &eacute; descoberto em minutos com ferramentas automatizadas. Seguran&ccedil;a real assume que o atacante conhece o sistema.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 5: Flexibilidade vs Complexidade ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#129513; Flexibilidade vs. Complexidade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Sistemas flex&iacute;veis s&atilde;o inevitavelmente mais complexos. Plugin systems, feature flags, configura&ccedil;&atilde;o din&acirc;mica, abstra&ccedil;&otilde;es gen&eacute;ricas &mdash; tudo tem custo cognitivo e operacional. <strong class="text-blue-400">YAGNI (You Ain&rsquo;t Gonna Need It)</strong> &eacute; a arma mais poderosa contra over-engineering.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> O Espectro da Flexibilidade</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Hardcoded:</strong> Zero flexibilidade, zero complexidade. OK para prot&oacute;tipos e MVPs</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Configur&aacute;vel:</strong> Vari&aacute;veis de ambiente, config files. Baixa complexidade, flexibilidade moderada</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Plugin System:</strong> Extens&otilde;es carregadas dinamicamente. Alta flexibilidade, alta complexidade</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">DSL/Scripting:</strong> Usu&aacute;rio define comportamento. M&aacute;xima flexibilidade, complexidade explosiva</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Dados: IBM Research sobre YAGNI</h3>
+                <p class="text-neutral-300 mb-4">Um estudo da IBM Research sobre features planejadas &ldquo;para o futuro&rdquo;:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">80%</strong> das features &ldquo;para o futuro&rdquo; nunca s&atilde;o usadas</li>
+                    <li><strong class="text-white">Cada abstra&ccedil;&atilde;o prematura</strong> adiciona em m&eacute;dia 3-5 arquivos e 200-500 linhas de c&oacute;digo para manter</li>
+                    <li><strong class="text-white">Custo de remover</strong> uma abstra&ccedil;&atilde;o errada &eacute; 3-5x maior que o custo de adicion&aacute;-la</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> &ldquo;E se precisarmos mudar isso no futuro?&rdquo; &eacute; a pergunta que mais gera over-engineering</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Aplicar YAGNI <strong class="text-white">rigorosamente</strong> at&eacute; ter evid&ecirc;ncia concreta de necessidade</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Preferir <strong class="text-white">c&oacute;digo espec&iacute;fico</strong> que resolve o problema atual</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Adicionar extension points <strong class="text-white">s&oacute; onde j&aacute; houve mudan&ccedil;a</strong> real</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Criar interfaces para classes que <strong class="text-white">s&oacute; ter&atilde;o uma implementa&ccedil;&atilde;o</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Construir plugin systems que <strong class="text-white">s&oacute; voc&ecirc;</strong> vai usar</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Dizer <strong class="text-white">&ldquo;e se precisarmos trocar o banco?&rdquo;</strong> como justificativa para abstrair tudo</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 6: Consistencia vs Disponibilidade ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#127760; Consist&ecirc;ncia vs. Disponibilidade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                O CAP Theorem &eacute; o trade-off mais fundamental em sistemas distribu&iacute;dos: durante parti&ccedil;&otilde;es de rede, voc&ecirc; escolhe <strong class="text-blue-400">consist&ecirc;ncia (rejeitar requests)</strong> ou <strong class="text-blue-400">disponibilidade (servir dados potencialmente desatualizados)</strong>. A escolha depende do dom&iacute;nio: bancos escolhem consist&ecirc;ncia; redes sociais escolhem disponibilidade.
+            </p>
+
+            <!-- Conceito -->
+            <div class="bg-gradient-to-br from-blue-900/30 to-dark-800 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> CAP na Vida Real: PACELC</h3>
+                <p class="text-neutral-300 mb-4">O CAP Theorem foi expandido pelo PACELC, que &eacute; mais &uacute;til na pr&aacute;tica:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Se Partition (P):</strong> escolha entre Availability (A) e Consistency (C)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">Else (E):</strong> mesmo sem parti&ccedil;&atilde;o, escolha entre Latency (L) e Consistency (C)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">DynamoDB:</strong> PA/EL &mdash; prioriza disponibilidade e lat&ecirc;ncia. Eventual consistency por padr&atilde;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-blue-400 mt-1">&bull;</span><span><strong class="text-white">PostgreSQL (r&eacute;plicas s&iacute;ncronas):</strong> PC/EC &mdash; prioriza consist&ecirc;ncia sempre, ao custo de lat&ecirc;ncia</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Netflix vs. Banco do Brasil</h3>
+                <p class="text-neutral-300 mb-4">Dois sistemas com escolhas opostas, ambas corretas para o contexto:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Netflix:</strong> Eventual consistency. Cat&aacute;logo pode estar 30s desatualizado. 99.99% uptime para 230M assinantes. &ldquo;&Eacute; melhor mostrar um cat&aacute;logo levemente desatualizado do que n&atilde;o mostrar nada&rdquo;</li>
+                    <li><strong class="text-white">Banco do Brasil:</strong> Strong consistency obrigat&oacute;ria. Se voc&ecirc; transferiu R$1.000, o saldo deve refletir imediatamente. Downtime eventual &eacute; aceit&aacute;vel, dados incorretos n&atilde;o</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> O mesmo trade-off tem respostas opostas. Contexto define a resposta certa</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use <strong class="text-white">tunable consistency</strong> quando poss&iacute;vel: different operations, different requirements. No DynamoDB, reads de cat&aacute;logo usam eventual consistency (barato, r&aacute;pido). Reads de saldo do usu&aacute;rio usam strong consistency (mais caro, mais lento, mas correto). Voc&ecirc; escolhe por opera&ccedil;&atilde;o, n&atilde;o por sistema.</p>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Armadilha: &ldquo;Eventual&rdquo; n&atilde;o significa &ldquo;quando quiser&rdquo;</h3>
+                <p class="text-neutral-300">Eventual consistency garante que <strong class="text-white">eventualmente</strong> todos os n&oacute;s convergir&atilde;o. Mas &ldquo;eventualmente&rdquo; pode ser milissegundos ou horas, dependendo da implementa&ccedil;&atilde;o. Se seu SLA exige converg&ecirc;ncia em &lt;5s, voc&ecirc; precisa de <strong class="text-white">bounded staleness</strong>, n&atilde;o eventual consistency gen&eacute;rica.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 7: Analise na Pratica ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#128208; An&aacute;lise de Trade-offs na Pr&aacute;tica</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Decis&otilde;es arquiteturais sem m&eacute;todo viram &ldquo;achismo do mais s&ecirc;nior&rdquo;. <strong class="text-blue-400">Um framework estruturado</strong> garante que todas as perspectivas sejam consideradas, trade-offs sejam expl&iacute;citos e a decis&atilde;o seja document&aacute;vel.
+            </p>
+
+            <!-- Timeline: Processo -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Framework de An&aacute;lise em 5 Passos</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Liste as Op&ccedil;&otilde;es</h4>
+                        <p class="text-neutral-300 text-sm">M&iacute;nimo 3 alternativas. &ldquo;Fazer ou n&atilde;o fazer&rdquo; n&atilde;o &eacute; an&aacute;lise. Ex: PostgreSQL vs. DynamoDB vs. CockroachDB para o servi&ccedil;o de pagamentos.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Defina Crit&eacute;rios com Pesos</h4>
+                        <p class="text-neutral-300 text-sm">Performance (peso 3), custo (peso 5), expertise do time (peso 4), ecossistema (peso 2). Pesos refletem as prioridades do projeto.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Avalie com Spike/PoC</h4>
+                        <p class="text-neutral-300 text-sm">Time-box de 2-3 dias para testar a op&ccedil;&atilde;o mais prov&aacute;vel. Perguntas espec&iacute;ficas: &ldquo;Conseguimos fazer X com esta tecnologia?&rdquo;</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">4</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Documente em ADR</h4>
+                        <p class="text-neutral-300 text-sm">Contexto, decis&atilde;o, alternativas rejeitadas e por qu&ecirc;, consequ&ecirc;ncias positivas e negativas. O &ldquo;por qu&ecirc;&rdquo; &eacute; mais importante que o &ldquo;o qu&ecirc;&rdquo;.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500/20 flex items-center justify-center">
+                        <span class="text-blue-400 font-bold">5</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Defina Gatilhos de Revis&atilde;o</h4>
+                        <p class="text-neutral-300 text-sm">&ldquo;Se ultrapassarmos 10k req/s, reavaliamos.&rdquo; &ldquo;Se o time crescer para 20+, reconsideramos microsservi&ccedil;os.&rdquo; Decis&otilde;es n&atilde;o s&atilde;o eternas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: ATAM no Spotify</h3>
+                <p class="text-neutral-300 mb-4">O ATAM (Architecture Tradeoff Analysis Method) &eacute; usado por empresas como Spotify e ThoughtWorks:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Processo:</strong> Stakeholders avaliam cen&aacute;rios de qualidade contra a arquitetura proposta</li>
+                    <li><strong class="text-white">Resultado:</strong> Discord&acirc;ncias entre stakeholders revelam riscos ocultos que ningu&eacute;m teria identificado sozinho</li>
+                    <li><strong class="text-white">Exemplo:</strong> &ldquo;O que acontece se tivermos 10x o tr&aacute;fego esperado?&rdquo; &mdash; Engenharia diz &ldquo;autoscaling resolve&rdquo;, finan&ccedil;as diz &ldquo;o custo dispara&rdquo;. Ambos est&atilde;o certos &mdash; &eacute; um trade-off</li>
+                </ul>
+            </div>
+
+            <!-- Dica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use o conceito de <strong class="text-white">&ldquo;reversibility score&rdquo;</strong> para cada decis&atilde;o: 1 (f&aacute;cil de reverter) a 5 (quase imposs&iacute;vel). Decis&otilde;es com score 1-2 podem ser tomadas r&aacute;pido. Decis&otilde;es com score 4-5 exigem an&aacute;lise profunda, PoC e consenso. N&atilde;o gaste energia anal&iacute;tica em decis&otilde;es facilmente revers&iacute;veis.</p>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">weighted decision matrix</strong> para decis&otilde;es significativas</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Validar com <strong class="text-white">PoC time-boxed</strong> (2 semanas m&aacute;x)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Incluir <strong class="text-white">stakeholders n&atilde;o-t&eacute;cnicos</strong> na an&aacute;lise</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Decidir <strong class="text-white">baseado em prefer&ecirc;ncia pessoal</strong> sem dados</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Gastar 3 meses analisando uma decis&atilde;o <strong class="text-white">facilmente revers&iacute;vel</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Deixar o <strong class="text-white">HiPPO</strong> (Highest Paid Person&rsquo;s Opinion) decidir sozinho</span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MODULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">N&atilde;o existe almo&ccedil;o gr&aacute;tis</strong><span class="text-neutral-400"> &mdash; Toda decis&atilde;o favorece um atributo em detrimento de outro</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Custo vs. Performance tem ponto &oacute;timo</strong><span class="text-neutral-400"> &mdash; Quick wins primeiro, diminishing returns depois</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Velocidade vs. Qualidade muda com o est&aacute;gio</strong><span class="text-neutral-400"> &mdash; Startups priorizam velocidade, produtos maduros priorizam estabilidade</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Seguran&ccedil;a progressiva &eacute; o caminho</strong><span class="text-neutral-400"> &mdash; Atrito proporcional ao risco da opera&ccedil;&atilde;o</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">YAGNI rigoroso evita over-engineering</strong><span class="text-neutral-400"> &mdash; 80% das features &ldquo;para o futuro&rdquo; nunca s&atilde;o usadas</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">CAP/PACELC: contexto define a resposta</strong><span class="text-neutral-400"> &mdash; Banco = consist&ecirc;ncia; streaming = disponibilidade</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-blue-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Use frameworks estruturados</strong><span class="text-neutral-400"> &mdash; Weighted matrix, PoC time-boxed, reversibility score, ADRs</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-blue-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">2.3 - &#128736;&#65039; Escolhendo a Stack Certa &mdash; Tecnologia &eacute; meio, n&atilde;o fim. Como escolher sem cair no hype</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha</a>
+                    <a href="modulo-2-3.html" class="flex-1 text-center px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; 2026</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 6.5 - Futuro da Arquitetura | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-rose-400 { color: #9f1239; }
+        html:not(.dark) .bg-rose-500\/20 { background-color: rgba(225, 29, 72, 0.12); }
+        html:not(.dark) .bg-rose-500\/10 { background-color: rgba(225, 29, 72, 0.08); }
+        html:not(.dark) .border-rose-500\/30 { border-color: rgba(225, 29, 72, 0.25); }
+        html:not(.dark) .hover\:bg-rose-500\/30:hover { background-color: rgba(225, 29, 72, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .bg-emerald-900\/30 { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .bg-emerald-900\/40 { background-color: rgba(5, 150, 105, 0.1); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.25); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-rose-400 bg-rose-500/10">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-rose-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-rose-400 transition-colors">Trilha 6</a>
+            <span>/</span>
+            <span class="text-rose-400 font-medium">M&oacute;dulo 6.5</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-rose-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-rose-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                    M&Oacute;DULO 6.5 &mdash; M&Oacute;DULO FINAL
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#128302; Futuro da Arquitetura
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    O &uacute;ltimo m&oacute;dulo do curso. Tend&ecirc;ncias que v&atilde;o moldar a pr&oacute;xima d&eacute;cada da engenharia de software &mdash; de IA-native applications a arquitetura zero-knowledge, passando por WebAssembly, edge computing e o papel do arquiteto do futuro.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">30 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">Avan&ccedil;ado</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-rose-400">Vis&atilde;o</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TÓPICO 1: IA-Native Applications ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#129302; IA-Native Applications</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Aplica&ccedil;&otilde;es IA-native n&atilde;o s&atilde;o apps tradicionais com IA &ldquo;colada por cima&rdquo;. S&atilde;o sistemas <strong class="text-rose-400">projetados desde o fundamento com IA no centro</strong> &mdash; onde o modelo de linguagem, os embeddings e os agentes s&atilde;o componentes arquiteturais de primeira classe, n&atilde;o features opcionais.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Arquitetura IA-Native</h3>
+                <p class="text-neutral-300 mb-4">Os padr&otilde;es arquiteturais emergentes de aplica&ccedil;&otilde;es IA-native:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">LLM como orquestrador</strong> &mdash; O modelo decide quais tools chamar, em que ordem, e como combinar resultados</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">RAG como infra padr&atilde;o</strong> &mdash; Vector stores (Pinecone, Weaviate, pgvector) como componente t&atilde;o fundamental quanto o banco relacional</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Agentes aut&ocirc;nomos</strong> &mdash; Sistemas que planejam, executam e corrigem a&ccedil;&otilde;es sem interven&ccedil;&atilde;o humana cont&iacute;nua</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Eval-driven development</strong> &mdash; Testes de qualidade de output de IA substituem testes unit&aacute;rios tradicionais</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Cursor, Devin e Claude Code</h3>
+                <p class="text-neutral-300 mb-4">A nova gera&ccedil;&atilde;o de ferramentas de desenvolvimento &eacute; IA-native por defini&ccedil;&atilde;o:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Cursor</strong> &mdash; Editor de c&oacute;digo onde IA &eacute; a interface prim&aacute;ria, n&atilde;o autocomplete</li>
+                    <li><strong class="text-white">Devin</strong> &mdash; Agente de engenharia que planeja, implementa e testa autonomamente</li>
+                    <li><strong class="text-white">Claude Code</strong> &mdash; CLI onde IA lida com codebase inteiro, n&atilde;o apenas snippets</li>
+                    <li><strong class="text-white">Padr&atilde;o</strong> &mdash; IA n&atilde;o assiste o dev &mdash; IA &eacute; o runtime principal do produto</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Ao projetar um sistema IA-native, comece pelo <strong class="text-white">eval framework</strong>: defina como voc&ecirc; vai medir a qualidade do output da IA antes de escrever uma linha de c&oacute;digo. Se voc&ecirc; n&atilde;o consegue medir se a IA est&aacute; fazendo um bom trabalho, n&atilde;o consegue melhorar o sistema.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 2: Edge Computing ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#127760; Edge Computing</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-rose-400">Mover computa&ccedil;&atilde;o para perto do usu&aacute;rio</strong> &mdash; de data centers centralizados para centenas de pontos de presen&ccedil;a (PoPs) ao redor do mundo. Edge computing reduz lat&ecirc;ncia de ~200ms para ~20ms, habilita aplica&ccedil;&otilde;es real-time e muda fundamentalmente como pensamos em deploy e estado.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Arquitetura Edge-First</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Cloudflare Workers</strong> &mdash; JavaScript/WASM rodando em 300+ PoPs globais. Cold start &lt;5ms</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Durable Objects</strong> &mdash; Estado consistente no edge. Resolve o problema &ldquo;edge &eacute; s&oacute; para stateless&rdquo;</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Edge Databases</strong> &mdash; Turso (SQLite distribu&iacute;do), Neon (PostgreSQL serverless), PlanetScale (MySQL global)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Smart routing</strong> &mdash; L&oacute;gica no edge decide se processa localmente ou roteia para origin server</span></li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; Ideal para Edge</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><strong class="text-white">A/B testing e feature flags</strong> sem lat&ecirc;ncia</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><strong class="text-white">Autentica&ccedil;&atilde;o e autoriza&ccedil;&atilde;o</strong> perto do usu&aacute;rio</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><strong class="text-white">Personaliza&ccedil;&atilde;o de conte&uacute;do</strong> por regi&atilde;o/dispositivo</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; N&atilde;o ideal para Edge</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><strong class="text-white">Transa&ccedil;&otilde;es complexas</strong> que exigem ACID distribu&iacute;do</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><strong class="text-white">Processamento heavy</strong> (ML training, batch jobs)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><strong class="text-white">Workloads com depend&ecirc;ncias</strong> de APIs centralizadas</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Comece movendo para o edge o que j&aacute; &eacute; stateless: <strong class="text-white">middleware de autentica&ccedil;&atilde;o, redirects, headers de seguran&ccedil;a e cache invalidation</strong>. Depois, explore edge databases para reads. Manter writes no origin &eacute; perfeitamente v&aacute;lido.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 3: WebAssembly ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#9881;&#65039; WebAssembly</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-rose-400">WebAssembly (WASM) &eacute; o bytecode universal.</strong> Nasceu para performance no browser, mas evoluiu para um runtime port&aacute;vel que roda em qualquer lugar &mdash; edge, server, IoT, blockchain. WASM permite usar Rust, C++, Go e outras linguagens onde antes s&oacute; JavaScript funcionava.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> WASM Al&eacute;m do Browser</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">WASI (WebAssembly System Interface)</strong> &mdash; WASM rodando fora do browser com acesso a filesystem, rede e clock</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Component Model</strong> &mdash; M&oacute;dulos WASM compostos como legos: um componente em Rust chama outro em Python</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Serverless WASM</strong> &mdash; Cold start de microsegundos (vs. segundos em containers). Spin, Fermyon, Wasmer</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Plugin systems</strong> &mdash; Extens&otilde;es em qualquer linguagem com sandbox de seguran&ccedil;a nativo</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> WASM em Produ&ccedil;&atilde;o</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Figma</strong> &mdash; Renderiza&ccedil;&atilde;o do canvas em C++ compilado para WASM. Performance nativa no browser</li>
+                    <li><strong class="text-white">Cloudflare Workers</strong> &mdash; WASM como runtime alternativo ao V8 para workloads compute-intensive</li>
+                    <li><strong class="text-white">Docker + WASM</strong> &mdash; Containers WASM com 1/100 do tamanho e startup instant&acirc;neo</li>
+                    <li><strong class="text-white">Shopify Functions</strong> &mdash; L&oacute;gica de neg&oacute;cio customizada em WASM executada no edge da Shopify</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">WASM n&atilde;o vai substituir JavaScript no browser para 95% dos casos. Mas se voc&ecirc; tem <strong class="text-white">processamento pesado client-side</strong> (edi&ccedil;&atilde;o de imagem, codifica&ccedil;&atilde;o de v&iacute;deo, simula&ccedil;&otilde;es, criptografia), WASM &eacute; a resposta. No server, fique de olho em <strong class="text-white">WASI e o Component Model</strong> &mdash; &eacute; o futuro dos plugins e extens&otilde;es.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 4: Platform Engineering ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128736;&#65039; Platform Engineering</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-rose-400">Platform Engineering &eacute; DevOps feito direito.</strong> Em vez de esperar que cada dev aprenda Kubernetes, Terraform e 15 ferramentas de observabilidade, o time de plataforma constr&oacute;i uma Internal Developer Platform (IDP) que abstrai a complexidade e oferece self-service para os times de produto.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Internal Developer Platform (IDP)</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Service Catalog</strong> &mdash; Registro de todos os servi&ccedil;os, seus owners, depend&ecirc;ncias e health (Backstage)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Golden Paths</strong> &mdash; Caminhos padronizados para tarefas comuns: criar servi&ccedil;o, configurar CI/CD, provisionar banco</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Self-service</strong> &mdash; Devs provisionam infraestrutura sem abrir ticket. Portal, CLI ou API</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Guardrails, n&atilde;o gates</strong> &mdash; Compliance e seguran&ccedil;a embutidos no pipeline, n&atilde;o em aprova&ccedil;&otilde;es manuais</span></li>
+                </ul>
+            </div>
+
+            <!-- Dados -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Dados do Mercado</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Gartner:</strong> &ldquo;At&eacute; 2026, 80% das organiza&ccedil;&otilde;es de engenharia ter&atilde;o times de Platform Engineering&rdquo;</li>
+                    <li><strong class="text-white">Spotify (Backstage)</strong> &mdash; Open-sourcou sua IDP. Adotada por Spotify, Netflix, American Airlines, HP</li>
+                    <li><strong class="text-white">ROI t&iacute;pico</strong> &mdash; Redu&ccedil;&atilde;o de 60-70% no tempo de onboarding de novos devs</li>
+                    <li><strong class="text-white">DORA metrics</strong> &mdash; Empresas com IDPs maduras t&ecirc;m 4x mais deploy frequency</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">N&atilde;o comece pela ferramenta (Backstage). Comece pelo <strong class="text-white">problema mais doloroso dos seus devs</strong>: criar um novo servi&ccedil;o demora 2 semanas? Automatize isso. Deploy exige 5 pessoas? Simplifique. A melhor IDP &eacute; a que resolve dor real, n&atilde;o a mais completa.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 5: Sustainability ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#127807; Sustainability</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-rose-400">Software tem pegada de carbono.</strong> Data centers consomem ~1-2% da eletricidade global, e IA est&aacute; acelerando esse crescimento. Green Software Engineering n&atilde;o &eacute; modismo &mdash; &eacute; uma responsabilidade arquitetural que tamb&eacute;m reduz custos. C&oacute;digo eficiente &eacute; c&oacute;digo sustent&aacute;vel.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Princ&iacute;pios de Green Software</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Carbon-aware computing</strong> &mdash; Agendar workloads para hor&aacute;rios/regi&otilde;es com energia mais limpa</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Demand shaping</strong> &mdash; Adaptar a carga de trabalho &agrave; disponibilidade de energia renov&aacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Efici&ecirc;ncia de hardware</strong> &mdash; Maximizar utiliza&ccedil;&atilde;o de servidores (m&eacute;dia atual: 15-20%)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Efici&ecirc;ncia de c&oacute;digo</strong> &mdash; Menos computa&ccedil;&atilde;o = menos energia. Rust vs Python pode ser 75x mais eficiente</span></li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> O Elefante na Sala: IA e Energia</h3>
+                <p class="text-neutral-300 mb-4">O custo energ&eacute;tico da IA &eacute; alarmante e crescente:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Treinar GPT-4</strong> consumiu energia equivalente a ~50 casas por 1 ano</li>
+                    <li><strong class="text-white">Uma query ChatGPT</strong> consome ~10x mais energia que uma busca Google tradicional</li>
+                    <li><strong class="text-white">Data centers de IA</strong> devem consumir 3-4% da eletricidade global at&eacute; 2030</li>
+                    <li><strong class="text-white">Implica&ccedil;&atilde;o arquitetural</strong> &mdash; Escolha modelos menores quando poss&iacute;vel. Cache de infer&ecirc;ncia. Batch processing</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Tr&ecirc;s a&ccedil;&otilde;es imediatas: (1) <strong class="text-white">Meça o consumo</strong> dos seus servi&ccedil;os com Cloud Carbon Footprint ou Green Metrics Tool. (2) <strong class="text-white">Use caching agressivo</strong> para infer&ecirc;ncias de IA repetidas. (3) <strong class="text-white">Escolha regi&otilde;es cloud</strong> com maior percentual de energia renov&aacute;vel (ex: us-west, europe-north).</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 6: Arquitetura Zero-Knowledge ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128274; Arquitetura Zero-Knowledge</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-rose-400">Zero-knowledge &eacute; provar que voc&ecirc; sabe algo sem revelar o que sabe.</strong> Al&eacute;m de blockchain e criptomoedas, ZK proofs est&atilde;o entrando em autentica&ccedil;&atilde;o, compliance, vota&ccedil;&atilde;o e qualquer dom&iacute;nio onde privacidade e verifica&ccedil;&atilde;o coexistem. &Eacute; o futuro da arquitetura de privacidade.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Aplica&ccedil;&otilde;es de ZK Al&eacute;m de Crypto</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Verifica&ccedil;&atilde;o de idade</strong> &mdash; Provar que voc&ecirc; tem 18+ sem revelar data de nascimento ou identidade</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Compliance sem exposi&ccedil;&atilde;o</strong> &mdash; Provar que seus dados atendem LGPD sem revelar os dados em si</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Autentica&ccedil;&atilde;o passwordless</strong> &mdash; Provar identidade sem transmitir segredos pela rede</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Computa&ccedil;&atilde;o verific&aacute;vel</strong> &mdash; Provar que um c&aacute;lculo foi executado corretamente sem re-execut&aacute;-lo</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> ZK na Pr&aacute;tica</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Worldcoin</strong> &mdash; Prova de humanidade &uacute;nica sem revelar identidade. ZK proofs no core</li>
+                    <li><strong class="text-white">zkSync / StarkNet</strong> &mdash; Escalabilidade de blockchain via ZK rollups. 100x mais transa&ccedil;&otilde;es</li>
+                    <li><strong class="text-white">EU Digital Identity Wallet</strong> &mdash; Framework europeu baseado em ZK para credenciais verificaveis</li>
+                    <li><strong class="text-white">Tend&ecirc;ncia</strong> &mdash; LGPD/GDPR empurram ado&ccedil;&atilde;o de ZK em enterprise para minimiza&ccedil;&atilde;o de dados</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Voc&ecirc; n&atilde;o precisa entender a matem&aacute;tica dos ZK proofs para us&aacute;-los. Bibliotecas como <strong class="text-white">snarkjs, circom e Noir</strong> abstraem a complexidade. Comece com um caso simples: <strong class="text-white">provar que um usu&aacute;rio pertence a um grupo sem revelar qual usu&aacute;rio &eacute;</strong> (membership proof).</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 7: O Arquiteto do Futuro ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#127919; O Arquiteto do Futuro</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-rose-400">O papel do arquiteto est&aacute; se transformando mais r&aacute;pido do que nunca.</strong> Com IA gerando c&oacute;digo, infraestrutura como produto e complexidade distribu&iacute;da crescendo, o arquiteto do futuro n&atilde;o &eacute; quem sabe mais tecnologias &mdash; &eacute; quem toma melhores decis&otilde;es sob incerteza e conecta pessoas, neg&oacute;cios e sistemas.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-rose-900/30 to-dark-800 rounded-xl border border-rose-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-rose-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Compet&ecirc;ncias do Arquiteto 2030</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">AI Literacy</strong> &mdash; Entender capacidades e limita&ccedil;&otilde;es de IA. Saber quando usar LLM, ML cl&aacute;ssico ou regras</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Systems Thinking</strong> &mdash; Pensar em sistemas sociot&eacute;cnicos: pessoas + processos + tecnologia como um todo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Sustainability Mindset</strong> &mdash; Considerar impacto ambiental e efici&ecirc;ncia energ&eacute;tica como requisito arquitetural</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Ethical Architecture</strong> &mdash; Privacidade, bias em IA, acessibilidade e inclus&atilde;o como decis&otilde;es de design</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-rose-400 mt-1">&bull;</span><span><strong class="text-white">Continuous Learning</strong> &mdash; A meia-vida do conhecimento t&eacute;cnico &eacute; ~2 anos. Aprender a aprender &eacute; a meta-skill</span></li>
+                </ul>
+            </div>
+
+            <!-- Timeline: Evolução do papel -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128337; A Evolu&ccedil;&atilde;o do Papel do Arquiteto</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+                        <span class="text-rose-400 font-bold text-sm">00s</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Ivory Tower Architect</h4>
+                        <p class="text-neutral-300 text-sm">Diagramas UML, documentos de 200 p&aacute;ginas, n&atilde;o codava. Decidia tudo isolado. Modelo falho.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+                        <span class="text-rose-400 font-bold text-sm">10s</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Hands-on Architect</h4>
+                        <p class="text-neutral-300 text-sm">Coda, faz design reviews, participa de sprints. Equilibra vis&atilde;o estrat&eacute;gica com execu&ccedil;&atilde;o t&aacute;tica.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+                        <span class="text-rose-400 font-bold text-sm">20s</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Platform Architect</h4>
+                        <p class="text-neutral-300 text-sm">Constr&oacute;i plataformas internas, define golden paths, habilita times aut&ocirc;nomos. Escala via sistemas, n&atilde;o presen&ccedil;a.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center">
+                        <span class="text-rose-400 font-bold text-sm">30s</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">AI-Augmented Architect</h4>
+                        <p class="text-neutral-300 text-sm">Usa IA para explorar design space, simular trade-offs e gerar c&oacute;digo. Foco em decis&otilde;es estrat&eacute;gicas e &eacute;tica. O julgamento humano &eacute; o diferencial.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; Invista Nisso</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><strong class="text-white">Comunica&ccedil;&atilde;o e influ&ecirc;ncia</strong> &mdash; IA n&atilde;o substitui isso</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><strong class="text-white">Pensamento sist&ecirc;mico</strong> &mdash; Conectar dom&iacute;nios diferentes</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><strong class="text-white">Fundamentos profundos</strong> &mdash; Redes, SO, bancos de dados, algoritmos</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span><strong class="text-white">Dom&iacute;nio de neg&oacute;cio</strong> &mdash; Entender o problema &eacute; mais raro que saber a solu&ccedil;&atilde;o</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; Cuidado Com</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><strong class="text-white">Tutorial hell</strong> &mdash; Consumir sem aplicar n&atilde;o gera expertise</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><strong class="text-white">Hype-driven learning</strong> &mdash; Estudar s&oacute; o que est&aacute; na moda</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><strong class="text-white">Delegar pensamento &agrave; IA</strong> &mdash; Use IA como ferramenta, n&atilde;o muleta</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span><strong class="text-white">Ignorar soft skills</strong> &mdash; T&eacute;cnica sem comunica&ccedil;&atilde;o &eacute; potencial desperdi&ccedil;ado</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Crie seu <strong class="text-white">&ldquo;Personal Architecture Radar&rdquo;</strong>: uma lista pessoal com 4 an&eacute;is &mdash; <strong class="text-white">Adopt</strong> (uso ativamente), <strong class="text-white">Trial</strong> (testando em projetos), <strong class="text-white">Assess</strong> (estudando para entender), <strong class="text-white">Hold</strong> (consciente mas n&atilde;o investindo agora). Atualize a cada 6 meses. Isso evita tanto o hype quanto a estagna&ccedil;&atilde;o.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MÓDULO E CONCLUSÃO DO CURSO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-rose-900/40 via-dark-800 to-dark-800 rounded-xl border border-rose-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">IA-native &eacute; o novo paradigma</strong><span class="text-neutral-400"> &mdash; LLMs como orquestradores, RAG como infra, eval-driven development</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Edge computing muda o deploy</strong><span class="text-neutral-400"> &mdash; Computa&ccedil;&atilde;o perto do usu&aacute;rio com lat&ecirc;ncia de ~20ms e edge databases</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">WASM &eacute; o bytecode universal</strong><span class="text-neutral-400"> &mdash; Do browser ao server, plugins multi-linguagem e cold start de microsegundos</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Platform Engineering &eacute; DevOps maduro</strong><span class="text-neutral-400"> &mdash; IDPs, golden paths e self-service para times aut&ocirc;nomos</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Sustentabilidade &eacute; requisito</strong><span class="text-neutral-400"> &mdash; Carbon-aware computing, efici&ecirc;ncia energ&eacute;tica e escolha de regi&otilde;es cloud</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Zero-knowledge habilita privacidade</strong><span class="text-neutral-400"> &mdash; Provar sem revelar: autentica&ccedil;&atilde;o, compliance e verifica&ccedil;&atilde;o sem exposi&ccedil;&atilde;o</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-rose-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">O arquiteto do futuro &eacute; AI-augmented</strong><span class="text-neutral-400"> &mdash; Julgamento humano + ferramentas de IA + comunica&ccedil;&atilde;o = o diferencial</span></div>
+                    </div>
+                </div>
+
+                <!-- Conclusão do Curso -->
+                <div class="bg-gradient-to-br from-primary/20 to-dark-800 rounded-xl border border-primary/40 p-8 mb-8">
+                    <h3 class="text-2xl font-bold text-primary mb-4 flex items-center"><span class="mr-3">&#127942;</span> Parab&eacute;ns! Voc&ecirc; Completou o Curso!</h3>
+                    <p class="text-neutral-300 mb-6 leading-relaxed">
+                        Voc&ecirc; concluiu todas as <strong class="text-white">6 trilhas</strong> e <strong class="text-white">30 m&oacute;dulos</strong> do <strong class="text-white">Arquitetura DEV 2030</strong>. De fundamentos de arquitetura at&eacute; o futuro da engenharia de software, passando por tomada de decis&atilde;o, IA aplicada, pr&aacute;tica de projeto, DevOps e escala &mdash; voc&ecirc; agora tem uma vis&atilde;o completa do que significa ser um arquiteto de software moderno.
+                    </p>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-dark-800 rounded-lg p-4 text-center border border-dark-600">
+                            <div class="text-2xl font-bold text-emerald-400">T1</div>
+                            <div class="text-xs text-neutral-400 mt-1">Fundamentos</div>
+                        </div>
+                        <div class="bg-dark-800 rounded-lg p-4 text-center border border-dark-600">
+                            <div class="text-2xl font-bold text-blue-400">T2</div>
+                            <div class="text-xs text-neutral-400 mt-1">Decis&atilde;o</div>
+                        </div>
+                        <div class="bg-dark-800 rounded-lg p-4 text-center border border-dark-600">
+                            <div class="text-2xl font-bold text-violet-400">T3</div>
+                            <div class="text-xs text-neutral-400 mt-1">IA</div>
+                        </div>
+                        <div class="bg-dark-800 rounded-lg p-4 text-center border border-dark-600">
+                            <div class="text-2xl font-bold text-amber-400">T4</div>
+                            <div class="text-xs text-neutral-400 mt-1">Pr&aacute;tica</div>
+                        </div>
+                        <div class="bg-dark-800 rounded-lg p-4 text-center border border-dark-600">
+                            <div class="text-2xl font-bold text-teal-400">T5</div>
+                            <div class="text-xs text-neutral-400 mt-1">DevOps</div>
+                        </div>
+                        <div class="bg-dark-800 rounded-lg p-4 text-center border border-dark-600">
+                            <div class="text-2xl font-bold text-rose-400">T6</div>
+                            <div class="text-xs text-neutral-400 mt-1">Escala</div>
+                        </div>
+                    </div>
+                    <p class="text-neutral-300 leading-relaxed">
+                        Lembre-se: <strong class="text-white">arquitetura &eacute; uma jornada, n&atilde;o um destino</strong>. O conhecimento deste curso &eacute; o ponto de partida. Aplique, erre, aprenda, compartilhe. O melhor arquiteto n&atilde;o &eacute; quem sabe tudo &mdash; &eacute; quem nunca para de aprender e ajuda outros a crescer.
+                    </p>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha 6</a>
+                    <a href="../../index.html" class="flex-1 text-center px-6 py-3 bg-rose-600 text-white rounded-lg font-semibold hover:bg-rose-500 transition-colors">&#127959;&#65039; P&aacute;gina Inicial do Curso</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; Trilha 6: Escalando e Evoluindo</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Set initial icon
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

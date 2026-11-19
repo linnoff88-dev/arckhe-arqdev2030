@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 3.4 - Agentes e Pipelines de IA | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-violet-400 { color: #7c3aed; }
+        html:not(.dark) .bg-violet-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+        html:not(.dark) .bg-violet-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+        html:not(.dark) .border-violet-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+        html:not(.dark) .hover\:bg-violet-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .bg-emerald-900\/30 { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .bg-emerald-900\/40 { background-color: rgba(5, 150, 105, 0.1); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .bg-violet-600 { background-color: #7c3aed; }
+        html:not(.dark) .hover\:bg-violet-500:hover { background-color: #6d28d9; }
+        html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+        html:not(.dark) .hover\:bg-violet-500\/10:hover { background-color: rgba(124, 58, 237, 0.08); }
+        html:not(.dark) .text-amber-400 { color: #92400e; }
+        html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(217, 119, 6, 0.08); }
+        html:not(.dark) .text-teal-400 { color: #0d9488; }
+        html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .text-rose-400 { color: #9f1239; }
+        html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(225, 29, 72, 0.08); }
+        html:not(.dark) .bg-violet-900\/30 { background-color: rgba(124, 58, 237, 0.06); }
+        html:not(.dark) .bg-violet-900\/40 { background-color: rgba(124, 58, 237, 0.08); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-violet-400 bg-violet-500/10">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="../trilha4/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-violet-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-violet-400 transition-colors">Trilha 3</a>
+            <span>/</span>
+            <span class="text-violet-400 font-medium">M&oacute;dulo 3.4</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-violet-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-violet-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-violet-500/20 text-violet-400 border border-violet-500/30">
+                    M&Oacute;DULO 3.4
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#129302; Agentes e Pipelines de IA
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Construindo IA que age autonomamente. De agentes que planejam e executam a pipelines determin&iacute;sticos com intelig&ecirc;ncia &mdash; arquiteturas para IA que vai al&eacute;m de responder perguntas.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">Inter.</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">Pr&aacute;tica</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TÓPICO 1: O que são Agentes de IA ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#129504; O que s&atilde;o Agentes de IA</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Agentes de IA s&atilde;o sistemas que recebem um <strong class="text-violet-400">objetivo</strong> e autonomamente planejam etapas, executam a&ccedil;&otilde;es via ferramentas, observam resultados e iteram at&eacute; completar a tarefa. Diferente de chatbots que s&oacute; respondem, agentes <strong class="text-violet-400">agem no mundo real</strong> &mdash; escrevem c&oacute;digo, buscam dados, chamam APIs, tomam decis&otilde;es.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> O Loop Plan-Act-Observe</h3>
+                <p class="text-neutral-300 mb-4">Todo agente segue um ciclo fundamental:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Plan</strong> &mdash; O modelo analisa o objetivo e decide qual a pr&oacute;xima a&ccedil;&atilde;o a executar</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Act</strong> &mdash; Executa a a&ccedil;&atilde;o escolhida via tool use (buscar dados, rodar c&oacute;digo, chamar API)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Observe</strong> &mdash; Analisa o resultado da a&ccedil;&atilde;o e decide se precisa de mais steps</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Iterate</strong> &mdash; Repete o ciclo at&eacute; o objetivo ser atingido ou um limite ser alcan&ccedil;ado</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Devin (Cognition AI)</h3>
+                <p class="text-neutral-300 mb-4">O Devin &eacute; um agente de engenharia de software que demonstra o poder do padr&atilde;o agente:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Input:</strong> &ldquo;Implemente feature X neste reposit&oacute;rio&rdquo;</li>
+                    <li><strong class="text-white">Plan:</strong> L&ecirc; o codebase, entende a arquitetura, planeja as mudan&ccedil;as</li>
+                    <li><strong class="text-white">Act:</strong> Escreve c&oacute;digo, cria testes, roda o build</li>
+                    <li><strong class="text-white">Observe:</strong> Se testes falham, analisa o erro e corrige</li>
+                    <li><strong class="text-white">Resultado:</strong> Cria PR pronta para review &mdash; aut&ocirc;nomo para tarefas bem definidas</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Definir <strong class="text-white">boundaries claros</strong> para o que o agente pode fazer</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Come&ccedil;ar com <strong class="text-white">tarefas bem definidas</strong> antes de generalizar</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Implementar <strong class="text-white">human-in-the-loop</strong> para a&ccedil;&otilde;es cr&iacute;ticas</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Dar <strong class="text-white">autonomia total</strong> sem mecanismos de controle</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Confundir <strong class="text-white">chatbot com agente</strong> &mdash; s&atilde;o arquiteturas diferentes</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">custos de loop infinito</strong> quando o agente n&atilde;o converge</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Antes de construir um agente, pergunte: <strong class="text-white">&ldquo;Essa tarefa requer planejamento din&acirc;mico ou uma sequ&ecirc;ncia fixa de steps?&rdquo;</strong> Se a sequ&ecirc;ncia &eacute; fixa, use um pipeline determin&iacute;stico &mdash; mais simples, test&aacute;vel e barato. Agentes s&atilde;o para quando o caminho at&eacute; o objetivo n&atilde;o &eacute; previs&iacute;vel.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 2: Frameworks de Agentes ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#128295; Frameworks de Agentes</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Frameworks abstraem o loop de agentes, gerenciam estado, tool calling e mem&oacute;ria. Cada um tem <strong class="text-violet-400">trade-offs diferentes</strong>: LangChain/LangGraph &eacute; flex&iacute;vel mas complexo, CrewAI &eacute; otimizado para multi-agent, Anthropic Agent SDK oferece tool use nativo com controle fino.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Comparando Frameworks</h3>
+                <p class="text-neutral-300 mb-4">Cada framework resolve um problema diferente:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">LangChain / LangGraph</strong> &mdash; Flex&iacute;vel, grande ecossistema, bom para DAGs complexos. Curva de aprendizado alta</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">CrewAI</strong> &mdash; Otimizado para multi-agent com roles definidos. Simples de configurar, menos flex&iacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Anthropic Agent SDK</strong> &mdash; Tool use nativo, controle fino de safety. Ideal para agentes Claude</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">From scratch</strong> &mdash; M&aacute;ximo controle, m&aacute;ximo esfor&ccedil;o. Justific&aacute;vel quando frameworks n&atilde;o atendem</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Framework vs. From-Scratch</h3>
+                <p class="text-neutral-300 mb-4">Com Anthropic Agent SDK, criar um agente que busca dados, processa e gera relat&oacute;rio leva <strong class="text-white">~50 linhas de c&oacute;digo</strong>. Do zero, seriam 500+. Mas uma fintech construiu do zero porque precisava de:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Controle total</strong> sobre retry logic e circuit breakers</li>
+                    <li><strong class="text-white">Compliance</strong> &mdash; auditoria de cada decis&atilde;o do agente</li>
+                    <li><strong class="text-white">Performance</strong> &mdash; overhead do framework era inaceit&aacute;vel em p99</li>
+                </ul>
+                <p class="text-neutral-300 mt-3"><strong class="text-white">Regra:</strong> comece com framework, migre para custom quando tiver raz&atilde;o concreta.</p>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Cuidado com <strong class="text-white">vendor lock-in de frameworks</strong>. LangChain muda API frequentemente &mdash; abstraia a camada de agente do seu dom&iacute;nio. Se o framework mudar (e vai mudar), voc&ecirc; troca a implementa&ccedil;&atilde;o sem reescrever o neg&oacute;cio.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 3: Multi-Agent Systems ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128101; Multi-Agent Systems</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                M&uacute;ltiplos agentes especializados trabalhando juntos: um pesquisa, outro escreve, outro revisa, um coordena. Cada um com <strong class="text-violet-400">role e tools espec&iacute;ficos</strong>. Inspirado em como times humanos funcionam &mdash; especializa&ccedil;&atilde;o + colabora&ccedil;&atilde;o supera generalistas individuais.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Padr&otilde;es de Coordena&ccedil;&atilde;o</h3>
+                <p class="text-neutral-300 mb-4">Como agentes colaboram entre si:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Orchestrator</strong> &mdash; Um agente central coordena e delega tarefas para agentes especializados</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Pipeline</strong> &mdash; Agentes em sequ&ecirc;ncia: output de um &eacute; input do pr&oacute;ximo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Debate</strong> &mdash; Agentes argumentam entre si para chegar a uma resposta melhor</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Shared Memory</strong> &mdash; Agentes compartilham um estado global e reagem a mudan&ccedil;as</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Content Pipeline Multi-Agent</h3>
+                <p class="text-neutral-300 mb-4">Sistema de gera&ccedil;&atilde;o de conte&uacute;do com 4 agentes especializados:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Agente Pesquisador</strong> &mdash; Busca dados e fontes relevantes</li>
+                    <li><strong class="text-white">Agente Escritor</strong> &mdash; Gera o texto com base nas fontes</li>
+                    <li><strong class="text-white">Agente Revisor</strong> &mdash; Verifica fatos e qualidade</li>
+                    <li><strong class="text-white">Agente Editor</strong> &mdash; Formata e publica</li>
+                </ul>
+                <p class="text-neutral-300 mt-3">Qualidade superior a um &uacute;nico agente generalista. Cada agente usa o <strong class="text-white">modelo mais adequado</strong> para sua tarefa &mdash; Pesquisador com context window grande, Escritor criativo, Revisor preciso.</p>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Definir <strong class="text-white">roles claros</strong> para cada agente</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">protocolos expl&iacute;citos</strong> de comunica&ccedil;&atilde;o entre agentes</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Monitorar <strong class="text-white">custo por agente</strong> para identificar inefici&ecirc;ncias</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Criar <strong class="text-white">10 agentes quando 2 bastam</strong> &mdash; complexidade desneces&aacute;ria</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Deixar agentes em <strong class="text-white">loop infinito de debate</strong> sem crit&eacute;rio de parada</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar que multi-agent <strong class="text-white">multiplica custos de API</strong></span></li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 4: Pipelines de Processamento ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128260; Pipelines de Processamento</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Pipelines s&atilde;o <strong class="text-violet-400">sequ&ecirc;ncias determin&iacute;sticas de steps</strong> onde cada step pode ou n&atilde;o usar IA. Diferente de agentes que decidem dinamicamente o pr&oacute;ximo passo, pipelines seguem um fluxo fixo. S&atilde;o mais <strong class="text-violet-400">previs&iacute;veis, test&aacute;veis e baratos</strong> que agentes.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Anatomia de um Pipeline de IA</h3>
+                <p class="text-neutral-300 mb-4">Um pipeline t&iacute;pico combina steps determin&iacute;sticos com steps de IA:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Input &amp; Validation</strong> &mdash; Recebe dados e valida formato (determin&iacute;stico)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Enrichment</strong> &mdash; Enriquece com contexto via RAG ou API (IA)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Transform</strong> &mdash; Processa, classifica ou gera conte&uacute;do (IA)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Validate Output</strong> &mdash; Verifica consist&ecirc;ncia do resultado (determin&iacute;stico + IA)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Output</strong> &mdash; Salva, envia ou publica o resultado (determin&iacute;stico)</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Pipeline de Processamento de Curr&iacute;culos</h3>
+                <p class="text-neutral-300 mb-4">Pipeline em produ&ccedil;&atilde;o que processa 500 curr&iacute;culos/dia:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Step 1:</strong> PDF &rarr; OCR &rarr; texto extra&iacute;do (determin&iacute;stico)</li>
+                    <li><strong class="text-white">Step 2:</strong> Claude extrai campos estruturados: nome, experi&ecirc;ncia, skills (IA)</li>
+                    <li><strong class="text-white">Step 3:</strong> Valida formato JSON e campos obrigat&oacute;rios (determin&iacute;stico)</li>
+                    <li><strong class="text-white">Step 4:</strong> Claude classifica senioridade: junior/pleno/senior (IA)</li>
+                    <li><strong class="text-white">Step 5:</strong> Score &rarr; insere no banco &rarr; notifica recruiter (determin&iacute;stico)</li>
+                </ul>
+                <p class="text-neutral-300 mt-3">Cada step &eacute; <strong class="text-white">test&aacute;vel independentemente</strong>. Se step 2 falha, retry s&oacute; daquele step.</p>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use a regra: <strong class="text-white">&ldquo;Pipeline primeiro, agente s&oacute; se necess&aacute;rio.&rdquo;</strong> Pipelines cobrem 80% dos casos de uso de IA em produ&ccedil;&atilde;o. S&atilde;o mais f&aacute;ceis de debugar, monitorar e escalar. Reserve agentes para tarefas onde o caminho at&eacute; a solu&ccedil;&atilde;o realmente n&atilde;o &eacute; previs&iacute;vel.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 5: Memória para Agentes ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#128190; Mem&oacute;ria para Agentes</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Agentes sem mem&oacute;ria repetem erros e perdem contexto. Existem tr&ecirc;s tipos de mem&oacute;ria: <strong class="text-violet-400">curto prazo</strong> (context window), <strong class="text-violet-400">longo prazo</strong> (vector store) e <strong class="text-violet-400">epis&oacute;dica</strong> (banco de dados de experi&ecirc;ncias passadas).
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Tipos de Mem&oacute;ria</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Context Window (Curto prazo)</strong> &mdash; Hist&oacute;rico da conversa atual. Limitada por tokens. Desaparece entre sess&otilde;es</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Vector Store (Longo prazo)</strong> &mdash; Embeddings de informa&ccedil;&otilde;es persistentes. Recuperadas por similaridade sem&acirc;ntica</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Epis&oacute;dica</strong> &mdash; Registro de a&ccedil;&otilde;es passadas e seus resultados. Permite aprender com erros</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Summarization</strong> &mdash; Comprimir mem&oacute;ria longa em resumos para caber na context window</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: ChatGPT Memory</h3>
+                <p class="text-neutral-300 mb-4">O ChatGPT com Memory feature &eacute; o exemplo mais vis&iacute;vel de mem&oacute;ria para agentes:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Armazenamento:</strong> Prefer&ecirc;ncias do usu&aacute;rio em vector store &mdash; &ldquo;prefiro respostas curtas&rdquo;, &ldquo;sou dev Python&rdquo;</li>
+                    <li><strong class="text-white">Recupera&ccedil;&atilde;o:</strong> Automaticamente injeta mem&oacute;rias relevantes no prompt</li>
+                    <li><strong class="text-white">Resultado:</strong> Conversas futuras j&aacute; consideram contexto anterior sem o usu&aacute;rio repetir</li>
+                    <li><strong class="text-white">Trade-off:</strong> Mais tokens por request (custo) vs. melhor experi&ecirc;ncia do usu&aacute;rio</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Implemente mem&oacute;ria <strong class="text-white">incrementalmente</strong>: comece com context window puro, adicione summarization quando a conversa ficar longa, depois vector store para mem&oacute;ria entre sess&otilde;es. N&atilde;o comece com a solu&ccedil;&atilde;o mais complexa &mdash; valide primeiro se mem&oacute;ria realmente melhora a qualidade do output.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 6: Controle e Safety ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128737;&#65039; Controle e Safety</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Agentes sem limites podem executar a&ccedil;&otilde;es destrutivas em loop. <strong class="text-violet-400">Safety n&atilde;o &eacute; feature &mdash; &eacute; requisito arquitetural.</strong> Definir boundaries, limites de custo, n&uacute;mero m&aacute;ximo de itera&ccedil;&otilde;es e quando escalar para humano &eacute; t&atilde;o importante quanto a funcionalidade.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Camadas de Controle</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Action Whitelist</strong> &mdash; O agente s&oacute; pode executar a&ccedil;&otilde;es explicitamente permitidas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Cost Limits</strong> &mdash; Budget m&aacute;ximo por execu&ccedil;&atilde;o ($X por task)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Iteration Caps</strong> &mdash; N&uacute;mero m&aacute;ximo de loops antes de parar</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Sandbox</strong> &mdash; Ambiente isolado para a&ccedil;&otilde;es potencialmente destrutivas</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Human Escalation</strong> &mdash; Trigger autom&aacute;tico para aprova&ccedil;&atilde;o humana em a&ccedil;&otilde;es cr&iacute;ticas</span></li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Caso Real: Agente Destrutivo</h3>
+                <p class="text-neutral-300 mb-4">Um agente de c&oacute;digo sem sandbox deletou arquivos de produ&ccedil;&atilde;o ao tentar &ldquo;limpar&rdquo; o projeto:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Objetivo:</strong> &ldquo;Organize o projeto removendo arquivos desnecess&aacute;rios&rdquo;</li>
+                    <li><strong class="text-white">A&ccedil;&atilde;o:</strong> O agente interpretou logs e backups como &ldquo;desnecess&aacute;rios&rdquo; e deletou</li>
+                    <li><strong class="text-white">Impacto:</strong> Perda de dados de auditoria de 6 meses</li>
+                    <li><strong class="text-white">Solu&ccedil;&atilde;o:</strong> Sandbox obrigat&oacute;rio, whitelist de opera&ccedil;&otilde;es, confirma&ccedil;&atilde;o humana para dele&ccedil;&otilde;es</li>
+                </ul>
+            </div>
+
+            <!-- Dica Prática -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Implemente a regra dos <strong class="text-white">&ldquo;3 gates&rdquo;</strong> para agentes em produ&ccedil;&atilde;o: <strong class="text-white">1)</strong> Limite de custo por execu&ccedil;&atilde;o &mdash; pare se ultrapassar $X. <strong class="text-white">2)</strong> Limite de itera&ccedil;&otilde;es &mdash; pare ap&oacute;s N loops. <strong class="text-white">3)</strong> Confirma&ccedil;&atilde;o humana &mdash; para qualquer a&ccedil;&atilde;o que modifique dados de produ&ccedil;&atilde;o.</p>
+            </div>
+        </section>
+
+        <!-- ===== TÓPICO 7: Avaliando Performance ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#128202; Avaliando Performance</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-violet-400">&ldquo;Funciona &agrave;s vezes&rdquo; n&atilde;o &eacute; aceit&aacute;vel em produ&ccedil;&atilde;o.</strong> Agentes precisam de m&eacute;tricas concretas: taxa de conclus&atilde;o, steps por tarefa, custo por task, taxa de erro, satisfa&ccedil;&atilde;o do usu&aacute;rio. Sem medi&ccedil;&atilde;o, n&atilde;o h&aacute; como melhorar.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> M&eacute;tricas Essenciais para Agentes</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Task Completion Rate</strong> &mdash; % de tarefas completadas com sucesso</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Steps to Completion</strong> &mdash; Quantos steps o agente precisou (efici&ecirc;ncia)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Cost per Task</strong> &mdash; Quanto cada execu&ccedil;&atilde;o custa em tokens/API calls</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Error Rate</strong> &mdash; % de execu&ccedil;&otilde;es que falharam ou precisaram de interven&ccedil;&atilde;o</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Time to Complete</strong> &mdash; Lat&ecirc;ncia total da tarefa</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: SWE-bench</h3>
+                <p class="text-neutral-300 mb-4">O SWE-bench &eacute; o padr&atilde;o ouro para avaliar agentes de c&oacute;digo:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Dataset:</strong> 1000 issues reais do GitHub com testes</li>
+                    <li><strong class="text-white">M&eacute;trica:</strong> % de issues resolvidas corretamente (testes passam)</li>
+                    <li><strong class="text-white">Claude Code:</strong> Resolve 72%+ &mdash; medido, n&atilde;o estimado</li>
+                    <li><strong class="text-white">Valor:</strong> Benchmark reproduz&iacute;vel que permite comparar vers&otilde;es e detectar regress&otilde;es</li>
+                </ul>
+                <p class="text-neutral-300 mt-3"><strong class="text-white">Li&ccedil;&atilde;o:</strong> Crie seu pr&oacute;prio &ldquo;SWE-bench&rdquo; para seu dom&iacute;nio &mdash; tarefas reais com crit&eacute;rios objetivos de sucesso.</p>
+            </div>
+
+            <!-- Timeline: Como criar eval suite -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Criando sua Eval Suite em 4 Passos</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Colete tarefas reais</h4>
+                        <p class="text-neutral-300 text-sm">Pegue 50-100 tarefas reais que o agente deve resolver. Inclua varia&ccedil;&otilde;es de complexidade.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Defina crit&eacute;rios de sucesso</h4>
+                        <p class="text-neutral-300 text-sm">Para cada tarefa, o que significa &ldquo;correto&rdquo;? Testes automatizados, output esperado, checklist.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Automatize a execu&ccedil;&atilde;o</h4>
+                        <p class="text-neutral-300 text-sm">Script que roda o agente em todas as tarefas e coleta m&eacute;tricas: success/fail, steps, custo, tempo.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">4</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Rode em CI/CD</h4>
+                        <p class="text-neutral-300 text-sm">Integre no pipeline de deploy. Se a taxa de sucesso cair &gt;5%, bloqueie o release. Evals s&atilde;o os testes unit&aacute;rios da IA.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MÓDULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-violet-900/40 via-dark-800 to-dark-800 rounded-xl border border-violet-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Agentes planejam e agem</strong><span class="text-neutral-400"> &mdash; Diferente de chatbots, agentes executam a&ccedil;&otilde;es no mundo real via loop Plan-Act-Observe</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Frameworks aceleram</strong><span class="text-neutral-400"> &mdash; LangChain, CrewAI e Anthropic SDK abstraem complexidade, mas cuidado com vendor lock-in</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Multi-agent &eacute; poderoso mas caro</strong><span class="text-neutral-400"> &mdash; Agentes especializados colaboram melhor, mas multiplicam custos e complexidade</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Pipeline primeiro, agente se necess&aacute;rio</strong><span class="text-neutral-400"> &mdash; Pipelines s&atilde;o mais previs&iacute;veis, test&aacute;veis e baratos para 80% dos casos</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Mem&oacute;ria melhora qualidade</strong><span class="text-neutral-400"> &mdash; Context window, vector store e mem&oacute;ria epis&oacute;dica permitem agentes que aprendem</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Safety n&atilde;o &eacute; opcional</strong><span class="text-neutral-400"> &mdash; Whitelist, cost limits, iteration caps e sandbox s&atilde;o requisitos arquiteturais</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Me&ccedil;a tudo</strong><span class="text-neutral-400"> &mdash; Crie eval suites com tarefas reais e rode em CI/CD como testes de c&oacute;digo</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-violet-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">3.5 - &#128269; Governan&ccedil;a e Observabilidade de IA &mdash; Monitorar, auditar e governar sistemas inteligentes</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha</a>
+                    <a href="modulo-3-5.html" class="flex-1 text-center px-6 py-3 bg-violet-600 text-white rounded-lg font-semibold hover:bg-violet-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; Trilha 3: Arquitetura com IA e Automa&ccedil;&atilde;o</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

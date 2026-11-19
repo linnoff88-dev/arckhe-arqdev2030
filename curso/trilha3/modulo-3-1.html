@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 3.1 - Arquitetura IA-First | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+
+        /* Violet accent */
+        html:not(.dark) .text-violet-400 { color: #7c3aed; }
+        html:not(.dark) .bg-violet-500\/20 { background-color: rgba(124, 58, 237, 0.12); }
+        html:not(.dark) .bg-violet-500\/10 { background-color: rgba(124, 58, 237, 0.08); }
+        html:not(.dark) .border-violet-500\/30 { border-color: rgba(124, 58, 237, 0.25); }
+        html:not(.dark) .hover\:bg-violet-500\/30:hover { background-color: rgba(124, 58, 237, 0.18); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-blue-400 { color: #1d4ed8; }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.2); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+
+        /* Other trilha colors for nav */
+        html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+        html:not(.dark) .text-amber-400 { color: #92400e; }
+        html:not(.dark) .hover\:bg-amber-500\/10:hover { background-color: rgba(217, 119, 6, 0.08); }
+        html:not(.dark) .text-teal-400 { color: #0d9488; }
+        html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .text-rose-400 { color: #9f1239; }
+        html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(225, 29, 72, 0.08); }
+
+        /* Violet button */
+        html:not(.dark) .bg-violet-600 { background-color: #7c3aed; }
+        html:not(.dark) .hover\:bg-violet-500:hover { background-color: #6d28d9; }
+        html:not(.dark) .bg-violet-900\/20 { background-color: rgba(124, 58, 237, 0.06); }
+        html:not(.dark) .bg-violet-900\/30 { background-color: rgba(124, 58, 237, 0.08); }
+        html:not(.dark) .bg-violet-900\/40 { background-color: rgba(124, 58, 237, 0.1); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <div class="flex items-center gap-3">
+                    <a href="../../index.html" class="text-yellow-400 font-bold text-lg hover:text-yellow-300 transition-colors">&#127959;&#65039; Arquitetura DEV 2030</a>
+                    <span class="text-neutral-500">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center gap-1">
+                    <a href="../trilha1/index.html" class="px-2 py-1 text-xs font-medium text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
+                    <a href="../trilha2/index.html" class="px-2 py-1 text-xs font-medium text-blue-400 hover:bg-blue-500/10 rounded transition-colors"><span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span></a>
+                    <a href="index.html" class="px-2 py-1 text-xs font-medium text-violet-400 bg-violet-500/10 rounded transition-colors"><span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span></a>
+                    <a href="../trilha4/index.html" class="px-2 py-1 text-xs font-medium text-amber-400 hover:bg-amber-500/10 rounded transition-colors"><span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span></a>
+                    <a href="../trilha5/index.html" class="px-2 py-1 text-xs font-medium text-teal-400 hover:bg-teal-500/10 rounded transition-colors"><span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span></a>
+                    <a href="../trilha6/index.html" class="px-2 py-1 text-xs font-medium text-rose-400 hover:bg-rose-500/10 rounded transition-colors"><span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span></a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="ml-3 p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-4 h-4 text-neutral-400" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-4 h-4 text-neutral-400" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-violet-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-violet-400 transition-colors">Trilha 3</a>
+            <span>/</span>
+            <span class="text-violet-400 font-medium">M&oacute;dulo 3.1</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-violet-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-violet-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-violet-500/20 text-violet-400 border border-violet-500/30">
+                    M&Oacute;DULO 3.1
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#129504; Arquitetura IA-First
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Quando a IA &eacute; o core do sistema, n&atilde;o apenas um feature. Neste m&oacute;dulo, voc&ecirc; vai entender como projetar sistemas que nascem em torno de modelos de IA, lidando com tokens, lat&ecirc;ncia, seguran&ccedil;a e observabilidade desde o dia zero.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">Interm.</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-violet-400">Estrat&eacute;gia</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== TOPICO 1: O que e IA-First ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#129302; O que &eacute; IA-First</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                IA-First n&atilde;o significa &ldquo;usar IA em tudo&rdquo;. Significa <strong class="text-violet-400">projetar o sistema em torno do modelo de IA como componente central</strong>, n&atilde;o como feature adicionado depois. A diferen&ccedil;a &eacute; estrutural: a IA define a arquitetura, os fluxos de dados e as interfaces &mdash; tudo gira em torno dela.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Conceito Principal</h3>
+                <p class="text-neutral-300 mb-4">A diferen&ccedil;a entre &ldquo;sistema com IA&rdquo; e &ldquo;sistema IA-First&rdquo;:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Sistema com IA</strong> &mdash; CRUD tradicional que chama uma API de IA para enriquecer dados (ex: autocomplete)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Sistema IA-First</strong> &mdash; O modelo &eacute; o core: sem ele, o produto n&atilde;o existe (ex: ChatGPT, Copilot, Midjourney)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Implica&ccedil;&atilde;o arquitetural</strong> &mdash; IA-First exige pensar em lat&ecirc;ncia de infer&ecirc;ncia, custo por requisi&ccedil;&atilde;o, cache de respostas e fallbacks desde o design</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: GitHub Copilot</h3>
+                <p class="text-neutral-300 mb-4">O Copilot &eacute; um exemplo perfeito de arquitetura IA-First:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Core:</strong> Modelo Codex/GPT-4 &mdash; sem ele, o produto n&atilde;o existe</li>
+                    <li><strong class="text-white">Lat&ecirc;ncia:</strong> Precisa responder em &lt;500ms para n&atilde;o atrapalhar o fluxo do dev</li>
+                    <li><strong class="text-white">Custo:</strong> Cada sugest&atilde;o custa tokens &mdash; GitHub perdeu US$20+/usu&aacute;rio/m&ecirc;s no in&iacute;cio</li>
+                    <li><strong class="text-white">Arquitetura:</strong> Streaming, cache agressivo, modelos menores para sugest&otilde;es simples</li>
+                </ul>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Definir <strong class="text-white">SLAs espec&iacute;ficos para infer&ecirc;ncia</strong> (lat&ecirc;ncia, throughput)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Projetar <strong class="text-white">fallbacks</strong> para quando o modelo falhar ou demorar</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Calcular <strong class="text-white">custo por requisi&ccedil;&atilde;o</strong> desde o dia 1</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Tratar a API de IA como <strong class="text-white">qualquer outro microservi&ccedil;o</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar que <strong class="text-white">modelos s&atilde;o n&atilde;o-determin&iacute;sticos</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Lan&ccedil;ar sem <strong class="text-white">rate limiting e controle de custos</strong></span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Antes de come&ccedil;ar qualquer projeto IA-First, fa&ccedil;a a conta: <strong class="text-white">&ldquo;Se cada usu&aacute;rio fizer X requisi&ccedil;&otilde;es/dia, quanto vou gastar com tokens por m&ecirc;s?&rdquo;</strong> Se o custo de infer&ecirc;ncia for maior que a receita por usu&aacute;rio, voc&ecirc; tem um problema de modelo de neg&oacute;cio, n&atilde;o de arquitetura.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 2: Padroes de Integracao com LLMs ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#128279; Padr&otilde;es de Integra&ccedil;&atilde;o com LLMs</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Existem m&uacute;ltiplas formas de integrar LLMs na arquitetura. Cada padr&atilde;o tem <strong class="text-violet-400">trade-offs de custo, lat&ecirc;ncia e controle</strong>. Escolher o padr&atilde;o certo depende do caso de uso, do volume de requisi&ccedil;&otilde;es e do n&iacute;vel de personaliza&ccedil;&atilde;o necess&aacute;rio.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Padr&otilde;es Arquiteturais para LLMs</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">API Gateway + LLM</strong> &mdash; Chamada direta via API (OpenAI, Anthropic). Simples, mas sem controle sobre o modelo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Proxy/Router de Modelos</strong> &mdash; Camada intermedi&aacute;ria que roteia entre provedores (LiteLLM, OpenRouter)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Self-hosted</strong> &mdash; Modelos open-source rodando na pr&oacute;pria infra (Ollama, vLLM). M&aacute;ximo controle, m&aacute;ximo custo operacional</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Hybrid</strong> &mdash; Modelos leves locais para tarefas simples, APIs externas para tarefas complexas</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Compara&ccedil;&atilde;o de Abordagens</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">API externa:</strong> Lat&ecirc;ncia ~500ms-2s, custo por token, zero ops, vendor lock-in</li>
+                    <li><strong class="text-white">Self-hosted:</strong> Lat&ecirc;ncia ~100-500ms, custo fixo de GPU, total controle, alta complexidade ops</li>
+                    <li><strong class="text-white">H&iacute;brido:</strong> Melhor custo-benef&iacute;cio para escala, complexidade m&eacute;dia, flexibilidade m&aacute;xima</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use um <strong class="text-white">proxy de modelos</strong> (como LiteLLM) desde o in&iacute;cio. Isso permite trocar de provedor sem mudar c&oacute;digo, implementar fallback autom&aacute;tico e monitorar custos centralizadamente. &Eacute; a &ldquo;camada anti-corrup&ccedil;&atilde;o&rdquo; do mundo de IA.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 3: Economia de Tokens ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#128176; Economia de Tokens</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Em sistemas IA-First, <strong class="text-violet-400">tokens s&atilde;o a moeda principal</strong>. Cada prompt, cada resposta, cada retry consome tokens &mdash; e tokens custam dinheiro. Otimizar o uso de tokens &eacute; t&atilde;o cr&iacute;tico quanto otimizar queries de banco de dados em sistemas tradicionais.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Estrat&eacute;gias de Otimiza&ccedil;&atilde;o</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Prompt caching</strong> &mdash; Reutilizar prefixos de prompt para reduzir tokens de input (Anthropic, OpenAI suportam nativamente)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Semantic caching</strong> &mdash; Cachear respostas para perguntas semanticamente similares (n&atilde;o apenas id&ecirc;nticas)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Model routing</strong> &mdash; Usar modelos baratos para tarefas simples, modelos caros s&oacute; quando necess&aacute;rio</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Prompt compression</strong> &mdash; Reduzir o tamanho do contexto sem perder informa&ccedil;&atilde;o relevante</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Alerta: Custos Escalam R&aacute;pido</h3>
+                <p class="text-neutral-300 mb-4">Uma startup com 10k usu&aacute;rios ativos fazendo 20 requisi&ccedil;&otilde;es/dia com GPT-4:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">200k requisi&ccedil;&otilde;es/dia</strong> &times; ~2k tokens/req = 400M tokens/dia</li>
+                    <li><strong class="text-white">Custo estimado:</strong> US$4.000-12.000/dia dependendo do modelo</li>
+                    <li><strong class="text-white">Sem otimiza&ccedil;&atilde;o:</strong> US$120k-360k/m&ecirc;s s&oacute; em infer&ecirc;ncia</li>
+                    <li><strong class="text-white">Com cache + routing:</strong> Redu&ccedil;&atilde;o de 40-70% dos custos</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Implemente <strong class="text-white">budget alerts por usu&aacute;rio e por endpoint</strong> desde o MVP. Defina limites de tokens por requisi&ccedil;&atilde;o (max_tokens) e por usu&aacute;rio/dia. Um usu&aacute;rio abusivo pode consumir todo seu budget mensal em horas se n&atilde;o houver controle.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 4: Guardrails e Safety ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128737;&#65039; Guardrails e Safety</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                LLMs s&atilde;o <strong class="text-violet-400">poderosos mas imprevis&iacute;veis</strong>. Sem guardrails, podem gerar conte&uacute;do t&oacute;xico, vazar dados sens&iacute;veis do contexto, executar a&ccedil;&otilde;es n&atilde;o autorizadas ou simplesmente alucinar. Guardrails s&atilde;o camadas de valida&ccedil;&atilde;o que protegem usu&aacute;rios e neg&oacute;cio.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Camadas de Prote&ccedil;&atilde;o</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Input validation</strong> &mdash; Filtrar prompts maliciosos (prompt injection, jailbreak) antes de enviar ao modelo</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Output validation</strong> &mdash; Verificar se a resposta est&aacute; dentro do formato esperado e n&atilde;o cont&eacute;m dados sens&iacute;veis</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Scope limiting</strong> &mdash; Restringir as a&ccedil;&otilde;es que o modelo pode executar (tools/functions dispon&iacute;veis)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Human-in-the-loop</strong> &mdash; Exigir aprova&ccedil;&atilde;o humana para a&ccedil;&otilde;es cr&iacute;ticas (deletar dados, enviar emails, transa&ccedil;&otilde;es)</span></li>
+                </ul>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Implementar <strong class="text-white">detec&ccedil;&atilde;o de prompt injection</strong> na entrada</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">structured outputs</strong> (JSON schema) para validar respostas</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Logar <strong class="text-white">100% das intera&ccedil;&otilde;es</strong> para auditoria</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Confiar no <strong class="text-white">system prompt como barreira de seguran&ccedil;a</strong></span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Dar ao modelo <strong class="text-white">acesso irrestrito</strong> a banco de dados ou APIs</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Exibir respostas do modelo <strong class="text-white">sem sanitiza&ccedil;&atilde;o</strong> no frontend</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Use bibliotecas como <strong class="text-white">Guardrails AI, NeMo Guardrails ou Rebuff</strong> para implementar valida&ccedil;&otilde;es de input/output. N&atilde;o reinvente a roda &mdash; prompt injection &eacute; um campo de pesquisa ativo e evolui constantemente.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 5: Latencia e Streaming ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#9889; Lat&ecirc;ncia e Streaming</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                LLMs s&atilde;o <strong class="text-violet-400">inerentemente lentos</strong>. Uma resposta de 500 tokens pode levar 3-10 segundos para gerar. Em UX, esperar 10 segundos por uma tela branca &eacute; inaceit&aacute;vel. Streaming &eacute; a solu&ccedil;&atilde;o: enviar tokens conforme s&atilde;o gerados, n&atilde;o esperar a resposta completa.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Estrat&eacute;gias para Lat&ecirc;ncia</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Server-Sent Events (SSE)</strong> &mdash; Streaming token a token via HTTP. Simples, amplamente suportado</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">WebSockets</strong> &mdash; Conex&atilde;o bidirecional para intera&ccedil;&otilde;es complexas (chat, voz)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Speculative execution</strong> &mdash; Come&ccedil;ar a gerar a resposta enquanto o usu&aacute;rio ainda digita</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Modelos menores como filtro</strong> &mdash; Usar modelo r&aacute;pido para classificar antes de chamar o modelo pesado</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> M&eacute;tricas de Lat&ecirc;ncia para IA</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">TTFB (Time to First Byte):</strong> Tempo at&eacute; o primeiro token chegar &mdash; meta: &lt;500ms</li>
+                    <li><strong class="text-white">TPS (Tokens Per Second):</strong> Velocidade de gera&ccedil;&atilde;o &mdash; GPT-4: ~30-80 TPS, modelos locais: 10-50 TPS</li>
+                    <li><strong class="text-white">E2E Latency:</strong> Tempo total da requisi&ccedil;&atilde;o &mdash; depende do tamanho da resposta</li>
+                    <li><strong class="text-white">Percep&ccedil;&atilde;o:</strong> Com streaming, usu&aacute;rio percebe lat&ecirc;ncia de 300ms mesmo que a resposta leve 8s</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300"><strong class="text-white">Sempre use streaming por padr&atilde;o.</strong> N&atilde;o existe raz&atilde;o para esperar a resposta completa em interfaces de usu&aacute;rio. Para APIs m&aacute;quina-a-m&aacute;quina, avalie caso a caso &mdash; parsing de streaming JSON &eacute; mais complexo que esperar a resposta completa.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 6: Fallback e Resiliencia ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#128256; Fallback e Resili&ecirc;ncia</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                APIs de IA falham. Modelos ficam lentos. Rate limits s&atilde;o atingidos. <strong class="text-violet-400">Sistemas IA-First precisam funcionar mesmo quando a IA n&atilde;o funciona.</strong> Isso exige uma estrat&eacute;gia de fallback bem definida: o que acontece quando o modelo principal n&atilde;o responde?
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Estrat&eacute;gias de Fallback</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Model fallback chain</strong> &mdash; GPT-4 &rarr; Claude &rarr; Llama local &rarr; resposta cached &rarr; mensagem gen&eacute;rica</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Circuit breaker</strong> &mdash; Parar de chamar um provedor que est&aacute; falhando e redirecionar automaticamente</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Graceful degradation</strong> &mdash; Oferecer funcionalidade reduzida em vez de erro total</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Retry com backoff</strong> &mdash; Retentar com intervalos crescentes para erros transit&oacute;rios (429, 503)</span></li>
+                </ul>
+            </div>
+
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: OpenAI Outage</h3>
+                <p class="text-neutral-300 mb-4">Em 2024, a OpenAI teve m&uacute;ltiplos outages que afetaram milh&otilde;es de aplica&ccedil;&otilde;es:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Apps sem fallback:</strong> Ficaram completamente fora do ar durante horas</li>
+                    <li><strong class="text-white">Apps com fallback:</strong> Redirecionaram para Anthropic/modelos locais em segundos</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> Nunca dependa de um &uacute;nico provedor de IA em produ&ccedil;&atilde;o</li>
+                </ul>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Implemente um <strong class="text-white">health check cont&iacute;nuo</strong> para cada provedor de IA. Mande um prompt de teste a cada 30 segundos e me&ccedil;a lat&ecirc;ncia. Se a lat&ecirc;ncia ultrapassar o threshold, ative o circuit breaker antes que os usu&aacute;rios percebam o problema.</p>
+            </div>
+        </section>
+
+        <!-- ===== TOPICO 7: Observabilidade de IA ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-violet-500/20 text-violet-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#128270; Observabilidade de IA</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Observabilidade em sistemas de IA &eacute; <strong class="text-violet-400">fundamentalmente diferente</strong> de sistemas tradicionais. Al&eacute;m de m&eacute;tricas de infra (CPU, mem&oacute;ria, lat&ecirc;ncia), voc&ecirc; precisa monitorar qualidade das respostas, custos de tokens, drift de comportamento e feedback dos usu&aacute;rios.
+            </p>
+
+            <div class="bg-gradient-to-br from-violet-900/30 to-dark-800 rounded-xl border border-violet-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-violet-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Pilares da Observabilidade de IA</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Traces de LLM</strong> &mdash; Rastrear cada requisi&ccedil;&atilde;o: prompt, resposta, tokens, lat&ecirc;ncia, custo (Langfuse, Langsmith)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Avalia&ccedil;&atilde;o de qualidade</strong> &mdash; M&eacute;tricas autom&aacute;ticas (relev&acirc;ncia, groundedness) e feedback humano</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Dashboards de custo</strong> &mdash; Custo por usu&aacute;rio, por feature, por modelo, por dia</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-violet-400 mt-1">&bull;</span><span><strong class="text-white">Alertas de drift</strong> &mdash; Detectar quando a qualidade das respostas degrada (model drift, data drift)</span></li>
+                </ul>
+            </div>
+
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; Stack de Observabilidade para IA</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Logging estruturado</h4>
+                        <p class="text-neutral-300 text-sm">Logar prompt, resposta, modelo, tokens (input/output), lat&ecirc;ncia e custo em formato JSON. Ferramenta: Langfuse, Helicone.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">M&eacute;tricas de neg&oacute;cio</h4>
+                        <p class="text-neutral-300 text-sm">Taxa de aceita&ccedil;&atilde;o das sugest&otilde;es, NPS de respostas, taxa de escalation para humano. Dashboard: Grafana, Datadog.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-violet-500/20 flex items-center justify-center">
+                        <span class="text-violet-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Avalia&ccedil;&atilde;o cont&iacute;nua</h4>
+                        <p class="text-neutral-300 text-sm">Rodar evals autom&aacute;ticos periodicamente com dataset de refer&ecirc;ncia. Comparar vers&otilde;es de prompts. Ferramenta: Promptfoo, Braintrust.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Implemente <strong class="text-white">Langfuse ou Helicone no dia 1</strong>. S&atilde;o open-source e levam minutos para integrar. Sem observabilidade, voc&ecirc; n&atilde;o sabe se seu sistema de IA est&aacute; funcionando bem &mdash; sabe apenas que est&aacute; funcionando.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO MODULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-violet-900/40 via-dark-800 to-dark-800 rounded-xl border border-violet-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">IA-First &eacute; estrutural, n&atilde;o funcional</strong><span class="text-neutral-400"> &mdash; O modelo define a arquitetura, n&atilde;o &eacute; adicionado depois</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Padr&otilde;es de integra&ccedil;&atilde;o variam</strong><span class="text-neutral-400"> &mdash; API direta, proxy, self-hosted ou h&iacute;brido &mdash; cada um com trade-offs claros</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Tokens s&atilde;o dinheiro</strong><span class="text-neutral-400"> &mdash; Otimize com caching, routing e compression desde o MVP</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Guardrails n&atilde;o s&atilde;o opcionais</strong><span class="text-neutral-400"> &mdash; Valide input e output, limite scope, implemente human-in-the-loop</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Streaming &eacute; obrigat&oacute;rio para UX</strong><span class="text-neutral-400"> &mdash; Usu&aacute;rios n&atilde;o esperam 10s por uma tela branca</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Nunca dependa de um provedor</strong><span class="text-neutral-400"> &mdash; Fallback chain e circuit breaker s&atilde;o essenciais</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-violet-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Observabilidade de IA vai al&eacute;m de infra</strong><span class="text-neutral-400"> &mdash; Monitore qualidade, custo e drift continuamente</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-violet-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">3.2 - &#128279; Padr&otilde;es para LLMs em Produ&ccedil;&atilde;o &mdash; RAG, Function Calling, Agent Loops e mais</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha</a>
+                    <a href="modulo-3-2.html" class="flex-1 text-center px-6 py-3 bg-violet-600 text-white rounded-lg font-semibold hover:bg-violet-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-700 mt-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <p class="text-center text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; 2026</p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>

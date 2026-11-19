@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M&oacute;dulo 4.4 - Frontend e Experi&ecirc;ncia | Arquitetura DEV 2030</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FACC15',
+                        dark: {
+                            900: '#111827',
+                            800: '#1f2937',
+                            700: '#374151',
+                            600: '#4b5563'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .dark body { background-color: #111827; }
+
+        /* Light mode styles */
+        html:not(.dark) body { background-color: #f8fafc; }
+        html:not(.dark) .bg-dark-900 { background-color: #ffffff; }
+        html:not(.dark) .bg-dark-800 { background-color: #f9fafb; }
+        html:not(.dark) .bg-dark-700 { background-color: #f3f4f6; }
+        html:not(.dark) .bg-dark-600 { background-color: #e5e7eb; }
+        html:not(.dark) .text-neutral-100 { color: #111827; }
+        html:not(.dark) .text-neutral-300 { color: #4b5563; }
+        html:not(.dark) .text-neutral-400 { color: #6b7280; }
+        html:not(.dark) .text-neutral-500 { color: #9ca3af; }
+        html:not(.dark) .border-dark-600 { border-color: #d1d5db; }
+        html:not(.dark) .border-dark-700 { border-color: #e5e7eb; }
+        html:not(.dark) .text-amber-400 { color: #92400e; }
+        html:not(.dark) .bg-amber-500\/20 { background-color: rgba(217, 119, 6, 0.12); }
+        html:not(.dark) .bg-amber-500\/10 { background-color: rgba(217, 119, 6, 0.08); }
+        html:not(.dark) .border-amber-500\/30 { border-color: rgba(217, 119, 6, 0.25); }
+        html:not(.dark) .hover\:bg-amber-500\/30:hover { background-color: rgba(217, 119, 6, 0.18); }
+        html:not(.dark) .text-emerald-400 { color: #059669; }
+        html:not(.dark) .hover\:bg-emerald-500\/10:hover { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .text-blue-400 { color: #2563eb; }
+        html:not(.dark) .hover\:bg-blue-500\/10:hover { background-color: rgba(37, 99, 235, 0.08); }
+        html:not(.dark) .text-violet-400 { color: #7c3aed; }
+        html:not(.dark) .hover\:bg-violet-500\/10:hover { background-color: rgba(124, 58, 237, 0.08); }
+        html:not(.dark) .text-teal-400 { color: #0d9488; }
+        html:not(.dark) .hover\:bg-teal-500\/10:hover { background-color: rgba(13, 148, 136, 0.08); }
+        html:not(.dark) .text-rose-400 { color: #9f1239; }
+        html:not(.dark) .hover\:bg-rose-500\/10:hover { background-color: rgba(225, 29, 72, 0.08); }
+        html:not(.dark) .hover\:bg-dark-700\/50:hover { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/50 { background-color: rgba(243, 244, 246, 0.5); }
+        html:not(.dark) .bg-dark-700\/30 { background-color: rgba(243, 244, 246, 0.3); }
+        html:not(.dark) [class*="bg-gradient-to"] { background-image: none !important; }
+        html:not(.dark) .text-primary { color: #a16207; }
+        html:not(.dark) .bg-primary\/10 { background-color: rgba(161, 98, 7, 0.08); }
+        html:not(.dark) .border-primary\/40 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .border-primary\/30 { border-color: rgba(161, 98, 7, 0.25); }
+        html:not(.dark) .text-sky-400 { color: #0369a1; }
+        html:not(.dark) .text-yellow-400 { color: #a16207; }
+        html:not(.dark) .hover\:text-sky-300:hover { color: #0284c7; }
+        html:not(.dark) .hover\:text-yellow-300:hover { color: #854d0e; }
+        html:not(.dark) .bg-dark-900\/95 { background-color: rgba(255, 255, 255, 0.95); }
+        html:not(.dark) .bg-dark-800\/50 { background-color: rgba(249, 250, 251, 0.5); }
+        html:not(.dark) .text-red-400 { color: #dc2626; }
+        html:not(.dark) .bg-blue-900\/20 { background-color: rgba(29, 78, 216, 0.06); }
+        html:not(.dark) .border-blue-500\/30 { border-color: rgba(29, 78, 216, 0.2); }
+        html:not(.dark) .bg-emerald-900\/20 { background-color: rgba(5, 150, 105, 0.06); }
+        html:not(.dark) .bg-emerald-900\/30 { background-color: rgba(5, 150, 105, 0.08); }
+        html:not(.dark) .border-emerald-500\/30 { border-color: rgba(5, 150, 105, 0.2); }
+        html:not(.dark) .bg-red-900\/20 { background-color: rgba(220, 38, 38, 0.06); }
+        html:not(.dark) .border-red-500\/30 { border-color: rgba(220, 38, 38, 0.2); }
+        html:not(.dark) .bg-amber-900\/30 { background-color: rgba(217, 119, 6, 0.08); }
+        html:not(.dark) .bg-amber-900\/40 { background-color: rgba(217, 119, 6, 0.1); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-dark-900 text-neutral-100 min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-dark-900/95 backdrop-blur-sm border-b border-dark-600">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-14">
+                <div class="flex items-center space-x-4">
+                    <a href="../../index.html" class="flex items-center space-x-2 text-yellow-400 hover:text-yellow-300">
+                        <span class="text-2xl">&#127959;&#65039;</span>
+                        <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
+                    </a>
+                    <span class="text-neutral-600">|</span>
+                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                </div>
+                <div class="flex items-center space-x-1 sm:space-x-2">
+                    <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
+                        <span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span>
+                    </a>
+                    <a href="../trilha2/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-blue-400 hover:bg-blue-500/10 transition-colors">
+                        <span class="sm:hidden">T2</span><span class="hidden sm:inline">Decis&atilde;o</span>
+                    </a>
+                    <a href="../trilha3/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-violet-400 hover:bg-violet-500/10 transition-colors">
+                        <span class="sm:hidden">T3</span><span class="hidden sm:inline">IA</span>
+                    </a>
+                    <a href="index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-amber-400 bg-amber-500/10">
+                        <span class="sm:hidden">T4</span><span class="hidden sm:inline">Pr&aacute;tica</span>
+                    </a>
+                    <a href="../trilha5/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-teal-400 hover:bg-teal-500/10 transition-colors">
+                        <span class="sm:hidden">T5</span><span class="hidden sm:inline">DevOps</span>
+                    </a>
+                    <a href="../trilha6/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors">
+                        <span class="sm:hidden">T6</span><span class="hidden sm:inline">Escala</span>
+                    </a>
+                    <!-- Theme Toggle -->
+                    <button id="theme-toggle" class="p-2 rounded-lg bg-dark-700 hover:bg-dark-600 transition-colors ml-2">
+                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5 text-neutral-300" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <nav class="flex items-center space-x-2 text-sm text-neutral-400">
+            <a href="../../index.html" class="hover:text-amber-400 transition-colors">In&iacute;cio</a>
+            <span>/</span>
+            <a href="index.html" class="hover:text-amber-400 transition-colors">Trilha 4</a>
+            <span>/</span>
+            <span class="text-amber-400 font-medium">M&oacute;dulo 4.4</span>
+        </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="relative overflow-hidden bg-gradient-to-br from-amber-900/30 via-dark-900 to-dark-900 border-b border-dark-600">
+        <div class="absolute inset-0 bg-gradient-to-r from-amber-500/5 to-transparent"></div>
+        <div class="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="flex flex-col items-start gap-6">
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                    M&Oacute;DULO 4.4
+                </span>
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-neutral-100 leading-tight">
+                    &#127912; Frontend e Experi&ecirc;ncia
+                </h1>
+                <p class="text-lg text-neutral-300 max-w-3xl leading-relaxed">
+                    Interfaces que funcionam para todos, em qualquer dispositivo, com performance de verdade. Neste m&oacute;dulo, voc&ecirc; vai entender quando HTML est&aacute;tico basta, quando SPAs se justificam, como criar design systems, e como garantir acessibilidade e performance no frontend.
+                </p>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 w-full max-w-2xl">
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-amber-400">7</div>
+                        <div class="text-sm text-neutral-400 mt-1">T&oacute;picos</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-amber-400">35 min</div>
+                        <div class="text-sm text-neutral-400 mt-1">Dura&ccedil;&atilde;o</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-amber-400">Pr&aacute;tico</div>
+                        <div class="text-sm text-neutral-400 mt-1">N&iacute;vel</div>
+                    </div>
+                    <div class="bg-dark-800 rounded-xl p-4 border border-dark-600 text-center">
+                        <div class="text-2xl font-bold text-amber-400">Execu&ccedil;&atilde;o</div>
+                        <div class="text-sm text-neutral-400 mt-1">Tipo</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- ===== T&Oacute;PICO 1: HTML Est&aacute;tico ===== -->
+        <section id="topico-1" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">1</span>
+                <h2 class="text-2xl font-bold">&#128196; HTML Est&aacute;tico</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                O frontend mais r&aacute;pido e confi&aacute;vel que existe &eacute; o que <strong class="text-amber-400">n&atilde;o precisa de JavaScript para funcionar</strong>. P&aacute;ginas HTML puras servidas via CDN carregam em menos de 1 segundo em qualquer conex&atilde;o, custam centavos para hospedar e s&atilde;o imunes a bugs de bundle, hydration e state management. Para 80% dos sites, SPA &eacute; overkill.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Conceito Principal</h3>
+                <p class="text-neutral-300 mb-4">HTML est&aacute;tico funciona em tr&ecirc;s abordagens modernas:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Static Site Generators</strong> &mdash; Astro, Hugo, 11ty geram HTML em build time a partir de templates e conte&uacute;do</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Progressive Enhancement</strong> &mdash; HTML funciona sem JS, JavaScript melhora a experi&ecirc;ncia quando dispon&iacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">CDN-first</strong> &mdash; Deploy direto para edge (Cloudflare Pages, Vercel, Netlify) com cache global</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Tailwind CSS Docs</h3>
+                <p class="text-neutral-300 mb-4">A documenta&ccedil;&atilde;o do Tailwind CSS serve milh&otilde;es de page views por m&ecirc;s como HTML est&aacute;tico:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Gera&ccedil;&atilde;o:</strong> HTML gerado em build time &mdash; zero servidor, zero runtime JS obrigat&oacute;rio</li>
+                    <li><strong class="text-white">Performance:</strong> LCP &lt; 0.8s, perfeito no Core Web Vitals</li>
+                    <li><strong class="text-white">Custo:</strong> Centavos por m&ecirc;s via CDN, mesmo com tr&aacute;fego massivo</li>
+                    <li><strong class="text-white">Li&ccedil;&atilde;o:</strong> A pr&oacute;pria INEMA serve cursos como HTML est&aacute;tico &mdash; zero bundle, zero build, zero framework</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar HTML est&aacute;tico para <strong class="text-white">sites de conte&uacute;do</strong>: docs, blogs, landing pages, portf&oacute;lios</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Combinar <strong class="text-white">Tailwind CSS</strong> para estiliza&ccedil;&atilde;o r&aacute;pida sem CSS custom</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Adicionar interatividade com <strong class="text-white">Alpine.js ou vanilla JS</strong> onde necess&aacute;rio</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar React para um <strong class="text-white">site institucional</strong> de 5 p&aacute;ginas</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Servir HTML est&aacute;tico via <strong class="text-white">servidor Node.js</strong> em vez de CDN</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">semantic HTML</strong> e usar divs para tudo</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Pr&aacute;tica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Antes de escolher um framework frontend, pergunte: <strong class="text-white">&ldquo;O usu&aacute;rio precisa interagir com esta p&aacute;gina al&eacute;m de ler e clicar em links?&rdquo;</strong> Se a resposta for n&atilde;o, HTML est&aacute;tico + Tailwind CSS &eacute; a melhor arquitetura. Mais r&aacute;pido de construir, mais r&aacute;pido de carregar, mais barato de manter.</p>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 2: Quando usar SPA ===== -->
+        <section id="topico-2" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">2</span>
+                <h2 class="text-2xl font-bold">&#9883;&#65039; Quando usar SPA</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Single Page Applications (React, Vue, Svelte) adicionam <strong class="text-amber-400">complexidade significativa</strong>: build pipelines, bundle size, hydration, state management, roteamento client-side. Essa complexidade s&oacute; se justifica quando a interface exige alta interatividade: dashboards, editores visuais, aplica&ccedil;&otilde;es real-time.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> SPA vs. MPA vs. Hybrid</h3>
+                <p class="text-neutral-300 mb-4">Cada modelo tem seu lugar:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">MPA (Multi-Page App)</strong> &mdash; Cada p&aacute;gina &eacute; um request ao servidor. Ideal para conte&uacute;do. Rails, Django, Laravel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">SPA (Single-Page App)</strong> &mdash; Uma p&aacute;gina que muda via JS. Ideal para apps interativos. React, Vue, Svelte</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Hybrid (SSR + CSR)</strong> &mdash; Server-side render no primeiro load, client-side depois. Next.js, Nuxt, SvelteKit</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Islands Architecture</strong> &mdash; HTML est&aacute;tico com &ldquo;ilhas&rdquo; interativas. Astro, Fresh. O melhor dos dois mundos</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Figma vs. Blog</h3>
+                <p class="text-neutral-300 mb-4">A escolha de SPA vs. est&aacute;tico depende fundamentalmente do tipo de intera&ccedil;&atilde;o:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Figma PRECISA ser SPA</strong> &mdash; Editor visual com colabora&ccedil;&atilde;o real-time, drag-and-drop, state complexo. Imposs&iacute;vel sem SPA</li>
+                    <li><strong class="text-white">Um blog N&Atilde;O precisa</strong> &mdash; Texto, imagens e links. React para isso &eacute; carregar 200KB de JS para servir texto est&aacute;tico</li>
+                    <li><strong class="text-white">Regra pr&aacute;tica:</strong> Se o usu&aacute;rio s&oacute; l&ecirc; e clica, use MPA/est&aacute;tico. Se manipula dados em tempo real, use SPA</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; SPA se justifica quando</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Interface com <strong class="text-white">muita intera&ccedil;&atilde;o</strong>: dashboards, editores, apps</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Dados <strong class="text-white">real-time</strong>: chat, notifica&ccedil;&otilde;es, colabora&ccedil;&atilde;o</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Navega&ccedil;&atilde;o <strong class="text-white">sem reload</strong> &eacute; cr&iacute;tica para UX</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; SPA N&Atilde;O se justifica quando</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Conte&uacute;do &eacute; <strong class="text-white">majoritariamente texto</strong> e imagens</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>SEO &eacute; <strong class="text-white">cr&iacute;tico</strong> e n&atilde;o h&aacute; budget para SSR</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Time n&atilde;o domina <strong class="text-white">state management</strong> e build tooling</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Pr&aacute;tica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Se voc&ecirc; est&aacute; em d&uacute;vida entre SPA e est&aacute;tico, considere <strong class="text-white">Astro com Islands Architecture</strong>. O site &eacute; HTML est&aacute;tico por padr&atilde;o, e voc&ecirc; adiciona componentes React/Vue/Svelte apenas onde precisa de interatividade. Zero JS onde n&atilde;o precisa, todo o JS onde precisa.</p>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 3: Design System ===== -->
+        <section id="topico-3" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">3</span>
+                <h2 class="text-2xl font-bold">&#127912; Design System</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                Um Design System &eacute; uma <strong class="text-amber-400">biblioteca de componentes padronizados</strong> (bot&otilde;es, formul&aacute;rios, modais, cards) compartilhados entre projetos. Garante consist&ecirc;ncia visual, acelera desenvolvimento e permite que qualquer dev novo produza UI consistente desde o primeiro dia.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Camadas de um Design System</h3>
+                <p class="text-neutral-300 mb-4">Do mais abstrato ao mais concreto:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Design Tokens</strong> &mdash; Cores, espa&ccedil;amentos, tipografia, sombras. A &ldquo;verdade &uacute;nica&rdquo; do visual</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Componentes Base (Atoms)</strong> &mdash; Bot&atilde;o, Input, Badge, Avatar. Unidades m&iacute;nimas reutiliz&aacute;veis</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Componentes Compostos (Molecules)</strong> &mdash; SearchBar (Input + Button), Card (Image + Text + Badge)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Patterns (Organisms)</strong> &mdash; Navbar, Footer, DataTable, Modal com formul&aacute;rio</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: shadcn/ui</h3>
+                <p class="text-neutral-300 mb-4">O shadcn/ui revolucionou design systems ao inverter o modelo tradicional:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Modelo tradicional:</strong> Instale pacote npm, use componentes como caixa-preta, customiza&ccedil;&atilde;o limitada</li>
+                    <li><strong class="text-white">shadcn/ui:</strong> Copie o c&oacute;digo do componente para seu projeto, customize livremente, sem depend&ecirc;ncia</li>
+                    <li><strong class="text-white">Stack:</strong> Tailwind CSS + Radix UI (acessibilidade) + CSS variables (temas)</li>
+                    <li><strong class="text-white">Resultado:</strong> 40k+ stars no GitHub, adotado por Vercel, cal.com, e centenas de startups</li>
+                </ul>
+            </div>
+
+            <!-- Dica Pr&aacute;tica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">N&atilde;o crie um design system do zero para MVP. Use <strong class="text-white">Tailwind CSS + Headless UI ou shadcn/ui</strong> como base. Documente seus componentes com <strong class="text-white">Storybook</strong> s&oacute; quando tiver mais de um time consumindo. Antes disso, o c&oacute;digo &eacute; a documenta&ccedil;&atilde;o.</p>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 4: Responsividade ===== -->
+        <section id="topico-4" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">4</span>
+                <h2 class="text-2xl font-bold">&#128241; Responsividade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-amber-400">Mobile-first n&atilde;o &eacute; opcional.</strong> Com mais de 60% do tr&aacute;fego web vindo de dispositivos m&oacute;veis, um site que n&atilde;o funciona bem no celular perde a maioria dos usu&aacute;rios. Responsividade &eacute; projetar para a menor tela primeiro e expandir para telas maiores.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Mobile-First com Tailwind</h3>
+                <p class="text-neutral-300 mb-4">Tailwind CSS usa mobile-first por padr&atilde;o. Estilos sem prefixo s&atilde;o mobile, prefixos adicionam para telas maiores:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Sem prefixo</strong> &mdash; Aplica em todas as telas (mobile primeiro)</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">sm: (640px+)</strong> &mdash; Tablets pequenos e acima</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">md: (768px+)</strong> &mdash; Tablets e acima</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">lg: (1024px+)</strong> &mdash; Desktops e acima</span></li>
+                </ul>
+            </div>
+
+            <!-- Alerta -->
+            <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-red-400 mb-4 flex items-center"><span class="mr-2">&#9888;&#65039;</span> Erros Comuns de Responsividade</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span><strong class="text-white">Touch targets pequenos</strong> &mdash; Bot&otilde;es menores que 44x44px s&atilde;o imposs&iacute;veis de tocar com precis&atilde;o no mobile</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span><strong class="text-white">Textos n&atilde;o leg&iacute;veis</strong> &mdash; Fontes menores que 16px no mobile for&ccedil;am zoom e quebram a experi&ecirc;ncia</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span><strong class="text-white">Scroll horizontal</strong> &mdash; Tabelas e imagens que vazam da viewport criam scroll horizontal indesejado</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span><strong class="text-white">Hover-only interactions</strong> &mdash; No mobile n&atilde;o existe hover. Use click/tap em vez de tooltips hover</span></li>
+                </ul>
+            </div>
+
+            <!-- Dica Pr&aacute;tica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Sempre <strong class="text-white">teste no celular real</strong>, n&atilde;o s&oacute; no DevTools. O emulador n&atilde;o captura problemas de touch target, scroll inertia e teclado virtual. Use <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">Flexbox</code> e <code class="bg-dark-700 px-2 py-0.5 rounded text-amber-400">CSS Grid</code> em vez de larguras fixas &mdash; eles se adaptam naturalmente a qualquer viewport.</p>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 5: Acessibilidade ===== -->
+        <section id="topico-5" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">5</span>
+                <h2 class="text-2xl font-bold">&#9855; Acessibilidade</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-amber-400">15% da popula&ccedil;&atilde;o mundial tem alguma defici&ecirc;ncia.</strong> Acessibilidade n&atilde;o &eacute; nice-to-have &mdash; &eacute; requisito legal em muitos pa&iacute;ses e faz sentido comercial. Web Content Accessibility Guidelines (WCAG) definem padr&otilde;es de contraste, navega&ccedil;&atilde;o por teclado, compatibilidade com screen readers e muito mais.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Os 4 Princ&iacute;pios POUR (WCAG)</h3>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Percept&iacute;vel</strong> &mdash; Conte&uacute;do vis&iacute;vel e aud&iacute;vel: alt text, legendas, contraste m&iacute;nimo 4.5:1</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Oper&aacute;vel</strong> &mdash; Naveg&aacute;vel por teclado e touch: tab order, focus visible, skip links</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Compreens&iacute;vel</strong> &mdash; Linguagem clara, erros explicativos, comportamento previs&iacute;vel</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Robusto</strong> &mdash; Funciona em diferentes browsers, screen readers e tecnologias assistivas</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Domino&rsquo;s Pizza</h3>
+                <p class="text-neutral-300 mb-4">Em 2019, Domino&rsquo;s perdeu na Suprema Corte dos EUA por site inacess&iacute;vel:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Problema:</strong> Usu&aacute;rio cego n&atilde;o conseguia fazer pedido &mdash; sem alt text, sem navega&ccedil;&atilde;o por teclado</li>
+                    <li><strong class="text-white">Resultado:</strong> Multa de US$10M e obriga&ccedil;&atilde;o de tornar o site acess&iacute;vel</li>
+                    <li><strong class="text-white">Dado:</strong> Em 2024, 97% dos top 1M sites ainda t&ecirc;m erros de acessibilidade (WebAIM)</li>
+                    <li><strong class="text-white">Oportunidade:</strong> Sites acess&iacute;veis t&ecirc;m melhor SEO, melhor usabilidade para todos</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">HTML sem&acirc;ntico</strong>: &lt;nav&gt;, &lt;main&gt;, &lt;button&gt; em vez de &lt;div onclick&gt;</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Testar <strong class="text-white">navega&ccedil;&atilde;o por teclado</strong> (Tab, Enter, Escape)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Garantir <strong class="text-white">contraste m&iacute;nimo 4.5:1</strong> em textos</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar <strong class="text-white">cores como &uacute;nica</strong> forma de comunicar informa&ccedil;&atilde;o</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Criar <strong class="text-white">links e bot&otilde;es</strong> sem texto descritivo (&ldquo;Clique aqui&rdquo;)</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Desabilitar <strong class="text-white">focus outline</strong> por &ldquo;est&eacute;tica&rdquo;</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Pr&aacute;tica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Instale a extens&atilde;o <strong class="text-white">axe DevTools</strong> no Chrome e rode em cada p&aacute;gina. Ela detecta automaticamente problemas de contraste, ARIA ausente e HTML sem&acirc;ntico. Al&eacute;m disso, navegue seu site inteiro usando <strong class="text-white">apenas o teclado</strong> &mdash; se voc&ecirc; n&atilde;o conseguir completar uma tarefa, um usu&aacute;rio com defici&ecirc;ncia tamb&eacute;m n&atilde;o.</p>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 6: Performance Frontend ===== -->
+        <section id="topico-6" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">6</span>
+                <h2 class="text-2xl font-bold">&#9889; Performance Frontend</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-amber-400">53% dos usu&aacute;rios mobile abandonam se o site leva mais de 3 segundos para carregar.</strong> Core Web Vitals s&atilde;o as m&eacute;tricas do Google que medem experi&ecirc;ncia real do usu&aacute;rio: tempo de renderiza&ccedil;&atilde;o, responsividade a intera&ccedil;&otilde;es e estabilidade visual. Afetam diretamente SEO, convers&atilde;o e receita.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Core Web Vitals</h3>
+                <p class="text-neutral-300 mb-4">As 3 m&eacute;tricas que o Google usa para medir experi&ecirc;ncia:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">LCP (Largest Contentful Paint)</strong> &mdash; Tempo at&eacute; o maior elemento vis&iacute;vel renderizar. Meta: &lt; 2.5s</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">INP (Interaction to Next Paint)</strong> &mdash; Tempo de resposta a intera&ccedil;&otilde;es (substituiu FID). Meta: &lt; 200ms</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">CLS (Cumulative Layout Shift)</strong> &mdash; Quanto o layout &ldquo;pula&rdquo; durante carregamento. Meta: &lt; 0.1</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Pinterest</h3>
+                <p class="text-neutral-300 mb-4">O Pinterest investiu pesado em performance frontend e mediu o impacto direto no neg&oacute;cio:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">A&ccedil;&atilde;o:</strong> Reduziu loading time em 40% com code splitting, lazy loading e otimiza&ccedil;&atilde;o de imagens</li>
+                    <li><strong class="text-white">Resultado:</strong> +15% em signups, +44% na receita de ads</li>
+                    <li><strong class="text-white">Dado:</strong> Cada 1 segundo de melhoria no load time = +7% de convers&atilde;o (Deloitte)</li>
+                    <li><strong class="text-white">Conclus&atilde;o:</strong> Performance frontend &eacute; diretamente proporcional a receita</li>
+                </ul>
+            </div>
+
+            <!-- Timeline: T&eacute;cnicas -->
+            <div class="space-y-6 mb-6">
+                <h3 class="text-lg font-semibold text-neutral-100 mb-2">&#128736;&#65039; T&eacute;cnicas de Otimiza&ccedil;&atilde;o</h3>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
+                        <span class="text-amber-400 font-bold">1</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Otimiza&ccedil;&atilde;o de Imagens</h4>
+                        <p class="text-neutral-300 text-sm">Use formato WebP/AVIF, lazy loading (loading="lazy"), srcset para resolu&ccedil;&otilde;es diferentes. Imagens s&atilde;o respons&aacute;veis por ~50% do peso da p&aacute;gina.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
+                        <span class="text-amber-400 font-bold">2</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Code Splitting e Tree Shaking</h4>
+                        <p class="text-neutral-300 text-sm">Carregue apenas o JS necess&aacute;rio para a p&aacute;gina atual. Tree shaking remove c&oacute;digo n&atilde;o utilizado do bundle. Import din&acirc;mico para rotas.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
+                        <span class="text-amber-400 font-bold">3</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">Font Loading Strategy</h4>
+                        <p class="text-neutral-300 text-sm">Use font-display: swap para evitar FOIT (Flash of Invisible Text). Preload fontes cr&iacute;ticas. Considere system fonts para performance m&aacute;xima.</p>
+                    </div>
+                </div>
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
+                        <span class="text-amber-400 font-bold">4</span>
+                    </div>
+                    <div class="flex-1 bg-dark-800 rounded-xl p-6 border border-dark-600">
+                        <h4 class="font-semibold text-white mb-2">CDN e Caching</h4>
+                        <p class="text-neutral-300 text-sm">Sirva assets est&aacute;ticos via CDN com cache longo (1 ano). Use content hashing nos nomes de arquivo para cache busting autom&aacute;tico.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dica Pr&aacute;tica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Rode <strong class="text-white">Lighthouse no Chrome DevTools</strong> em cada p&aacute;gina antes de deployar. Meta m&iacute;nima: score 90+ em Performance. Se estiver usando SPA, meça o <strong class="text-white">Time to Interactive (TTI)</strong> &mdash; se passa de 5 segundos em 3G, seu bundle est&aacute; grande demais.</p>
+            </div>
+        </section>
+
+        <!-- ===== T&Oacute;PICO 7: Dark Mode e Temas ===== -->
+        <section id="topico-7" class="mb-16">
+            <div class="flex items-center space-x-4 mb-6">
+                <span class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-500/20 text-amber-400 font-bold text-xl">7</span>
+                <h2 class="text-2xl font-bold">&#127769; Dark Mode e Temas</h2>
+            </div>
+            <p class="text-neutral-300 mb-6 leading-relaxed">
+                <strong class="text-amber-400">82% dos usu&aacute;rios mobile usam dark mode.</strong> Al&eacute;m de prefer&ecirc;ncia est&eacute;tica, dark mode reduz fadiga visual em ambientes escuros e economiza bateria em telas OLED. Implementar suporte a temas de forma elegante &eacute; uma habilidade essencial para qualquer frontend moderno.
+            </p>
+
+            <!-- Conceito Principal -->
+            <div class="bg-gradient-to-br from-amber-900/30 to-dark-800 rounded-xl border border-amber-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-amber-400 mb-4 flex items-center"><span class="mr-2">&#128161;</span> Implementa&ccedil;&atilde;o com Tailwind CSS</h3>
+                <p class="text-neutral-300 mb-4">A abordagem mais pr&aacute;tica para dark mode:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">Class strategy</strong> &mdash; Toggle classe &ldquo;dark&rdquo; no &lt;html&gt; para controle manual + detec&ccedil;&atilde;o autom&aacute;tica</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">dark: prefix</strong> &mdash; <code class="bg-dark-700 px-1 rounded text-amber-400">bg-white dark:bg-gray-900</code> aplica estilos condicionalmente</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">localStorage</strong> &mdash; Persiste prefer&ecirc;ncia do usu&aacute;rio entre sess&otilde;es</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-amber-400 mt-1">&bull;</span><span><strong class="text-white">prefers-color-scheme</strong> &mdash; Media query detecta prefer&ecirc;ncia do sistema operacional</span></li>
+                </ul>
+            </div>
+
+            <!-- Caso Real -->
+            <div class="bg-blue-900/20 rounded-xl border border-blue-500/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-blue-400 mb-4 flex items-center"><span class="mr-2">&#128202;</span> Caso Real: Este Pr&oacute;prio Curso</h3>
+                <p class="text-neutral-300 mb-4">O Arquitetura DEV 2030 implementa dark mode como exemplo pr&aacute;tico:</p>
+                <ul class="space-y-2 text-neutral-300">
+                    <li><strong class="text-white">Estrat&eacute;gia:</strong> Tailwind dark: prefix + class strategy no &lt;html&gt;</li>
+                    <li><strong class="text-white">Persist&ecirc;ncia:</strong> localStorage salva prefer&ecirc;ncia, carregada antes do primeiro render</li>
+                    <li><strong class="text-white">Fallback:</strong> Dark mode como padr&atilde;o (melhor para leitura prolongada)</li>
+                    <li><strong class="text-white">CSS variables:</strong> Cores de cada trilha definidas como vari&aacute;veis para troca de tema</li>
+                </ul>
+            </div>
+
+            <!-- Fazer vs Evitar -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-emerald-900/20 rounded-xl border border-emerald-500/30 p-6">
+                    <h4 class="font-bold text-emerald-400 mb-4">&#10003; O que FAZER</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Usar <strong class="text-white">CSS custom properties</strong> para cores do tema</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Carregar prefer&ecirc;ncia <strong class="text-white">antes do primeiro render</strong> para evitar flash</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-emerald-400">&#10003;</span><span>Testar <strong class="text-white">ambos os modos</strong> em cada componente novo</span></li>
+                    </ul>
+                </div>
+                <div class="bg-red-900/20 rounded-xl border border-red-500/30 p-6">
+                    <h4 class="font-bold text-red-400 mb-4">&#10007; O que N&Atilde;O fazer</h4>
+                    <ul class="space-y-3 text-neutral-300">
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Inverter cores com <strong class="text-white">filter: invert(1)</strong> &mdash; quebra imagens e &iacute;cones</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Usar <strong class="text-white">preto puro (#000)</strong> como fundo &mdash; causa fadiga visual, use #111827</span></li>
+                        <li class="flex items-start space-x-2"><span class="text-red-400">&#10007;</span><span>Ignorar <strong class="text-white">contraste</strong> no dark mode &mdash; texto cinza em fundo escuro pode ser ileg&iacute;vel</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Dica Pr&aacute;tica -->
+            <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
+                <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
+                <p class="text-neutral-300">Para evitar o &ldquo;flash&rdquo; de tema errado no carregamento, coloque um <strong class="text-white">script inline no &lt;head&gt;</strong> (antes do CSS carregar) que l&ecirc; localStorage e aplica a classe &ldquo;dark&rdquo; imediatamente. Isso garante que o usu&aacute;rio nunca v&ecirc; o tema errado, nem por um milissegundo.</p>
+            </div>
+        </section>
+
+        <!-- ===== RESUMO DO M&Oacute;DULO ===== -->
+        <section class="mb-12">
+            <div class="bg-gradient-to-br from-amber-900/40 via-dark-800 to-dark-800 rounded-xl border border-amber-500/30 p-8">
+                <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">HTML est&aacute;tico &eacute; subestimado</strong><span class="text-neutral-400"> &mdash; Para 80% dos sites, &eacute; a melhor arquitetura: mais r&aacute;pido, mais barato, mais confi&aacute;vel</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">SPA s&oacute; quando justificada</strong><span class="text-neutral-400"> &mdash; Alta interatividade, real-time e state complexo. Sen&atilde;o, &eacute; complexidade gratuita</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Design System acelera o time</strong><span class="text-neutral-400"> &mdash; Componentes padronizados garantem consist&ecirc;ncia e velocidade de entrega</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Mobile-first &eacute; obrigat&oacute;rio</strong><span class="text-neutral-400"> &mdash; 60%+ do tr&aacute;fego &eacute; mobile. Projete para a menor tela primeiro</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Acessibilidade &eacute; requisito</strong><span class="text-neutral-400"> &mdash; 15% da popula&ccedil;&atilde;o tem defici&ecirc;ncia. WCAG, sem&acirc;ntica HTML e testes com teclado</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Performance = dinheiro</strong><span class="text-neutral-400"> &mdash; Cada segundo de melhoria no loading = +7% de convers&atilde;o. Core Web Vitals afetam SEO</span></div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <span class="text-amber-400 mt-1">&#10003;</span>
+                        <div><strong class="text-white">Dark mode &eacute; expectativa</strong><span class="text-neutral-400"> &mdash; 82% dos usu&aacute;rios usam. Implemente com Tailwind dark: prefix e localStorage</span></div>
+                    </div>
+                </div>
+                <div class="bg-dark-800/50 rounded-lg p-4 mb-8">
+                    <h3 class="font-semibold text-amber-400 mb-2">Pr&oacute;ximo M&oacute;dulo:</h3>
+                    <p class="text-neutral-300">4.5 - &#129514; Testes e Qualidade &mdash; Pir&acirc;mide de testes, TDD, integra&ccedil;&atilde;o, E2E e m&eacute;tricas de qualidade</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="index.html" class="flex-1 text-center px-6 py-3 bg-dark-700 text-neutral-300 rounded-lg font-semibold hover:bg-dark-600 transition-colors">&larr; Voltar para Trilha</a>
+                    <a href="modulo-4-5.html" class="flex-1 text-center px-6 py-3 bg-amber-600 text-white rounded-lg font-semibold hover:bg-amber-500 transition-colors">Pr&oacute;ximo M&oacute;dulo &rarr;</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-dark-600 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; Trilha 4: Construindo na Pr&aacute;tica</p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Set initial icon
+        if (document.documentElement.classList.contains('dark')) {
+            themeToggleLightIcon.classList.remove('hidden');
+        } else {
+            themeToggleDarkIcon.classList.remove('hidden');
+        }
+
+        themeToggleBtn.addEventListener('click', function() {
+            themeToggleDarkIcon.classList.toggle('hidden');
+            themeToggleLightIcon.classList.toggle('hidden');
+
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.setItem('color-theme', 'light');
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.setItem('color-theme', 'dark');
+            }
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('color-theme') === 'light') {
+            document.documentElement.classList.remove('dark');
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+        }
+    </script>
+
+</body>
+</html>
