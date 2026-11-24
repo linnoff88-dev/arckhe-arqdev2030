@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Módulo 2.5 - Migração e Evolução | Arquitetura DEV 2030</title>
+    <title>MÃ³dulo 2.5 - MigraÃ§Ã£o e EvoluÃ§Ã£o | Arquitetura DEV 2030</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -90,7 +90,7 @@
                 <div class="flex items-center gap-3">
                     <a href="../../index.html" class="text-yellow-400 font-bold text-lg hover:text-yellow-300 transition-colors">&#127959;&#65039; Arquitetura DEV 2030</a>
                     <span class="text-neutral-500">|</span>
-                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">INEMA.CLUB</a>
+                    <a href="https://ARCKHÉ AI" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium transition-colors">ARCKHÉ AI</a>
                 </div>
                 <div class="flex items-center gap-1">
                     <a href="../trilha1/index.html" class="px-2 py-1 text-xs font-medium text-neutral-400 hover:bg-dark-700/50 rounded transition-colors"><span class="sm:hidden">T1</span><span class="hidden sm:inline">Fundamentos</span></a>
@@ -158,7 +158,7 @@
     <!-- Main Content -->
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
-        <!-- ===== TÓPICO 1: Strangler Fig Pattern ===== -->
+        <!-- ===== TÃ“PICO 1: Strangler Fig Pattern ===== -->
         <section id="topico-1" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">1</span>
@@ -198,19 +198,19 @@
                 <p class="text-neutral-300 mb-4">Dados do Standish Group mostram que <strong class="text-white">70% das reescritas big-bang falham</strong>:</p>
                 <ul class="space-y-2 text-neutral-300">
                     <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>O sistema antigo <strong class="text-white">continua recebendo features</strong> durante a reescrita</span></li>
-                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>O novo sistema nunca alcança <strong class="text-white">feature parity</strong></span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>O novo sistema nunca alcanÃ§a <strong class="text-white">feature parity</strong></span></li>
                     <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span>O budget acaba antes da migra&ccedil;&atilde;o completar &mdash; <strong class="text-white">ficam com dois sistemas</strong></span></li>
                 </ul>
             </div>
 
-            <!-- Dica Prática -->
+            <!-- Dica PrÃ¡tica -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
                 <p class="text-neutral-300">Comece pelo m&oacute;dulo com <strong class="text-white">menor acoplamento e maior dor</strong>. Se o m&oacute;dulo de busca &eacute; lento e tem interface clara, migre primeiro. Vit&oacute;rias r&aacute;pidas criam momentum e confian&ccedil;a no processo.</p>
             </div>
         </section>
 
-        <!-- ===== TÓPICO 2: Branch by Abstraction ===== -->
+        <!-- ===== TÃ“PICO 2: Branch by Abstraction ===== -->
         <section id="topico-2" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">2</span>
@@ -267,14 +267,14 @@
                 <p class="text-neutral-300">O Flickr migrou de MySQL para PostgreSQL usando Branch by Abstraction &mdash; criaram uma interface de &ldquo;data store&rdquo;, rodaram ambos em paralelo por semanas comparando resultados, e fizeram o switch quando tinham <strong class="text-white">100% de confian&ccedil;a</strong> que os resultados eram id&ecirc;nticos.</p>
             </div>
 
-            <!-- Dica Prática -->
+            <!-- Dica PrÃ¡tica -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
                 <p class="text-neutral-300">Branch by Abstraction funciona melhor quando a <strong class="text-white">interface j&aacute; existe naturalmente</strong>. Se voc&ecirc; precisa criar uma abstra&ccedil;&atilde;o muito for&ccedil;ada, talvez Strangler Fig seja mais adequado. Escolha a estrat&eacute;gia que se encaixa na arquitetura atual.</p>
             </div>
         </section>
 
-        <!-- ===== TÓPICO 3: Canary Releases ===== -->
+        <!-- ===== TÃ“PICO 3: Canary Releases ===== -->
         <section id="topico-3" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">3</span>
@@ -328,7 +328,7 @@
             </div>
         </section>
 
-        <!-- ===== TÓPICO 4: Database Migration ===== -->
+        <!-- ===== TÃ“PICO 4: Database Migration ===== -->
         <section id="topico-4" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">4</span>
@@ -367,18 +367,18 @@
                 <ul class="space-y-2 text-neutral-300">
                     <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span><strong class="text-white">Stored procedures</strong> &mdash; L&oacute;gica de neg&oacute;cio escondida no banco que ningu&eacute;m lembra</span></li>
                     <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span><strong class="text-white">Implicit schemas</strong> &mdash; JSON columns sem valida&ccedil;&atilde;o; dados em formatos inesperados</span></li>
-                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span><strong class="text-white">Data volume</strong> &mdash; Migrar 1TB de dados leva tempo; planeje janelas de manutencão</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-red-400 mt-1">&bull;</span><span><strong class="text-white">Data volume</strong> &mdash; Migrar 1TB de dados leva tempo; planeje janelas de manutencÃ£o</span></li>
                 </ul>
             </div>
 
-            <!-- Dica Prática -->
+            <!-- Dica PrÃ¡tica -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
                 <p class="text-neutral-300">Regra de ouro para migra&ccedil;&otilde;es de schema: <strong class="text-white">nunca fa&ccedil;a breaking changes em um &uacute;nico deploy</strong>. Use o padr&atilde;o expand-contract: (1) adicione nova coluna, (2) migre dados e c&oacute;digo, (3) remova coluna antiga. Tr&ecirc;s deploys, zero downtime.</p>
             </div>
         </section>
 
-        <!-- ===== TÓPICO 5: Feature Flags ===== -->
+        <!-- ===== TÃ“PICO 5: Feature Flags ===== -->
         <section id="topico-5" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">5</span>
@@ -432,7 +432,7 @@
             </div>
         </section>
 
-        <!-- ===== TÓPICO 6: Architecture Fitness Functions ===== -->
+        <!-- ===== TÃ“PICO 6: Architecture Fitness Functions ===== -->
         <section id="topico-6" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">6</span>
@@ -464,14 +464,14 @@
                 </ul>
             </div>
 
-            <!-- Dica Prática -->
+            <!-- Dica PrÃ¡tica -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
                 <p class="text-neutral-300">Comece com <strong class="text-white">3 fitness functions simples</strong>: (1) nenhuma depend&ecirc;ncia circular, (2) bundle size < threshold, (3) nenhuma depend&ecirc;ncia com vulnerabilidade cr&iacute;tica. Rode na CI. Adicione mais conforme a maturidade do time cresce.</p>
             </div>
         </section>
 
-        <!-- ===== TÓPICO 7: Evolutionary Architecture ===== -->
+        <!-- ===== TÃ“PICO 7: Evolutionary Architecture ===== -->
         <section id="topico-7" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-blue-500/20 text-blue-400 font-bold text-xl">7</span>
@@ -507,21 +507,21 @@
                 <p class="text-neutral-300 mt-3"><strong class="text-white">Nenhuma foi big-bang.</strong> Cada migra&ccedil;&atilde;o levou anos e foi guiada por fitness functions e m&eacute;tricas de neg&oacute;cio.</p>
             </div>
 
-            <!-- Citação -->
+            <!-- CitaÃ§Ã£o -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128172;</span> Kent Beck</h3>
                 <p class="text-neutral-300 text-lg italic">&ldquo;Make the change easy, then make the easy change.&rdquo;</p>
                 <p class="text-neutral-400 mt-2 text-sm">Primeiro, refatore para que a mudan&ccedil;a seja simples. Depois, fa&ccedil;a a mudan&ccedil;a simples. Dois passos pequenos em vez de um salto arriscado.</p>
             </div>
 
-            <!-- Dica Prática -->
+            <!-- Dica PrÃ¡tica -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
                 <p class="text-neutral-300">Pergunte-se regularmente: <strong class="text-white">&ldquo;Se precis&aacute;ssemos trocar [componente X] amanh&atilde;, quanto custaria?&rdquo;</strong> Se a resposta &eacute; &ldquo;meses de trabalho&rdquo;, voc&ecirc; tem acoplamento excessivo. Evolutionary architecture mant&eacute;m o custo de mudan&ccedil;a baixo e previs&iacute;vel.</p>
             </div>
         </section>
 
-        <!-- ===== RESUMO DO MÓDULO ===== -->
+        <!-- ===== RESUMO DO MÃ“DULO ===== -->
         <section class="mb-12">
             <div class="bg-gradient-to-br from-blue-900/40 via-dark-800 to-dark-800 rounded-xl border border-blue-500/30 p-8">
                 <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
@@ -576,7 +576,7 @@
     <footer class="border-t border-dark-600 py-8">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p class="text-neutral-500 text-sm">&#127959;&#65039; Arquitetura DEV 2030 &mdash; Trilha 2: Estrat&eacute;gias de Decis&atilde;o</p>
-            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://ARCKHÉ AI" target="_blank" class="text-sky-400 hover:text-sky-300">ARCKHÉ AI</a></p>
         </div>
     </footer>
 

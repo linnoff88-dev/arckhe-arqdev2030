@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Módulo 5.2 - Infraestrutura como Código | Arquitetura DEV 2030</title>
+    <title>MÃ³dulo 5.2 - Infraestrutura como CÃ³digo | Arquitetura DEV 2030</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -88,7 +88,7 @@
                         <span class="font-bold text-lg hidden sm:inline">Arquitetura DEV 2030</span>
                     </a>
                     <span class="text-neutral-600">|</span>
-                    <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">INEMA.CLUB</a>
+                    <a href="https://ARCKHÉ AI" target="_blank" class="text-sky-400 hover:text-sky-300 text-sm font-medium">ARCKHÉ AI</a>
                 </div>
                 <div class="flex items-center space-x-1 sm:space-x-2">
                     <a href="../trilha1/index.html" class="px-3 py-1.5 rounded-lg text-sm font-semibold text-neutral-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors">
@@ -169,7 +169,7 @@
     <!-- Main Content -->
     <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 
-        <!-- ===== TÓPICO 1: O que é IaC ===== -->
+        <!-- ===== TÃ“PICO 1: O que Ã© IaC ===== -->
         <section id="topico-1" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">1</span>
@@ -222,14 +222,14 @@
                 </div>
             </div>
 
-            <!-- Dica Prática -->
+            <!-- Dica PrÃ¡tica -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
                 <p class="text-neutral-300">Comece com o <strong class="text-white">&ldquo;teste do fogo&rdquo;</strong>: consiga destruir e recriar toda a infraestrutura de um ambiente a partir do c&oacute;digo, sem nenhuma interven&ccedil;&atilde;o manual. Se n&atilde;o conseguir, voc&ecirc; ainda n&atilde;o tem IaC de verdade &mdash; tem scripts de automa&ccedil;&atilde;o parcial.</p>
             </div>
         </section>
 
-        <!-- ===== TÓPICO 2: Terraform ===== -->
+        <!-- ===== TÃ“PICO 2: Terraform ===== -->
         <section id="topico-2" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">2</span>
@@ -261,14 +261,14 @@
                 </ul>
             </div>
 
-            <!-- Dica Prática -->
+            <!-- Dica PrÃ¡tica -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
                 <p class="text-neutral-300">Estruture seus projetos Terraform com <strong class="text-white">m&oacute;dulos reutiliz&aacute;veis</strong>. Crie m&oacute;dulos para padr&otilde;es comuns (VPC, banco de dados, cluster ECS) e reutilize entre ambientes e projetos. Isso evita duplica&ccedil;&atilde;o e garante consist&ecirc;ncia. Use <strong class="text-white">Terragrunt</strong> para gerenciar m&uacute;ltiplos ambientes com DRY.</p>
             </div>
         </section>
 
-        <!-- ===== TÓPICO 3: Docker Compose ===== -->
+        <!-- ===== TÃ“PICO 3: Docker Compose ===== -->
         <section id="topico-3" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">3</span>
@@ -285,7 +285,7 @@
                     <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Services</strong> &mdash; Cada container &eacute; um servi&ccedil;o: app, db, redis, rabbitmq</span></li>
                     <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Networks</strong> &mdash; Redes isoladas para comunica&ccedil;&atilde;o entre containers. DNS autom&aacute;tico por nome do servi&ccedil;o</span></li>
                     <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Volumes</strong> &mdash; Persist&ecirc;ncia de dados entre restarts. Essencial para bancos de dados locais</span></li>
-                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Profiles</strong> &mdash; Agrupe servi&ccedil;os por cenário: <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">--profile debug</code> sobe ferramentas extras</span></li>
+                    <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Profiles</strong> &mdash; Agrupe servi&ccedil;os por cenÃ¡rio: <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">--profile debug</code> sobe ferramentas extras</span></li>
                     <li class="flex items-start space-x-2"><span class="text-teal-400 mt-1">&bull;</span><span><strong class="text-white">Depends_on</strong> &mdash; Ordem de inicializa&ccedil;&atilde;o e health checks para garantir que depend&ecirc;ncias est&atilde;o prontas</span></li>
                 </ul>
             </div>
@@ -310,14 +310,14 @@
                 </div>
             </div>
 
-            <!-- Dica Prática -->
+            <!-- Dica PrÃ¡tica -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
                 <p class="text-neutral-300">Crie um <strong class="text-white">Makefile ou Taskfile</strong> com targets como <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">make dev</code>, <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">make test</code>, <code class="bg-dark-700 px-2 py-0.5 rounded text-teal-400">make seed</code> que abstraem os comandos do Docker Compose. Um novo desenvolvedor deve conseguir rodar o projeto inteiro em menos de 5 minutos.</p>
             </div>
         </section>
 
-        <!-- ===== TÓPICO 4: Kubernetes ===== -->
+        <!-- ===== TÃ“PICO 4: Kubernetes ===== -->
         <section id="topico-4" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">4</span>
@@ -352,14 +352,14 @@
                 </ul>
             </div>
 
-            <!-- Dica Prática -->
+            <!-- Dica PrÃ¡tica -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
                 <p class="text-neutral-300">Antes de adotar Kubernetes, pergunte: <strong class="text-white">&ldquo;Tenho mais de 10 servi&ccedil;os para orquestrar?&rdquo;</strong> Se n&atilde;o, considere alternativas mais simples: ECS, Cloud Run, Railway, Fly.io. K8s &eacute; poderoso, mas a complexidade operacional &eacute; real. Use managed K8s (EKS, GKE, AKS) para reduzir a carga operacional do control plane.</p>
             </div>
         </section>
 
-        <!-- ===== TÓPICO 5: Secrets Management ===== -->
+        <!-- ===== TÃ“PICO 5: Secrets Management ===== -->
         <section id="topico-5" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">5</span>
@@ -392,14 +392,14 @@
                 </ul>
             </div>
 
-            <!-- Dica Prática -->
+            <!-- Dica PrÃ¡tica -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
                 <p class="text-neutral-300">Configure <strong class="text-white">git-secrets ou gitleaks</strong> como pre-commit hook. Eles impedem que credenciais sejam commitadas acidentalmente. Al&eacute;m disso, rode scans regulares no hist&oacute;rico do Git &mdash; secrets removidos do c&oacute;digo atual ainda existem em commits antigos.</p>
             </div>
         </section>
 
-        <!-- ===== TÓPICO 6: CDN e Edge ===== -->
+        <!-- ===== TÃ“PICO 6: CDN e Edge ===== -->
         <section id="topico-6" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">6</span>
@@ -431,14 +431,14 @@
                 </ul>
             </div>
 
-            <!-- Dica Prática -->
+            <!-- Dica PrÃ¡tica -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
                 <p class="text-neutral-300">Comece com CDN para <strong class="text-white">assets est&aacute;ticos</strong> (imagens, JS, CSS) &mdash; &eacute; o quick win mais f&aacute;cil e de maior impacto. Depois, explore <strong class="text-white">stale-while-revalidate</strong> para APIs que podem tolerar dados ligeiramente desatualizados. Edge Functions ficam para quando voc&ecirc; precisa de personaliza&ccedil;&atilde;o por regi&atilde;o ou A/B testing com lat&ecirc;ncia m&iacute;nima.</p>
             </div>
         </section>
 
-        <!-- ===== TÓPICO 7: Otimização de Custos ===== -->
+        <!-- ===== TÃ“PICO 7: OtimizaÃ§Ã£o de Custos ===== -->
         <section id="topico-7" class="mb-16">
             <div class="flex items-center space-x-4 mb-6">
                 <span class="flex items-center justify-center w-12 h-12 rounded-full bg-teal-500/20 text-teal-400 font-bold text-xl">7</span>
@@ -473,14 +473,14 @@
                 <p class="text-neutral-300 mt-3"><strong class="text-white">Cuidado:</strong> Isso n&atilde;o significa que todo mundo deve sair da cloud. A 37signals tem contexto espec&iacute;fico que viabiliza.</p>
             </div>
 
-            <!-- Dica Prática -->
+            <!-- Dica PrÃ¡tica -->
             <div class="bg-primary/10 rounded-xl border border-primary/30 p-6 mb-6">
                 <h3 class="text-lg font-semibold text-primary mb-3 flex items-center"><span class="mr-2">&#128161;</span> Dica Pr&aacute;tica</h3>
                 <p class="text-neutral-300">Implemente <strong class="text-white">alertas de custo</strong> desde o dia 1. Configure budgets no AWS/GCP/Azure que notificam quando os gastos ultrapassam thresholds (50%, 80%, 100% do budget). Al&eacute;m disso, agende a <strong class="text-white">destrui&ccedil;&atilde;o autom&aacute;tica de ambientes de staging</strong> fora do hor&aacute;rio comercial &mdash; isso sozinho pode reduzir 30-40% da fatura.</p>
             </div>
         </section>
 
-        <!-- ===== RESUMO DO MÓDULO ===== -->
+        <!-- ===== RESUMO DO MÃ“DULO ===== -->
         <section class="mb-12">
             <div class="bg-gradient-to-br from-teal-900/40 via-dark-800 to-dark-800 rounded-xl border border-teal-500/30 p-8">
                 <h2 class="text-2xl font-bold mb-6 flex items-center"><span class="mr-3">&#128203;</span> Resumo do M&oacute;dulo</h2>
@@ -531,7 +531,7 @@
     <footer class="border-t border-dark-600 mt-8">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
             <p class="text-neutral-500 text-sm">Arquitetura DEV 2030 &mdash; 2026</p>
-            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://inema.club" target="_blank" class="text-sky-400 hover:text-sky-300">INEMA.CLUB</a></p>
+            <p class="text-neutral-600 text-xs mt-2">Criado por <a href="https://ARCKHÉ AI" target="_blank" class="text-sky-400 hover:text-sky-300">ARCKHÉ AI</a></p>
         </div>
     </footer>
 
